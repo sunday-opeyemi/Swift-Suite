@@ -1,2 +1,0 @@
-djangorestframework,
-django_rest_passwordreset,
