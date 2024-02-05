@@ -9,12 +9,12 @@ import EnterEmail from './pages/EnterEmail'
 
 
 
+
 function App() {
 
   return (
   <>
       <Routes>
-
       <Route path='/'  element={<SignUp/>}/>
       <Route path='layout/*' element={<Rootlayout/>}/>
       <Route path='/enteremail'  element={<EnterEmail/>}/>
