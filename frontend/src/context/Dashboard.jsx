@@ -4,7 +4,7 @@ import {useMediaQuery} from 'react-responsive'
 export const AppContext = createContext();
 
 const DashboardContext = ({ children }) => {
-    const isTablet = useMediaQuery({ query: '(max-width: 768px)' });
+    const isTablet = useMediaQuery({ query: '(max-width: 1300px)' });
     const [sideBarOpen, setSideBarOpen] = useState(isTablet ? false : true);
 
     const toggleSideBar = () => {
