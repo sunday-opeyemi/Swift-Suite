@@ -10,7 +10,7 @@ const ErrorPage = () => {
         <img src="/path/to/error-image.png" alt="Error Illustration" className="max-w-full h-auto mb-8" />
 
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-          Go Back
+          Go Back.
         </button>
       </div>
     </div>
