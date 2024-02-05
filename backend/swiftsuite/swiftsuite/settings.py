@@ -26,11 +26,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework",
-    "rest_framework.authtoken",
-    "django_rest_passwordreset",
     "accounts",
-    # "accounts.apps.AccountsConfig",  # Update the app's reference
+    "rest_framework",
+    "corsheaders",
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +62,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "swiftsuite.wsgi.application"
 
-AUTH_USER_MODEL = 'accounts.AllUser'
+AUTH_USER_MODEL = 'accounts.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

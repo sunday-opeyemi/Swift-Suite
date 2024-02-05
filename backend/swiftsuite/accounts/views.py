@@ -1,80 +1,104 @@
-from rest_framework import status
+
+from rest_framework.generics import GenericAPIView
+from .serializers import UserRegisterSerializer, LoginSerializer, PasswordResetSerializer,SetNewPasswordSerializer, LogoutUserSerializer
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.authtoken.models import Token
+from rest_framework import status
+from .utils import send_code_to_user
+from .models import OneTimePassword, User
+from django.utils.encoding import smart_str, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_decode
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework.permissions import IsAuthenticated
-from django.contrib.auth import authenticate
-from django.core.exceptions import ObjectDoesNotExist
-from .serializers import StaffUserSerializer
-from .models import AllUser
-from django.contrib.auth import update_session_auth_hash
-from .serializers import ChangePasswordSerializer
+from django.http import HttpResponseRedirect
 
-# Create a new API view in “accounts/views.py” for user registration:
 
-@api_view(['POST'])
-def register_user(request):
-    if request.method == 'POST':
-        serializer = StaffUserSerializer(data=request.data)
-        if serializer.is_valid():
+
+class RegisterUserView(GenericAPIView):
+    serializer_class = UserRegisterSerializer
+
+    def post(self, request):
+        user_data = request.data 
+        serializer = self.serializer_class(data=user_data)
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            user = serializer.data
+            # send email
+            send_code_to_user(user['email'])
+
+            return Response({
+                "data":user, 
+                'message':"Sign up succesfull", 
+                }, status=status.HTTP_201_CREATED) 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
-# create a new API view for user login that supports both username and email login
 
-@api_view(['POST'])
-def user_login(request):
-    if request.method == 'POST':
-        username = request.data.get('username')
-        password = request.data.get('password')
-
-        user = None
-        if '@' in username:
-            try:
-                user = AllUser.objects.get(email=username)
-            except ObjectDoesNotExist:
-                pass
-
-        if not user:
-            user = authenticate(username=username, password=password)
-
-        if user:
-            token, _ = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
-
-        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-    
-# To handle user logout, we’ll create a new API
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def user_logout(request):
-    if request.method == 'POST':
+class VerifyUserEmail(GenericAPIView):
+    def post(self, request):
+        otpcode = request.data.get('otp')
         try:
-            # Delete the user's token to logout
-            request.user.auth_token.delete()
-            return Response({'message': 'Successfully logged out.'}, status=status.HTTP_200_OK)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        
-# create a new API view for users to change their passwords when logged in
-
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def change_password(request):
-    if request.method == 'POST':
-        serializer = ChangePasswordSerializer(data=request.data)
-        if serializer.is_valid():
-            user = request.user
-            if user.check_password(serializer.data.get('old_password')):
-                user.set_password(serializer.data.get('new_password'))
+            user_code_obj = OneTimePassword.objects.get(code = otpcode)
+            user = user_code_obj.user
+            if not user.is_verified:
+                user.is_verified = True
                 user.save()
-                update_session_auth_hash(request, user)  # To update session after password change
-                return Response({'message': 'Password changed successfully.'}, status=status.HTTP_200_OK)
-            return Response({'error': 'Incorrect old password.'}, status=status.HTTP_400_BAD_REQUEST)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({
+                    "message":"account email verified successfully"
+                }, status=status.HTTP_200_OK)
+            return Response({
+                "message":"code is invalid, user already verified."
+            }, status=status.HTTP_204_NO_CONTENT)
+        except OneTimePassword.DoesNotExist:
+            return Response({"message":"Passcode not provided"}, status=status.HTTP_404_NOT_FOUND)
+
+
+class LoginUserView(GenericAPIView):
+    serializer_class  = LoginSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data, context = {'request':request})
+        serializer.is_valid(raise_exception=True)
+        return Response (serializer.data, status=status.HTTP_200_OK)
+
+
+
+class PasswordResetView(GenericAPIView):
+    serializer_class = PasswordResetSerializer
+    def post(self, request):
+        serializer = self.serializer_class(data = request.data, context ={'request':request})
+        serializer.is_valid(raise_exception = True)
+        return Response({'message':"A link has been sent to your email to reset your password"}, status=status.HTTP_200_OK)
     
-# To enable password reset functionality, we’ll use Django’s built-in password reset framework.
-# pip install django-rest-passwordreset
+class PasswordResetConfirm(GenericAPIView):
+    def get(self, request, uidb64, token):
+        try:
+            user_id = smart_str(urlsafe_base64_decode(uidb64))
+            user = User.objects.get(id=user_id)
+            if not PasswordResetTokenGenerator().check_token(user, token):
+                return Response({'message':'Token is invalid or has expired'}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({'success':True, 'message':'credential is valid', 'uidb64':uidb64, 'token':token}, status=status.HTTP_200_OK)
+        
+        except DjangoUnicodeDecodeError:
+            return Response({'message':'Token is invalid or has expired'}, status=status.HTTP_401_UNAUTHORIZED)
+        
+class SetNewPassword(GenericAPIView):
+    serializer_class = SetNewPasswordSerializer
+    def patch(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({'message':'Password reset successful'}, status=status.HTTP_200_OK)
+    
+
+class LogoutUserView(GenericAPIView):
+    serializer_class = LogoutUserSerializer
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+def landingPage(request):
+    return HttpResponseRedirect("https://swift-suite.netlify.app/layout/home")
+
+
