@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRef } from "react";
 import { motion } from "framer-motion";
 
@@ -9,14 +9,20 @@ import { AiOutlineAppstore } from "react-icons/ai";
 import { LiaSignOutAltSolid } from "react-icons/lia";
 import { BiBorderRight } from "react-icons/bi";
 import { TbReport } from "react-icons/tb";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { MdOutlineInventory2 } from "react-icons/md";
 import { FaRegAddressBook } from 'react-icons/fa'
+import { IoIosArrowUp } from 'react-icons/io'
+import {IoChevronDown} from 'react-icons/io5'
 import swift from '../Images/swift.png'
 import { AppContext } from "../context/Dashboard";
 
+
 const Sidebar = () => {
   const { sideBarOpen, setSideBarOpen, isTablet } = useContext(AppContext)
+  const [host, setHost] = useState(false);
+  // const [hosting, setHosting] = useState(false);
+
 
   // check on useRef
   const sidebarRef = useRef();
@@ -41,6 +47,16 @@ const Sidebar = () => {
   useEffect(() => {
     isTablet && setSideBarOpen(false);
   }, [pathname]);
+
+
+  const toggleUp = () => {
+    setHost(false);
+  };
+
+  const toggleDown = () => {
+    // setHosting(false);
+    setHost(true);
+  };
 
   const Nav_animation = isTablet
     ? {
@@ -89,44 +105,64 @@ const Sidebar = () => {
         <div className="flex flex-col text-4xl bg-white text-black h-full">
           <ul className=" px-2.5 text-[0.9rem] py-5 flex flex-col gap-2  font-serif   dark:scrollbar-track-slate-400  dark:scrollbar-thumb-slate-700  md:h-[78%] h-[75%]">
             <li>
-              <NavLink to={"/layout/home"} className="link flex   gap-8  hover:rounded hover:text-black">
+              <NavLink to={"/layout/home"} className="link flex gap-8  hover:rounded hover:text-black">
                 <AiOutlineAppstore size={23} className="mt-2 min-w-max" />
                 Dashboard
               </NavLink>
             </li>
-            <li>
+            <li className="flex lg:gap-10 gap-5">
               <NavLink to={"/layout/allapp"} className="link flex gap-8 hover:text-green-700 ">
                 <FaRegAddressBook size={23} className="mt-2 min-w-max" />
-                Catalogue
+                <div className="flex gap-5">
+                  <p>
+                    Catalogue
+                  </p>
+                 
+                </div>
               </NavLink>
+              <p className="mt-3 cursor-pointer hover:text-green-700">
+              <span onClick={toggleUp} className={host ? '' : 'hidden'}>
+                <IoIosArrowUp />
+              </span>
+              <span onClick={toggleDown} className={host ? 'hidden' : ''}>
+                <IoChevronDown />
+              </span>
+            </p>
             </li>
             <li>
+              <li className={`ms-14 shadow w-20 p-2 mt-[-4%] ${host ? 'block' : 'hidden'}`}>
+                <p>
+                  <Link to="/layout/catalogue">catalogue</Link>
+                </p>
+                <p>
+                  <Link to="/layout/product">product</Link>
+                </p>
+              </li>
               <NavLink to={"/layout/authentication"} className="link flex gap-8 hover:text-green-700">
                 <MdOutlineInventory2 size={23} className="mt-2 min-w-max" />
                 Inventory
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/stroage"} className="link flex gap-8 hover:text-green-700">
+              <NavLink to={""} className="link flex gap-8 hover:text-green-700">
                 <BiBorderRight size={23} className="mt-2 min-w-max" />
                 Orders
               </NavLink>
             </li>
-            {/* test routeless */}
             <li>
-              <NavLink to={"/post"} className="link flex gap-8 hover:text-green-700">
+              <NavLink to={""} className="link flex gap-8 hover:text-green-700">
                 <TbReport size={23} className="mt-2 min-w-max" />
                 Reports
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/product"} className="link flex gap-8 hover:text-green-700">
+              <NavLink to={""} className="link flex gap-8 hover:text-green-700">
                 <IoMdHelpCircleOutline size={23} className="mt-2 min-w-max" />
                 Help
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/product"} className="link flex gap-8 hover:text-green-700">
+              <NavLink to={""} className="link flex gap-8 hover:text-green-700">
                 <LiaSignOutAltSolid size={23} className="mt-2 min-w-max" />
                 Sign Out
               </NavLink>

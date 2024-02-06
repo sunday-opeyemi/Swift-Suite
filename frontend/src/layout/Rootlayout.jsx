@@ -8,6 +8,8 @@ import { Route, Routes } from 'react-router-dom'
 // import Home from '../pages/Home'
 import Dashboard from '../pages/Dashboard'
 import Allapp from '../pages/Allapp'
+import Catalogue from '../pages/Catalogue'
+import Product from '../pages/Product'
 // import Allapp from '../pages/Allapp'
 // import Authentication from '../pages/Authentication'
 
@@ -40,7 +42,9 @@ const Rootlayout = ({children}) => {
         <Routes>
           <Route path='/home' element={<Dashboard/>}/>
           <Route path='/allapp' element={<Allapp/>}/>
-         
+          <Route path='/product' element={<Product/>}/>
+          <Route path='/catalogue' element={<Catalogue/>}/>
+
         </Routes>
    
     </>
