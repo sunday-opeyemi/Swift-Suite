@@ -15,6 +15,7 @@ const SignUp = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [inputFilled, setInputFilled] = useState(false);
+  const [match, setMatch] = useState("")
 
 
 
@@ -98,7 +99,7 @@ const SignUp = () => {
                   <span className='text-red-500 font-bold'>{formik.touched.confirm && formik.errors.confirm}</span>
                   <span onClick={() => togglePasswordVisibility('confirm')} className='absolute top-[35px] right-5'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
                 </div>
-                <button className='w-full bg-[#089451] text-white font-bold py-2 my-2'>Sign Up</button>
+                <button type='submit' className='w-full bg-[#089451] text-white font-bold py-2 my-2'>Sign Up</button>
               </form>
             </div>
         </section>
