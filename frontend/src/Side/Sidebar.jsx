@@ -93,7 +93,7 @@ const Sidebar = () => {
 
   return (
     <div className=" absolute">
-      <div onClick={() => overlayClicked()} className={`md:hidden fixed inset-0 max-h-screen z-[998] bg-blue-100  opacity-30 ${sideBarOpen ? "block" : "hidden"} `}></div>
+      <div onClick={() => overlayClicked()} className={`md:hidden fixed inset-0 max-h-screen z-[998] bg-blue-100 opacity-30 ${sideBarOpen ? "block" : "hidden"} `}></div>
 
       <motion.div ref={sidebarRef} variants={Nav_animation} initial={{ x: isTablet ? -250 : 0 }} animate={sideBarOpen ? "open" : "closed"} className="shadow-xl md:z-[9] z-[9999] max-w-[16rem]  w-[16rem] fixed top-0 left-0 h-screen">
 
