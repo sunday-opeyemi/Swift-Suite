@@ -1,16 +1,19 @@
 import React from 'react'
 
 const Dropshipping = () => {
-  return (
-    <div>
-        <div id='back'></div>
+    return (
         <div>
-            <h1>Elevate Youe eCommerce Dropshipping E xperience </h1>
-            <p>Elevate Youe eCommerce Dropshipping E xperience</p>
-            <button className='bg-green-200'>Get Started for free</button>
+            <div id='back'>
+                <div className='absolute text-white lg:mt-[12%] lg:ms-[5%]'>
+                    <h1 className='text-2xl font-bold '>Elevate Your e-Commerce</h1>
+                    <p className='text-2xl font-bold'>Dropshipping Experience</p>
+                    <p>Elevate Your E-Commerce</p>
+                    <p>Dropshipping Experience</p>
+                    <button className='bg-green-600'>Get Started for free</button>
+                </div>
+            </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default Dropshipping
