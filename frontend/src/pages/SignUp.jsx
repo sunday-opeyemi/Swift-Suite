@@ -82,7 +82,7 @@ const SignUp = () => {
                 <div className=' h-[80px] my-3 lg:my-1'>
                   <label htmlFor="" className='font-semibold my-1'>Firstname</label><br />
                   <input type="text" placeholder='Jane'  className='px-4 py-2 w-full border-2 mt-1 border-[#089451] focus:outline-[#089451]' name='first_name' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
-                  <small className='text-red-500 my-1 text-[1px]'>{formik.touched.first_name && formik.errors.first_name}</small>
+                  <span className='text-red-500 my-1'>{formik.touched.first_name && formik.errors.first_name}</span>
                 </div>
                 <div className='h-[80px] my-3 lg:my-1'>
                   <label htmlFor="" className='font-semibold my-1'>Lastname</label><br />
@@ -106,7 +106,7 @@ const SignUp = () => {
                   <span className='text-red-500 my-1'>{formik.touched.password2 && formik.errors.password2}</span>
                   <span onClick={() => togglePasswordVisibility('confirm')} className='absolute top-[35px] right-5'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
                 </div>
-                <button type='submit' className='w-full bg-[#089451] flex justify-center items-center text-white font-bold py-3 my-3'>{myloader? <img src={loader} alt="" className='w-[25px] ' /> : 'Sign Up'}</button>
+                <button type='submit' className='w-full bg-[#089451] flex justify-center items-center text-white font-bold py-3 mt-5'>{myloader? <img src={loader} alt="" className='w-[25px] ' /> : 'Sign Up'}</button>
               </form>
             </div>
         </section>
