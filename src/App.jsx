@@ -5,6 +5,7 @@ import ErrorPage from './pages/Errorpage'
 import EnterEmail from './pages/EnterEmail'
 import Signin from './pages/Signin'
 import Reset from './pages/Reset'
+import Landingpage from './landingpage/Landingpage'
 
 
 
@@ -16,7 +17,8 @@ function App() {
   return (
   <>
       <Routes>
-      <Route path='/'  element={<SignUp/>}/>
+      <Route path='/'  element={<Landingpage/>}/>
+      <Route path='/signup'  element={<SignUp/>}/>
       <Route path='layout/*' element={<Rootlayout/>}/>
       <Route path='/signin'  element={<Signin/>}/>
       <Route path='/enteremail'  element={<EnterEmail/>}/>
