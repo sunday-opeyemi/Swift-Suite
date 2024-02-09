@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import Navbar from '../components/Navbar'
-import { IoEyeSharp } from "react-icons/io5";
-import { BsEyeSlashFill } from "react-icons/bs";
-import { Link } from 'react-router-dom';
+
 
 
 
