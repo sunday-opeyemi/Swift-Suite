@@ -10,8 +10,6 @@ import Landingpage from './landingpage/Landingpage'
 
 
 
-
-
 function App() {
 
   return (
