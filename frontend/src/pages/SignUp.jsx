@@ -82,7 +82,7 @@ const SignUp = () => {
                 <div className=' h-[80px] my-3 lg:my-1'>
                   <label htmlFor="" className='font-semibold my-1'>Firstname</label><br />
                   <input type="text" placeholder='Jane'  className='px-4 py-2 w-full border-2 mt-1 border-[#089451] focus:outline-[#089451]' name='first_name' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
-                  <small className='text-red-500 my-1 text-[1px]'>{formik.touched.first_name && formik.errors.first_name}</small>
+                  <span className='text-red-500 my-1'>{formik.touched.first_name && formik.errors.first_name}</span>
                 </div>
                 <div className='h-[80px] my-3 lg:my-1'>
                   <label htmlFor="" className='font-semibold my-1'>Lastname</label><br />
