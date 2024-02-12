@@ -6,6 +6,9 @@ import Platforms from './Platforms'
 import Choose from './Choose'
 import Global from './Global'
 import Pricing from './Pricing'
+import Testimonials from './Testimonials'
+import Efficiency from './Efficiency'
+import Footer from './Footer'
 
 const Landingpage = () => {
   return (
@@ -17,6 +20,9 @@ const Landingpage = () => {
     <Choose/>
     <Global/>
     <Pricing/>
+    <Testimonials/>
+    <Efficiency/>
+    <Footer/>
     </div>
   )
 }
