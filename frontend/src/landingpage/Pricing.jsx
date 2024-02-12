@@ -3,7 +3,7 @@ import { IoMdCheckmark } from 'react-icons/io'
 
 const Pricing = () => {
     return (
-        <div className='bg-green-700'>
+        <div className='bg-green-700 font-[font-PlayfairDisplay]'>
             <h1 className='text-center font-bold text-xl text-white py-3'>Pricing</h1>
             <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 p-5 lg:px-[20%] px-[12%]'>
                 <div className='bg-white rounded lg:w-[90%] md:w-[80%] md:h-[83%] lg:h-[75%] py-6'>
