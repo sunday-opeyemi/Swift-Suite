@@ -32,7 +32,7 @@ const Navbar = () => {
           </ul>
         </div>
         <div className='hidden lg:flex justify-center items-center gap-6 md:me-10 mt-1'>
-            <a href="" className='border w-[160px]  font-semibold text-white text-center py-1 bg-[#089451] rounded'>Get Started For Free</a>
+            <a href="" className='border w-[165px]  font-semibold text-white text-center py-1 bg-[#089451] rounded'>Get Started For Free</a>
             <a href="" className='border w-[150px] font-semibold border-[#089451] text-center py-1 text-[#089451] rounded'>Sign in</a>
         </div>
         <button className='lg:hidden block mt-1 W-[200PX] text-green-700 font-bold '>
