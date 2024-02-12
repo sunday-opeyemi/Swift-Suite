@@ -77,7 +77,7 @@ const SignUp = () => {
             </div>
             <div className='lg:py-20 py-0   lg:px-28 px-14 '>
               <h1 className='text-center font-bold text-2xl text-[#089451]'>Create an Account</h1>
-              <form action="" className='' onSubmit={formik.handleSubmit}>
+              <form action="" className=''c>
               <p className='flex my-4 font-bold text-xl text-[#089451]'>Sign Up</p>
                 <div className=' h-[80px] my-3'>
                   <label htmlFor="" className='font-semibold my-1'>Firstname</label><br />
