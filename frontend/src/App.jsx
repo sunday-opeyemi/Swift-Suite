@@ -6,6 +6,8 @@ import EnterEmail from './pages/EnterEmail'
 import Signin from './pages/Signin'
 import Reset from './pages/Reset'
 import Landingpage from './landingpage/Landingpage'
+import Regsuccess from './pages/Regsuccess'
+import PassSuccess from './pages/PassSuccess'
 
 
 
@@ -21,6 +23,8 @@ function App() {
       <Route path='/signin'  element={<Signin/>}/>
       <Route path='/enteremail'  element={<EnterEmail/>}/>
       <Route path='/reset'  element={<Reset/>}/>
+      <Route path='/success'  element={<Regsuccess/>}/>
+      <Route path='passreg'   element={<PassSuccess/>}/>
       <Route path="*" element={<ErrorPage/>}/>
     </Routes>
   </>
