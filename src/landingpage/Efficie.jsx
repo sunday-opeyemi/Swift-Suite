@@ -2,7 +2,7 @@ import React from 'react'
 import eff from '../Images/eff.png'
 import { IoIosArrowRoundForward } from "react-icons/io";
 
-const Efficiency = () => {
+const Efficie = () => {
     return (
         <div className='grid lg:grid-cols-2 lg:px-[16%] md:px-[16%] px-10 bg-green-700 text-white md:grid-cols-2 grid-cols-1 '>
             <div className='mt-[10%]  font-[font-PlayfairDisplay]'>
@@ -20,4 +20,4 @@ const Efficiency = () => {
     )
 }
 
-export default Efficiency
+export default Efficie

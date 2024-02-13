@@ -9,9 +9,6 @@ import Pricing from './Pricing'
 import Testimonials from './Testimonials'
 import Efficiency from './Efficiency'
 import Footer from './Footer'
-import Foot from './Foot'
-import Efficie from './Efficie'
-import Testimo from './Testimo'
 
 const Landingpage = () => {
   return (
@@ -23,9 +20,9 @@ const Landingpage = () => {
     <Choose/>
     <Global/>
     <Pricing/>
-    <Testimo/>
-    <Efficie/>
-    <Foot/>
+    <Testimonials/>
+    <Efficiency/>
+    <Footer/>
     </div>
   )
 }
