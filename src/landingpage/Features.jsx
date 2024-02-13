@@ -53,6 +53,7 @@ const Features = () => {
             <div className='flex flex-col justify-center'>
                     <img className='lg:w-[66%]' src={feat3} alt="" />
                 </div>
+                
                 <div>
                     <h2 className='font-bold lg:mt-0 mt-4 text-xl'>Multiple Supplier Integration</h2>
                     <p>Connect one product to multiple  <br />suppliers and intelligently route orders <br />to the best possible. This ensures optimal <br />fulfillment and customer satisfaction.</p>
