@@ -19,7 +19,7 @@ def send_code_to_user(email):
    subject = "One time passcode for Email Verification"
    otp_code =  generate_otp()
    user = User.objects.get(email=email)
-   current_site = "SwiftSuit"
+   current_site = "SwiftSuite"
    email_body = f'Hi {user.first_name}, thanks for signing up on {current_site}, kindly verify your email with the\none time passcode {otp_code} '
    from_email = settings.DEFAULT_FROM_EMAIL
 
@@ -31,7 +31,8 @@ def send_normal_email(data):
     email = EmailMessage(
         subject= data['email_subject'],
         body = data['email_body'],
-        from_email = settings.EMAIL_HOST_USER,
+        # from_email = settings.EMAIL_HOST_USER,
+        from_email = 'support@swiftsuite.app',
         to = [data['to_email']] 
     )
 
