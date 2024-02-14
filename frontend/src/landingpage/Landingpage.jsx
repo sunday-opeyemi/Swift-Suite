@@ -6,23 +6,23 @@ import Platforms from './Platforms'
 import Choose from './Choose'
 import Global from './Global'
 import Pricing from './Pricing'
-import Testimonials from './Testimonials'
-import Efficiency from './Efficiency'
-import Footer from './Footer'
+import Foot from './Foot'
+import Efficie from './Efficie'
+import Testimo from './Testimo'
 
 const Landingpage = () => {
   return (
     <div>
-    <Navbar/>
-    <Dropshipping/>
-    <Features/>
-    <Platforms/>
-    <Choose/>
-    <Global/>
-    <Pricing/>
-    <Testimonials/>
-    <Efficiency/>
-    <Footer/>
+      <Navbar />
+      <Dropshipping />
+      <Features />
+      <Platforms />
+      <Choose />
+      <Global />
+      <Pricing />
+      <Testimo />
+      <Efficie />
+      <Foot />
     </div>
   )
 }
