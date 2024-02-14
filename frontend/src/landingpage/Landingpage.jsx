@@ -13,16 +13,16 @@ import Testimo from './Testimo'
 const Landingpage = () => {
   return (
     <div>
-    <Navbar/>
-    <Dropshipping/>
-    <Features/>
-    <Platforms/>
-    <Choose/>
-    <Global/>
-    <Pricing/>
-    <Testimo/>
-    <Efficie/>
-    <Foot/>
+      <Navbar />
+      <Dropshipping />
+      <Features />
+      <Platforms />
+      <Choose />
+      <Global />
+      <Pricing />
+      <Testimo />
+      <Efficie />
+      <Foot />
     </div>
   )
 }
