@@ -5,7 +5,7 @@ import lisa from '../Images/lisa.png'
 
 
 
-const Testimonials = () => {
+const Testimo = () => {
     return (
         <div className='mb-10'>
             <h1 className='text-center p-2 font-[font-PlayfairDisplay] text-2xl mt-10 font-bold'>Customers Testimonials</h1>
@@ -49,4 +49,4 @@ const Testimonials = () => {
     )
 }
 
-export default Testimonials
+export default Testimo
