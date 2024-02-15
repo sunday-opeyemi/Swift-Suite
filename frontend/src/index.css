@@ -3,6 +3,28 @@
 @import 'tailwindcss/utilities';
 
 
+<<<<<<< HEAD
+
+
+
+
+
+  
+  @import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
+   
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital@1&family=PT+Serif&display=swap');
+  
+  
+  
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital@1&family=PT+Serif&family=Phudu&family=Poppins:ital@1&family=Vesper+Libre:wght@700;900&display=swap');
+  
+  
+  
+  
+  
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@1,100&display=swap');
+=======
+>>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
   
   
   
@@ -27,6 +49,20 @@
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
 
 
+<<<<<<< HEAD
+
+
+
+  #back{
+    background-image: url(./Images/back.png);
+    position: relative;
+    height: 100vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+  }
+=======
+>>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
   
   
     

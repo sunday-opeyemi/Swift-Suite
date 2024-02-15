@@ -6,9 +6,12 @@ import Platforms from './Platforms'
 import Choose from './Choose'
 import Global from './Global'
 import Pricing from './Pricing'
+import Testimo from './Testimo'
+import Efficie from './Efficie'
 import Foot from './Foot'
 import Efficie from './Efficie'
 import Testimo from './Testimo'
+
 
 const Landingpage = () => {
   return (
