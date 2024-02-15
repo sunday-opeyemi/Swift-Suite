@@ -8,21 +8,24 @@ import Global from './Global'
 import Pricing from './Pricing'
 import Testimo from './Testimo'
 import Efficie from './Efficie'
-
+import Foot from './Foot'
+import Efficie from './Efficie'
+import Testimo from './Testimo'
 
 
 const Landingpage = () => {
   return (
     <div>
-    <Navbar/>
-    <Dropshipping/>
-    <Features/>
-    <Platforms/>
-    <Choose/>
-    <Global/>
-    <Pricing/>
-    <Testimo/>
-    <Efficie/>
+      <Navbar />
+      <Dropshipping />
+      <Features />
+      <Platforms />
+      <Choose />
+      <Global />
+      <Pricing />
+      <Testimo />
+      <Efficie />
+      <Foot />
     </div>
   )
 }

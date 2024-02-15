@@ -62,7 +62,11 @@ const SignUp = () => {
       first_name: yup.string().required( <span className='flex'><span>Field is required</span></span>),
       last_name: yup.string().required( <span className='flex'><span>Field is required</span></span> ),
       email: yup.string().email('Invalid email format').required( <span className='flex'><span>Field is required</span></span> ),
+<<<<<<< HEAD
       password: yup.string().required(<span className="flex">{' '}<span>Field is required</span></span>).matches(passwordRegex, 'must include letters and numbers'),
+=======
+      password: yup.string().required(<span className="flex">{' '}<span>Field is required</span></span>).min(8, 'Password must be at least 8 characters').matches(passwordRegex, 'must include letters and numbers'),
+>>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
       password2: yup.string().required(<span className="flex">{' '}<span>Confirm your Password</span></span> ).oneOf([yup.ref('password'), null], 'Passwords do not match'),
     })
   });
@@ -76,24 +80,40 @@ const SignUp = () => {
             <img src={signImage} alt=""  className='lg:w-[500px] lg:h-[626px] md:w-full'/>
             </div>
             <div className='lg:py-20 py-0   lg:px-28 px-14 '>
+<<<<<<< HEAD
               <h1 className='text-center font-semibold text-xl text-[#089451]'>Create an Account</h1>
               <form action="" className='' onSubmit={formik.handleSubmit}>
               <p className='flex my-4 font-semibold text-xl text-[#089451]'>Sign Up</p>
                 <div className=' h-[80px] my-3 lg:my-1'>
+=======
+              <h1 className='text-center font-bold text-2xl text-[#089451]'>Create an Account</h1>
+              <form action="" className=''c>
+              <p className='flex my-4 font-bold text-xl text-[#089451]'>Sign Up</p>
+                <div className=' h-[80px] my-3'>
+>>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
                   <label htmlFor="" className='font-semibold my-1'>Firstname</label><br />
                   <input type="text" placeholder='Jane'  className='px-4 py-2 w-full border-2 mt-1 border-[#089451] focus:outline-[#089451]' name='first_name' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
                   <span className='text-red-500 my-1'>{formik.touched.first_name && formik.errors.first_name}</span>
                 </div>
+<<<<<<< HEAD
                 <div className='h-[80px] my-3 lg:my-1'>
+=======
+                <div className='h-[80px] my-3'>
+>>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
                   <label htmlFor="" className='font-semibold my-1'>Lastname</label><br />
                   <input  type="text" placeholder='Doe'   className='px-4 py-2 w-full border-2 mt-1 border-[#089451] focus:outline-[#089451]' name='last_name' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
                   <span className='text-red-500 my-1'>{formik.touched.last_name && formik.errors.last_name}</span>
                 </div>
+<<<<<<< HEAD
                 <div className='h-[80px] my-3 lg:my-1'>
+=======
+                <div className='h-[80px] my-3'>
+>>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
                   <label htmlFor="Email" className='font-semibold my-1'>Email</label><br />
                   <input  type="email" placeholder='jane@gmail.com'  className='px-4 py-2 w-full border-2 mt-1 border-[#089451]  focus:outline-[#089451]' name='email' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
                   <span className='text-red-500 my-1'>{formik.touched.email && formik.errors.email}</span>
                 </div>
+<<<<<<< HEAD
                 <div className='h-[80px] relative my-3 lg:my-1'>
                   <label htmlFor="" className='font-semibold'>Password</label><br />
                   <input  type={passwordVisible ? 'text' : 'password'} placeholder='**********'   autoComplete='off' className='border-2 mt-1 border-[#089451] py-2 px-4 w-full focus:outline-[#089451]' name='password' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
@@ -105,6 +125,19 @@ const SignUp = () => {
                   <input type={confirmVisible ? 'text' : 'password'} placeholder='**********'  className='border-2 bg-white border-[#089451] py-2 mt-1 px-4 w-full focus:outline-[#089451]' name='password2' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
                   <span className='text-red-500 my-1'>{formik.touched.password2 && formik.errors.password2}</span>
                   <span onClick={() => togglePasswordVisibility('confirm')} className='absolute top-[35px] right-5'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
+=======
+                <div className='h-[80px] relative my-3'>
+                  <label htmlFor="" className='font-semibold'>Password</label><br />
+                  <input  type={passwordVisible ? 'text' : 'password'} placeholder='**********'   autoComplete='off' className='border-2 mt-1 border-[#089451] py-2 px-4 w-full focus:outline-[#089451]' name='password' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
+                  <span className='text-red-500 my-1'>{formik.touched.password && formik.errors.password}</span>
+                  <span onClick={() => togglePasswordVisibility('password')} className='absolute top-[42px] right-5'>{!passwordVisible ? <IoEyeSharp /> :  <BsEyeSlashFill /> }</span>
+                </div>
+                <div className='h-[80px] relative my-3'>
+                  <label htmlFor="" className='font-semibold'>Confirm Password</label><br />
+                  <input type={confirmVisible ? 'text' : 'password'} placeholder='**********'  className='border-2 bg-white border-[#089451] py-2 mt-1 px-4 w-full focus:outline-[#089451]' name='password2' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
+                  <span className='text-red-500 my-1'>{formik.touched.password2 && formik.errors.password2}</span>
+                  <span onClick={() => togglePasswordVisibility('confirm')} className='absolute top-[42px] right-5'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
+>>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
                 </div>
                 <button type='submit' className='w-full bg-[#089451] flex justify-center items-center text-white font-bold py-3 mt-5'>{myloader? <img src={loader} alt="" className='w-[25px] ' /> : 'Sign Up'}</button>
               </form>

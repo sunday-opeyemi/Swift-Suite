@@ -1,3 +1,7 @@
+<<<<<<< HEAD
 # Swift-Suite
 This is an Inventory Management Software solution crafted with the vision of optimizing product management, streamlining marketplace listings and enhancing the efficiency of order processing. 
 The outlined features encapsulate a commitment to providing businesses in the e-commerce domain with a sophisticated, user-friendly platform designed to address the intricacies and demands of modern online commerce. By fostering seamless integration, real-time updates, and robust security measures. This software aspires to empower businesses to navigate the complexities of inventory management with agility and precision, ultimately contributing to enhanced operational efficacy and overall bysiness success in the dynamic realm of e-commerce.
+=======
+
+>>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
