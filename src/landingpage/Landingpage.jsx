@@ -9,6 +9,7 @@ import Pricing from './Pricing'
 import Testimo from './Testimo'
 import Efficie from './Efficie'
 import Foot from './Foot'
+import Footer from './Footer'
 
 
 
@@ -25,6 +26,7 @@ const Landingpage = () => {
       <Testimo />
       <Efficie />
       <Foot />
+      <Footer/>
     </div>
   )
 }
