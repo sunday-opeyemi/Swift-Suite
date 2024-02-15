@@ -13,6 +13,7 @@ import Footer from './Footer'
 
 
 
+
 const Landingpage = () => {
   return (
     <div>
@@ -27,6 +28,7 @@ const Landingpage = () => {
       <Efficie />
       <Foot />
       <Footer/>
+  
     </div>
   )
 }
