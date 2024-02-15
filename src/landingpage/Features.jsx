@@ -31,6 +31,7 @@ const Features = () => {
                     <img className='lg:w-[66%] lg:ms-20 lg:mt-0 mt-5' src={feat1} alt="" />
                 </div>
             </div>
+
             <div className='grid lg:grid-cols-2 grid-cols-1 md:grid-cols-2 md:gap-28 lg:gap-0 lg:px-[28%] p-10 lg:p-10'>
             <div className='flex flex-col justify-center'>
                     <img className='lg:w-[66%]' src={feat2} alt="" />

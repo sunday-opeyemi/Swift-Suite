@@ -8,6 +8,8 @@ import shopify from '../Images/shopify.png'
 
 
 const Platforms = () => {
+
+
     return (
         <>
             <h1 className='font-[font-PlayfairDisplay] text-center text-2xl font-bold'>Supported Platforms</h1>
@@ -16,8 +18,8 @@ const Platforms = () => {
                     <img className='w-[50%] mx-auto' src={walmart} alt="" />
                     <p>Direct Integration with <br /> walmart for a <br /> streamlined selling <br />  experience </p>
                 </div>
-                <div className='border shadow-lg lg:w-[80%] w-[80%] bg-gray-300 mx-auto p-2 py-5 lg:mt-0 md:mt-0 mt-10 md:h-[100%] lg:h-[95%] rounded'>
-                    <img className='w-[50%] mx-auto' src={amazon} alt="" />
+                <div className='border shadow-lg lg:w-[80%] w-[80%] bg-gray-300 mx-auto p-2 py-5  lg:mt-0 mt-10 lg:h-[95%] rounded'>
+                    <img className='w-[40%] mx-auto' src={amazon} alt="" />
                     <p>Seamless integration <br />  with amazon Seller <br /> central for a robust <br />  eCommerce presence.</p>
                 </div>
                 <div className='border shadow-lg lg:w-[80%] w-[80%] bg-blue-100 mx-auto p-2 py-5 md:h-[100%] lg:h-[95%] lg:mt-0 mt-10 rounded'>

@@ -9,6 +9,7 @@ import axios from 'axios';
 
 
 
+
 const Reset = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmVisible, setConfirmVisible] = useState(false);
@@ -20,7 +21,8 @@ const Reset = () => {
           setConfirmVisible(!confirmVisible);
       }
   }; 
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/
+
+  const passwordRegex = /^(?=.[A-Za-z])(?=.\d)[A-Za-z\d@$!%*?&]{8,}$/
   let formik = useFormik({
     initialValues: {
       password: "",
@@ -34,6 +36,7 @@ const Reset = () => {
       password2: yup.string().required('Confirm password').oneOf([yup.ref('password'), null], 'Passwords do not match'),
     })
   });
+
 
 
   return (

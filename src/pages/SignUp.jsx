@@ -37,7 +37,7 @@ const SignUp = () => {
       }
   };  
 
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/
+  const passwordRegex = /^(?=.[A-Za-z])(?=.\d)[A-Za-z\d@$!%*?&]{8,}$/
   let formik = useFormik({
     initialValues: {
       first_name: "",
@@ -77,7 +77,7 @@ const SignUp = () => {
             </div>
             <div className='lg:py-20 py-0   lg:px-28 px-14 '>
               <h1 className='text-center font-bold text-2xl text-[#089451]'>Create an Account</h1>
-              <form action="" className=''c>
+              <form action="" className='' onSubmit={formik.handleSubmit}>
               <p className='flex my-4 font-bold text-xl text-[#089451]'>Sign Up</p>
                 <div className=' h-[80px] my-3'>
                   <label htmlFor="" className='font-semibold my-1'>Firstname</label><br />
@@ -96,13 +96,13 @@ const SignUp = () => {
                 </div>
                 <div className='h-[80px] relative my-3'>
                   <label htmlFor="" className='font-semibold'>Password</label><br />
-                  <input  type={passwordVisible ? 'text' : 'password'} placeholder='**********'   autoComplete='off' className='border-2 mt-1 border-[#089451] py-2 px-4 w-full focus:outline-[#089451]' name='password' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
+                  <input  type={passwordVisible ? 'text' : 'password'} placeholder=''   autoComplete='off' className='border-2 mt-1 border-[#089451] py-2 px-4 w-full focus:outline-[#089451]' name='password' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
                   <span className='text-red-500 my-1'>{formik.touched.password && formik.errors.password}</span>
                   <span onClick={() => togglePasswordVisibility('password')} className='absolute top-[42px] right-5'>{!passwordVisible ? <IoEyeSharp /> :  <BsEyeSlashFill /> }</span>
                 </div>
                 <div className='h-[80px] relative my-3'>
                   <label htmlFor="" className='font-semibold'>Confirm Password</label><br />
-                  <input type={confirmVisible ? 'text' : 'password'} placeholder='**********'  className='border-2 bg-white border-[#089451] py-2 mt-1 px-4 w-full focus:outline-[#089451]' name='password2' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
+                  <input type={confirmVisible ? 'text' : 'password'} placeholder=''  className='border-2 bg-white border-[#089451] py-2 mt-1 px-4 w-full focus:outline-[#089451]' name='password2' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
                   <span className='text-red-500 my-1'>{formik.touched.password2 && formik.errors.password2}</span>
                   <span onClick={() => togglePasswordVisibility('confirm')} className='absolute top-[42px] right-5'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
                 </div>

@@ -11,14 +11,10 @@ import loader from '../Images/loader1.gif'
 
 
 
+
 const Signin = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-
-    const togglePasswordVisibility = (field) => {
-      if (field === 'password') {
-          setPasswordVisible(!passwordVisible);
-      } 
-  };  
+       
 
     let formik = useFormik({
       initialValues: {
@@ -33,6 +29,7 @@ const Signin = () => {
         password: yup.string().required(<span className="flex">{' '}<span>Field is required</span></span>)
       })
     });
+
 
   return (
       <div>
