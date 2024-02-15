@@ -8,31 +8,21 @@ import shopify from '../Images/shopify.png'
 
 
 const Platforms = () => {
+
+
     return (
         <>
             <h1 className='font-[font-PlayfairDisplay] text-center text-2xl font-bold'>Supported Platforms</h1>
-<<<<<<< HEAD
-            <div className='font-[font-PlayfairDisplay] text-2xl lg:text-sm grid lg:grid-cols-5 grid-cols-1 text-center lg:px-20 lg:mt-0 mt-3 p-5'>
-=======
             <div className='font-[font-PlayfairDisplay] text-2xl lg:text-xl grid lg:grid-cols-5 md:grid-cols-2 grid-cols-1 text-center lg:px-10 lg:mt-0 mt-3 p-5'>
->>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
                 <div className='border shadow-lg lg:w-[80%] w-[80%] bg-gray-300 p-2 mx-auto py-5 lg:h-[95%] rounded'>
                     <img className='w-[50%] mx-auto' src={walmart} alt="" />
                     <p>Direct Integration with <br /> walmart for a <br /> streamlined selling <br />  experience </p>
                 </div>
-<<<<<<< HEAD
                 <div className='border shadow-lg lg:w-[80%] w-[80%] bg-gray-300 mx-auto p-2 py-5  lg:mt-0 mt-10 lg:h-[95%] rounded'>
                     <img className='w-[40%] mx-auto' src={amazon} alt="" />
                     <p>Seamless integration <br />  with amazon Seller <br /> central for a robust <br />  eCommerce presence.</p>
                 </div>
-                <div className='border shadow-lg lg:w-[80%] w-[80%] bg-blue-100 mx-auto p-2 py-5 lg:h-[95%] lg:mt-0 mt-10 rounded'>
-=======
-                <div className='border shadow-lg lg:w-[80%] w-[80%] bg-gray-300 mx-auto p-2 py-5 lg:mt-0 md:mt-0 mt-10 md:h-[100%] lg:h-[95%] rounded'>
-                    <img className='w-[50%] mx-auto' src={amazon} alt="" />
-                    <p>Seamless integration <br />  with amazon Seller <br /> central for a robust <br />  eCommerce presence.</p>
-                </div>
                 <div className='border shadow-lg lg:w-[80%] w-[80%] bg-blue-100 mx-auto p-2 py-5 md:h-[100%] lg:h-[95%] lg:mt-0 mt-10 rounded'>
->>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
                     <img className='w-[40%] mx-auto' src={ebay} alt="" />
                     <p>Effortless connection <br />  with ebay Seller for <br />  efficient order <br />  management.</p>
                 </div>

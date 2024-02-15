@@ -3,11 +3,6 @@
 @import 'tailwindcss/utilities';
 
 
-<<<<<<< HEAD
-
-
-
-
 
   
   @import url('https://fonts.googleapis.com/css2?family=PT+Serif&display=swap');
@@ -23,8 +18,7 @@
   
   
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@1,100&display=swap');
-=======
->>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
+
   
   
   
@@ -49,10 +43,6 @@
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap');
 
 
-<<<<<<< HEAD
-
-
-
   #back{
     background-image: url(./Images/back.png);
     position: relative;
@@ -61,8 +51,7 @@
     background-position: center;
     background-size: cover;
   }
-=======
->>>>>>> f3777b94b4498370d7a37a80ee0e9f1b335fde42
+
   
   
     
