@@ -22,7 +22,7 @@ const Reset = () => {
       }
   }; 
 
-  const passwordRegex = /^(?=.[A-Za-z])(?=.\d)[A-Za-z\d@$!%*?&]{8,}$/
+  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/
   let formik = useFormik({
     initialValues: {
       password: "",

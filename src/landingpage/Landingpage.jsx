@@ -9,8 +9,11 @@ import Pricing from './Pricing'
 import Testimo from './Testimo'
 import Efficie from './Efficie'
 import Foot from './Foot'
+<<<<<<< HEAD:src/landingpage/Landingpage.jsx
 import Footer from './Footer'
 
+=======
+>>>>>>> d14b86d1d4e470bc8b7e47a0e410fb34ff706f7a:frontend/src/landingpage/Landingpage.jsx
 
 
 
