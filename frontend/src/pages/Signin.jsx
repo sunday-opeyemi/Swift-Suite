@@ -13,7 +13,7 @@ import loader from '../Images/loader1.gif'
 
 
 const Signin = () => {
-  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false)
        
 
     let formik = useFormik({
