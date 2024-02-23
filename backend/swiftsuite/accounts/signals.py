@@ -23,11 +23,11 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
 
     msg = EmailMultiAlternatives(
         # title:
-        "Password Reset for {title}".format(title="Swiftsuite"),
+        "Password Reset for {title}".format(title="Your Website Title"),
         # message:
         email_plaintext_message,
         # from:
-        "support@swiftsuite.app",
+        "noreply@yourdomain.com",
         # to:
         [reset_password_token.user.email]
     )

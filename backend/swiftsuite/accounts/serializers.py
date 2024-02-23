@@ -39,6 +39,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         )
         return user
     
+class VerifyEmailSerializer(serializers.Serializer):
+    otp = serializers.CharField(max_length=6)  # Assuming OTP is a 6-digit code
+
+    
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length = 255, min_length = 6)
@@ -88,11 +92,11 @@ class PasswordResetSerializer(serializers.Serializer):
             site_domain = get_current_site(request).domain
             relative_link = reverse('password_reset_confirm', kwargs={'uidb64':uidb64, 'token':token})
             abslink = f'http://{site_domain}{relative_link}'
-            email_body = f"Hi, use the link below to reset your password\n{abslink}"
             data = {
-                'email_body':email_body,
+                'reset_link':abslink,
                 'email_subject':'Reset your password',
-                "to_email":user.email
+                "to_email":user.email,
+                'first_name':user.first_name
             }
 
             send_normal_email(data)

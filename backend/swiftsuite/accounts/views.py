@@ -1,6 +1,6 @@
 
 from rest_framework.generics import GenericAPIView
-from .serializers import UserRegisterSerializer, LoginSerializer, PasswordResetSerializer,SetNewPasswordSerializer, LogoutUserSerializer
+from .serializers import UserRegisterSerializer, LoginSerializer, PasswordResetSerializer,SetNewPasswordSerializer, LogoutUserSerializer, VerifyEmailSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from .utils import send_code_to_user
@@ -32,23 +32,48 @@ class RegisterUserView(GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# class VerifyUserEmail(GenericAPIView):
+#     def post(self, request):
+#         otpcode = request.data.get('otp')
+#         try:
+#             user_code_obj = OneTimePassword.objects.get(code = otpcode)
+#             user = user_code_obj.user
+#             if not user.is_verified:
+#                 user.is_verified = True
+#                 user.save()
+#                 return Response({
+#                     "message":"account email verified successfully"
+#                 }, status=status.HTTP_200_OK)
+#             return Response({
+#                 "message":"code is invalid, user already verified."
+#             }, status=status.HTTP_204_NO_CONTENT)
+#         except OneTimePassword.DoesNotExist:
+#             return Response({"message":"Passcode not provided"}, status=status.HTTP_404_NOT_FOUND)
+    
 class VerifyUserEmail(GenericAPIView):
+    serializer_class = VerifyEmailSerializer
+
     def post(self, request):
-        otpcode = request.data.get('otp')
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        otpcode = serializer.validated_data.get('otp')
+        
+
         try:
-            user_code_obj = OneTimePassword.objects.get(code = otpcode)
+            user_code_obj = OneTimePassword.objects.get(code=otpcode)
             user = user_code_obj.user
             if not user.is_verified:
                 user.is_verified = True
                 user.save()
                 return Response({
-                    "message":"account email verified successfully"
+                    "message": "account email verified successfully"
                 }, status=status.HTTP_200_OK)
             return Response({
-                "message":"code is invalid, user already verified."
+                "message": "Code is valid, but the user's email has already been verified."
             }, status=status.HTTP_204_NO_CONTENT)
         except OneTimePassword.DoesNotExist:
-            return Response({"message":"Passcode not provided"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"message": "Passcode not provided"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class LoginUserView(GenericAPIView):
