@@ -25,7 +25,7 @@ const Rootlayout = ({children}) => {
               <Header/>
               <div className="flex max-w-full">
                 <Sidebar />
-                <div className={`  ${!(sideBarOpen) ? 'md:ml-16' : 'md:ml-64'}  `}>
+                <div className={`w-full  ${!(sideBarOpen) ? 'md:ml-16' : 'md:ml-64'}  `}>
                 <main className="py-4 flex-1 break-words">{children}</main>
                 </div>
               </div>
