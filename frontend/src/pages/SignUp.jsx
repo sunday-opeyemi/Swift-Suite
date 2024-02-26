@@ -24,7 +24,7 @@ const SignUp = () => {
   const [match, setMatch] = useState("")
   const [myloader, setMyloader] = useState(false)
 
-  const endpoint = 'https://swiftsuite.app/accounts/register/'
+  const endpoint = 'https://service.swiftsuite.app/accounts/register/'
   const notify = () => toast("Sign up Successful!");
 
 
@@ -52,6 +52,7 @@ const SignUp = () => {
       axios.post(endpoint, values)
       .then((result)=>{
         console.log(result);
+        setMyloader(false)
       })
       .catch((error)=>{
         setMyloader(false)
@@ -106,7 +107,7 @@ const SignUp = () => {
                   <span className='text-red-500 my-1'>{formik.touched.password2 && formik.errors.password2}</span>
                   <span onClick={() => togglePasswordVisibility('confirm')} className='absolute top-[42px] right-5'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
                 </div>
-                <button type='submit' className='w-full bg-[#089451] flex justify-center items-center text-white font-bold py-3 mt-5'>{myloader? <img src={loader} alt="" className='w-[25px] ' /> : 'Sign Up'}</button>
+                <button type='submit' className='w-full bg-[#089451] hover:opacity-75  flex justify-center items-center text-white font-bold py-3 mt-5'>{myloader? <img src={loader} alt="" className='w-[25px] ' /> : 'Sign Up'}</button>
               </form>
             </div>
         </section>

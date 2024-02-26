@@ -8,15 +8,30 @@ import Reset from './pages/Reset'
 import Landingpage from './landingpage/Landingpage'
 import Regsuccess from './pages/Regsuccess'
 import PassSuccess from './pages/PassSuccess'
+import React, { useState } from 'react'
+import Navbar from './components/Navbar'
+import Upbar from './components/Upbar'
+import Test from './components/Test'
 
 
 
 
 
 function App() {
+  const [isOpen, setIsOpen] = useState(false)
 
+
+  const toggleIsOpen = () => {
+    setIsOpen(!isOpen)
+  }
+
+  const handleClose = () => {
+    setIsOpen(false)
+  }
   return (
-  <>
+  <> 
+      <Navbar openToggle={toggleIsOpen}/>
+      {isOpen && <Upbar onClickHandler={handleClose} />}
       <Routes>
       <Route path='/'  element={<Landingpage/>}/>
       <Route path='/signup'  element={<SignUp/>}/>
@@ -26,6 +41,7 @@ function App() {
       <Route path='/reset'  element={<Reset/>}/>
       <Route path='/success'  element={<Regsuccess/>}/>
       <Route path='passreg'   element={<PassSuccess/>}/>
+      <Route path='/test'  element={<Test/>}/>
       <Route path="*" element={<ErrorPage/>}/>
     </Routes>
   </>

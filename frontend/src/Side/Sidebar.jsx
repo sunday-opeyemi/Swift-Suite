@@ -2,7 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import { useRef } from "react";
 import { motion } from "framer-motion";
 
+
+
 // * React icons
+import React from 'react';
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { SlSettings } from "react-icons/sl";
 import { AiOutlineAppstore } from "react-icons/ai";
