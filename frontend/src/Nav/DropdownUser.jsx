@@ -1,8 +1,6 @@
-import { useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import avatar2 from '../Images/avatar2.png'
-import React from 'react';
-
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -174,7 +172,7 @@ const DropdownUser = () => {
               fill=""
             />
           </svg>
-          Log Out
+          <Link to="/signin">Log Out</Link>
         </button>
       </div>
       {/* <!-- Dropdown End --> */}

@@ -13,12 +13,12 @@ const Choose = () => {
             <div className='grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1 mt-10 lg:px-[30%] md:px-[10%] px-[10%] gap-10'>
                 <div className='bg-green-800 p-5 font-[font-PlayfairDisplay] text-white rounded-lg py-10 lg:h-[100%]'>
                     <img src={ico4} alt="" />
-                    <h1 className='mt-5'>Versatility</h1>
+                    <h1 className='mt-5 font-bold'>Versatility</h1>
                     <p className='mt-5'>Swift Suite supports a variety of platforms, catering to the diverse needs of eCommerce merchants</p>
                 </div>
                 <div className='bg-gray-300 font-[font-PlayfairDisplay] p-5 rounded-lg lg:h-[100%]'>
                     <img src={ico2} alt="" />
-                    <h1 className='mt-5'>Efficiency</h1>
+                    <h1 className='mt-5 font-bold'>Efficiency</h1>
                     <p className='mt-5'>With features inspired by successful solutions like Spark Shipping and Inventory Source, Swift Suite ensures your operations are streamlined, saving <br /> time and resources</p>
                 </div>
 
@@ -28,9 +28,9 @@ const Choose = () => {
                     <h1 className='font-bold mt-5'>Simplify Inventory Oversight</h1>
                     <p className=''>Our integrated system brings together the dashboard, catalogue, and reports for seamless inventory oversight. Say goodbye to complexity and hello to streamlined control.</p>
                 </div>
-                <div className='bg-green-800 p-5 font-[font-PlayfairDisplay] rounded-lg'>
+                <div className='bg-green-800 text-white p-5 font-[font-PlayfairDisplay] rounded-lg'>
                     <img src={ico1} alt="" />
-                    <h1 className='font-bold mt-5'>Achieve progres, Track Success</h1>
+                    <h1 className='font-bold text-white mt-5'>Achieve progres, Track Success</h1>
                     <p className='mt-5'>Track your business's journey to success through our user-friendly dashboard, comprehensive catalogue management and insightful reports. Your progress, your way.</p>
                 </div>
             </div>

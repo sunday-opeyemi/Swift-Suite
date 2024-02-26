@@ -11,7 +11,7 @@ import PassSuccess from './pages/PassSuccess'
 import React, { useState } from 'react'
 import Navbar from './components/Navbar'
 import Upbar from './components/Upbar'
-import Test from './components/Test'
+import Auth from './pages/Auth'
 
 
 
@@ -41,7 +41,7 @@ function App() {
       <Route path='/reset'  element={<Reset/>}/>
       <Route path='/success'  element={<Regsuccess/>}/>
       <Route path='passreg'   element={<PassSuccess/>}/>
-      <Route path='/test'  element={<Test/>}/>
+      <Route path='/auth'   element={<Auth/>}/>
       <Route path="*" element={<ErrorPage/>}/>
     </Routes>
   </>
