@@ -172,7 +172,7 @@ const DropdownUser = () => {
               fill=""
             />
           </svg>
-          Log Out
+          <Link to="/signin">Log Out</Link>
         </button>
       </div>
       {/* <!-- Dropdown End --> */}

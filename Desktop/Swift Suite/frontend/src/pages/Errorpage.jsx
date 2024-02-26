@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 
 const ErrorPage = () => {
@@ -9,9 +10,9 @@ const ErrorPage = () => {
         <p className="text-lg md:text-xl lg:text-2xl mb-8">We apologize for the inconvenience. Please try again later.</p>
         <img src="/path/to/error-image.png" alt="Error Illustration" className="max-w-full h-auto mb-8" />
 
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+        <Link to="/" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
           Go Back.
-        </button>
+        </Link>
       </div>
     </div>
   );

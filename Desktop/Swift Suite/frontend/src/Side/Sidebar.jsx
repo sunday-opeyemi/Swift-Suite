@@ -138,7 +138,7 @@ const Sidebar = () => {
                   <Link to="/layout/product">product</Link>
                 </p>
               </li>
-              <NavLink to={"/layout/authentication"} className="link flex gap-8 hover:text-green-700">
+              <NavLink to={"/layout/catalogue"} className="link flex gap-8 hover:text-green-700">
                 <MdOutlineInventory2 size={23} className="mt-2 min-w-max" />
                 Inventory
               </NavLink>
@@ -162,7 +162,7 @@ const Sidebar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink to={""} className="link flex gap-8 hover:text-green-700">
+              <NavLink to={"/signin"} className="link flex gap-8 hover:text-green-700">
                 <LiaSignOutAltSolid size={23} className="mt-2 min-w-max" />
                 Sign Out
               </NavLink>

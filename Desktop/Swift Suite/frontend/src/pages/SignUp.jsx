@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import signImage from '../Images/signup.svg'
-import Navbar from '../components/Navbar'
 import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
 // import { useForm } from 'react-hook-form'
@@ -9,10 +8,10 @@ import { MdErrorOutline } from "react-icons/md";
 import { useFormik } from "formik";
 import * as yup from 'yup'
 import axios from 'axios';
-import loader from '../Images/loader1.gif'
+import gif from '../Images/gif.gif'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -23,12 +22,13 @@ const SignUp = () => {
   const [inputFilled, setInputFilled] = useState(false);
   const [match, setMatch] = useState("")
   const [myloader, setMyloader] = useState(false)
+  // const [message, setMessage] = useState('')
 
-  const endpoint = 'https://swiftsuite.app/accounts/register/'
+  const endpoint = 'https://service.swiftsuite.app/accounts/register/'
   const notify = () => toast("Sign up Successful!");
 
 
-
+  let navigate = useNavigate()
     const togglePasswordVisibility = (field) => {
       if (field === 'password') {
           setPasswordVisible(!passwordVisible);
@@ -51,11 +51,19 @@ const SignUp = () => {
       // console.log(values);
       axios.post(endpoint, values)
       .then((result)=>{
-        console.log(result);
+        // console.log(result);
+        console.log(result.data.message);
+        setMyloader(false)
+        toast.success("Sign up Successful!");
+        navigate('/auth')
       })
       .catch((error)=>{
         setMyloader(false)
         console.log(error);
+        if(error.response.status == 400) {
+          console.log("duplicate user found");
+          toast.error("Duplicate user found");
+      }
       })
     },
     validationSchema: yup.object({
@@ -69,7 +77,7 @@ const SignUp = () => {
   return (
       <div>
         <div>
-        <Navbar/>
+       
         </div>
         <section className='grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1'>
             <div className='px-10'>
@@ -106,13 +114,12 @@ const SignUp = () => {
                   <span className='text-red-500 my-1'>{formik.touched.password2 && formik.errors.password2}</span>
                   <span onClick={() => togglePasswordVisibility('confirm')} className='absolute top-[42px] right-5'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
                 </div>
-                <button type='submit' className='w-full bg-[#089451] flex justify-center items-center text-white font-bold py-3 mt-5'>{myloader? <img src={loader} alt="" className='w-[25px] ' /> : 'Sign Up'}</button>
+                <button type='submit' className='w-full bg-[#089451] flex justify-center items-center text-white font-bold py-3 mt-5 mb-10'>{myloader? <img src={gif} alt="" className='w-[25px] ' /> : 'Sign Up'}</button>
               </form>
             </div>
         </section>
 
         <div>
-        <button onClick={notify}>Notify !</button>
         <ToastContainer />
       </div>
 

@@ -1,17 +1,13 @@
 import React, { useContext } from 'react'
-
 import Sidebar from '../Side/Sidebar'
 import { AppContext } from '../context/Dashboard'
-
 import Header from '../Nav/Header'
 import { Route, Routes } from 'react-router-dom'
-// import Home from '../pages/Home'
 import Dashboard from '../pages/Dashboard'
 import Allapp from '../pages/Allapp'
 import Catalogue from '../pages/Catalogue'
 import Product from '../pages/Product'
-// import Allapp from '../pages/Allapp'
-// import Authentication from '../pages/Authentication'
+
 
 
 
@@ -26,7 +22,6 @@ const Rootlayout = ({children}) => {
     <>
     
     <div className="h-28 duration-200 ease-in-out z-1 bg-blue-100" >
-              
               <Header/>
               <div className="flex max-w-full">
                 <Sidebar />

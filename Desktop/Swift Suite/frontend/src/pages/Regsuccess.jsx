@@ -1,11 +1,9 @@
 import React from 'react'
 import sucImage from '../Images/suc.png'
-import Navbar from '../components/Navbar'
 
 const Regsuccess = () => {
   return (
     <>
-    <Navbar />
     <div className="flex flex-col items-center justify-center  h-[85vh]" >
       <div className='my-2'>
             <img src={sucImage} alt=""  width={150}/>
