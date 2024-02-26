@@ -1,5 +1,6 @@
 import React from 'react'
-import '../Dropshipping.css'
+import '../Dropshipping.css';
+import { Link } from 'react-router-dom';
 
 
 const Dropshipping = () => {
@@ -11,7 +12,9 @@ const Dropshipping = () => {
                     <p className='lg:text-4xl md:text-4xl text-2xl font-bold'>Dropshipping Experience</p>
                     <p className='lg:text-2xl md:text-2xl mt-5'>Elevate Your E-Commerce</p>
                     <p className='lg:text-2xl md:text-2xl'>Dropshipping Experience</p>
-                    <button className='bg-green-600 mt-2 p-2 rounded-lg'>Get Started for free</button>
+                    <div className='bg-green-600 lg:w-[150px] md:w-[150px] w-[180px] cursor-pointer p-2 px-5 lg:px-2 md:px-2 mt-5 rounded-lg'>
+                    <Link to='/signup'>Get Started for free</Link>
+                    </div>
                 </div>
             </div>
         </div>

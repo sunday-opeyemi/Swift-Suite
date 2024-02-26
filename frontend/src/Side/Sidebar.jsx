@@ -2,10 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useRef } from "react";
 import { motion } from "framer-motion";
 
-
-
 // * React icons
-import React from 'react';
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { SlSettings } from "react-icons/sl";
 import { AiOutlineAppstore } from "react-icons/ai";
@@ -141,7 +138,7 @@ const Sidebar = () => {
                   <Link to="/layout/product">product</Link>
                 </p>
               </li>
-              <NavLink to={"/layout/authentication"} className="link flex gap-8 hover:text-green-700">
+              <NavLink to={"/layout/catalogue"} className="link flex gap-8 hover:text-green-700">
                 <MdOutlineInventory2 size={23} className="mt-2 min-w-max" />
                 Inventory
               </NavLink>
@@ -165,7 +162,7 @@ const Sidebar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink to={""} className="link flex gap-8 hover:text-green-700">
+              <NavLink to={"/signin"} className="link flex gap-8 hover:text-green-700">
                 <LiaSignOutAltSolid size={23} className="mt-2 min-w-max" />
                 Sign Out
               </NavLink>
