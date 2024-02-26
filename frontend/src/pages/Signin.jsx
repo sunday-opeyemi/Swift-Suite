@@ -14,6 +14,7 @@ import loader from '../Images/loader1.gif'
 
 const Signin = () => {
   const [passwordVisible, setPasswordVisible] = useState(false)
+  let endpoint = 'https://service.swiftsuite.app/accounts/login/'
        
 
     let formik = useFormik({
@@ -22,7 +23,15 @@ const Signin = () => {
         password: ""
       },
       onSubmit: (values)=>{
-        console.log(values);
+        // console.log(values);
+        axios.post(endpoint, values)
+      .then((result)=>{
+        console.log(result);
+      })
+      .catch((error)=>{
+        // setMyloader(false)
+        console.log(error);
+      })
       },
       validationSchema: yup.object({
         email: yup.string().email('Invalid email format').required( <span className='flex'><span>Field is required</span></span> ),
@@ -34,7 +43,6 @@ const Signin = () => {
   return (
       <div>
         <div>
-        <Navbar/>
         </div>
         <section className='grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 border-4'>
             <div className='px-10'>
@@ -43,7 +51,7 @@ const Signin = () => {
             <div className='lg:py-20 py-0   lg:px-28 md:px-14 px-4 '>
               <h1 className='text-center font-semibold text-2xl text-[#089451] my-2'>Enter your sign In details</h1>
               <form action="" className=''  onSubmit={formik.handleSubmit}>
-              <p className='flex text-[#089451] font-semibold text-xl my-4'>Sign up</p>
+              <p className='flex text-[#089451] font-semibold text-xl my-4'>Sign in</p>
                 <div className='my-2 h-[80px]'>
                   <label htmlFor="" className='font-semibold'>Email</label><br />
                   <input type="text" placeholder='Jane1234' name='email' className='focus:outline-[#089451] px-4 py-3 w-full border-2 mt-1  border-[#089451]' onBlur={formik.handleBlur} onChange={formik.handleChange}/>
@@ -62,7 +70,7 @@ const Signin = () => {
                     </div>
                     <div className='font-semibold'>Forgot password?</div>
                 </div>
-                <button className='w-full bg-[#089451] text-white font-bold py-3 my-2'>Sign In</button>
+                <button type='submit' className='w-full bg-[#089451] text-white font-bold py-3 my-2'>Sign In</button>
                 <div className='flex justify-between my-2'>
                     <div>
                     <span className='font-semibold'>Don't have an Account?</span>
