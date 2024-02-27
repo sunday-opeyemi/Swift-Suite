@@ -173,7 +173,6 @@ const DropdownUser = () => {
           <Link to="/signin">Log Out</Link>
         </button>
       </div>
-      {/* <!-- Dropdown End --> */}
     </div>
   );
 };

@@ -78,7 +78,9 @@ const SignIn = () => {
               <span onClick={() => setPasswordVisible(!passwordVisible)} className='absolute top-[47px] right-5'>{passwordVisible ? <IoEyeSharp /> : <BsEyeSlashFill />}</span>
             </div>
             <div className='flex justify-between my-5'>
-              
+            <div className='flex gap-3 font-semibold'>
+            <input type="checkbox" /> <span>Remember Me</span>
+            </div>
               <Link to="/enteremail" className='font-semibold'>Forgot password?</Link>
             </div>
             <button type='submit' className='w-full bg-[#089451] flex justify-center items-center text-white font-bold py-3 mt-5'>{myLoader? <img src={gif} alt="" className='w-[25px] ' /> : 'Sign In'}</button>
