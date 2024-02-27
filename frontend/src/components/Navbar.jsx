@@ -64,8 +64,8 @@ const Navbar = ({ openToggle }) => {
           </ul>
         </div>
         <div className='hidden lg:flex justify-center items-center gap-6 md:me-10 mt-1'>
-          <Link to="/signup" className='border w-[165px] font-semibold text-white text-center py-1 bg-[#089451] rounded'>Get Started For Free</Link>
-          <Link to="/signin" className='border w-[150px] font-semibold border-[#089451] text-center py-1 text-[#089451] rounded'>Sign in</Link>
+          <Link to="/signup" className='border w-[165px] font-semibold text-white text-center py-1 bg-[#089451] hover:bg-green-900 rounded'>Get Started For Free</Link>
+          <Link to="/signin" className='border w-[150px] font-semibold border-[#089451] hover:border-green-900 text-center py-1 text-[#089451] hover:text-green-900 rounded'>Sign in</Link>
         </div>
         <button ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='lg:hidden block mt-1 W-[200PX] text-green-700 font-bold '>
           {openToggle ? <span><FaBars /></span> : <span><IoMdClose /></span>}
