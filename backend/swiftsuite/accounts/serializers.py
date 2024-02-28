@@ -89,7 +89,7 @@ class PasswordResetSerializer(serializers.Serializer):
             uidb64 = urlsafe_base64_encode(smart_bytes(user.id))
             token = PasswordResetTokenGenerator().make_token(user)
             request = self.context.get('request')
-            site_domain = get_current_site(request).domain
+            site_domain = 'swiftsuit.app//reset'
             relative_link = reverse('password_reset_confirm', kwargs={'uidb64':uidb64, 'token':token})
             abslink = f'http://{site_domain}{relative_link}'
             data = {
