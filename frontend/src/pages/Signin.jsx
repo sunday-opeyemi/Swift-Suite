@@ -37,7 +37,7 @@ const SignIn = () => {
         console.log(result);
         toast.success("Sign in Successful!");
         setMyLoader(false)
-        // navigate('/layout/home')
+        navigate('/layout/home')
       })
       .catch((error)=>{
         console.log(error);

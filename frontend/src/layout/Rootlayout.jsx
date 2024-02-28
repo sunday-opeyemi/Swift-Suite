@@ -5,8 +5,8 @@ import Header from '../Nav/Header'
 import { Route, Routes } from 'react-router-dom'
 import Dashboard from '../pages/Dashboard'
 import Allapp from '../pages/Allapp'
-import Catalogue from '../pages/Catalogue'
 import Product from '../pages/Product'
+import Enrolment from '../Vendorenrolment/Enrolment'
 
 
 
@@ -25,7 +25,7 @@ const Rootlayout = ({children}) => {
               <Header/>
               <div className="flex max-w-full">
                 <Sidebar />
-                <div className={`w-full  ${!(sideBarOpen) ? 'md:ml-16' : 'md:ml-64'}  `}>
+                <div className={`  ${!(sideBarOpen) ? 'md:ml-16' : 'md:ml-64'}  `}>
                 <main className="py-4 flex-1 break-words">{children}</main>
                 </div>
               </div>
@@ -38,8 +38,7 @@ const Rootlayout = ({children}) => {
           <Route path='/home' element={<Dashboard/>}/>
           <Route path='/allapp' element={<Allapp/>}/>
           <Route path='/product' element={<Product/>}/>
-          <Route path='/catalogue' element={<Catalogue/>}/>
-
+          <Route path='/enrolment' element={<Enrolment/>}/>
         </Routes>
    
     </>
