@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import avatar2 from '../Images/avatar2.png'
+import Profileimage from './Profileimage';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -35,16 +35,14 @@ const DropdownUser = () => {
   });
 
   return (
-    <div className="relative">
+    <div className="relative flex gap-3">
+    <Profileimage/>
       <Link
         ref={trigger}
         onClick={() => setDropdownOpen(!dropdownOpen)}
         className="flex items-center gap-4"
         to="#"
       >
-        <span className="h-12 w-12 rounded-full">
-        <img className='rounded-full' src={avatar2}  alt="" />
-        </span>
 
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
@@ -175,7 +173,6 @@ const DropdownUser = () => {
           <Link to="/signin">Log Out</Link>
         </button>
       </div>
-      {/* <!-- Dropdown End --> */}
     </div>
   );
 };

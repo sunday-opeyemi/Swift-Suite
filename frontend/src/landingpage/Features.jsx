@@ -25,7 +25,7 @@ const Features = () => {
             <div className='grid lg:grid-cols-2 grid-cols-1 md:grid-cols-2 md:gap-28 lg:gap-0 lg:px-[28%] px-10 lg:p-10'>
                 <div>
                     <h2 className='font-bold lg:mt-0 text-xl'>Intelligent Order Routing</h2>
-                    <p>Streamline Order processing by<br /> automatically routing orders to the <br />  best-suited supplier. Our intelligent system ensures orders are directed to suppliers with the product in stock and the lowest <br /> cost.</p>
+                    <p>Streamline Order processing by<br /> automatically routing orders to the <br />  best-suited supplier. Our intelligent system <br /> ensures orders are directed to suppliers  <br /> with the product in stock and the lowest <br /> cost.</p>
                 </div>
                 <div className='flex flex-col justify-center'>
                     <img className='lg:w-[66%] lg:ms-20 lg:mt-0 mt-5' src={feat1} alt="" />

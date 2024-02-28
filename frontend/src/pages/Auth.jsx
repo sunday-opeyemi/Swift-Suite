@@ -29,6 +29,10 @@ const Auth = () => {
           .catch((error)=>{
               console.log(error);
               setMyLoader(false)
+              if(error.response.status == 404) {
+                // console.log("duplicate user found");
+                toast.error("Passcode not provided");
+            }
           })
         },
     validationSchema: yup.object({
