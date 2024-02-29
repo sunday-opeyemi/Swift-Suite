@@ -10,7 +10,7 @@ const Enrolment = () => {
 
   return (
     <section className='bg-blue-100 h-screen'>
-    <div className='lg:ms-[24%]'>
+    <div className='lg:ms-[20%]'>
      
       <div className='stepContainer'>
         {currentIndex === 0 &&
