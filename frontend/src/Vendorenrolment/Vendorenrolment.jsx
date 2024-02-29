@@ -45,31 +45,6 @@ const vendorenrolment = () => {
     // }, [])
   return (
     <section className='bg-blue-100 h-screen'>
-    <div className='lg:ms-[24%]'>
-    <h1 className='text-3xl mt-5 font-bold font-sans'>Personal Info</h1>
-    <p className='mt-5 '>Please provide your name, email address, and phone number.</p>
-
-    <form action="" onSubmit={handleSubmit(onSubmit)}>
-        <div className='my-5'>
-            <label className='font-bold' htmlFor="">Name</label>
-            <input {...register("Name")} type="text" className={`border border-black h-[40px] rounded lg:w-full mt-3 ${errors.Name?.message && 'error'}`} />
-            <p className='text-red-600'>{errors.Name?.message}</p>
-        </div>
-
-        <div className='my-5'>
-            <label className='font-bold' htmlFor="">Email Address</label>
-            <input {...register("Email")} type="text" className={`border border-black h-[40px] mt-3 rounded lg:w-full ${errors.Email?.message && 'error'}`} />
-            <p className='text-red-600'>{errors.Email?.message}</p>
-        </div>
-        <div className='my-5'>
-            <label className='font-bold' htmlFor="">Phone</label>
-            <input {...register("Phone")} type="text" className={`border border-black h-[40px] mt-3 rounded lg:w-full ${errors.Phone?.message && 'error'}`} />
-            <p className='text-red-600'>{errors.Phone?.message}</p>
-        </div>
-        <button type='submit' className='bg-blue-800 text-white rounded lg:ms-96 ms-26 lg:mt-0 lg:p-3 p-2 lg:w-[25%] w-[105px]'>CONFIRM</button>
-    </form>
-
-    </div>
     </section>
   )
 }
