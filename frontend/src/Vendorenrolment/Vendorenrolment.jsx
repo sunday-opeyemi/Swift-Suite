@@ -48,6 +48,7 @@ const vendorenrolment = () => {
 
     //     }
     // }, [])
+
     return (
         <section className='bg-blue-100 mb-10'>
             <form className='bg-white py-10  mt-8' action="" onSubmit={handleSubmit(onSubmit)}>

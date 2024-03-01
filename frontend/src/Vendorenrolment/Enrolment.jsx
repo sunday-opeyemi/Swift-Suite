@@ -35,7 +35,9 @@ const Enrolment = () => {
   return (
     <section className='bg-blue-100'>
     <div className='lg:ms-[20%] lg:me-[15%] flex gap-8'>
-      <div className='stepContainer  border-2 w-[70%]'>
+
+      <div className='stepContainer  border-2 border-black w-[70%]'>
+
         {currentIndex === 0 &&
           (<Vendorenrolment />
           )}
@@ -52,7 +54,9 @@ const Enrolment = () => {
             (<Thank />
             )}
       </div>
-      <div className='w-[30%] border-2  bg-white mt-8 h-[30%] shadow'>
+
+      <div className='w-[30%] border-2  bg-white h-[30%] shadow'>
+
             {
               myList.map((items, index)=>(
                 <ul key={index} className='flex justify-between border-b border-gray-500 p-5'>
