@@ -200,11 +200,15 @@ const countries = [
 ];
 
 
+
 const CountrySelect = () => {
   const options = countries.map(country => ({
     value: country.value,
     label: country.label
-  }));
+  }
+  )
+  );
+  
 
 
   return (

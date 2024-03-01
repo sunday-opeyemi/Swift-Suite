@@ -20,15 +20,7 @@ const Schema = yup.object().shape({
     city: yup.string().required(),
     state: yup.string().required(),
     postalCode: yup.string().required(),
-    country: yup.string(),
-
-
-
-
-    
-
-    // Phone: yup.string().matches(phoneRegExp, 'Invalid phone').required(),
-    // Email: yup.string().email().required(),
+    country: yup.string().required(),
 })
 
 
@@ -110,7 +102,7 @@ const vendorenrolment = () => {
             <div className='my-5'>
                 <div className='flex gap-10'>
                     <label className='font-bold mt-5' htmlFor="">Country:</label>
-                    <CountrySelect {...register("country")}  onChange={(e) => setSelect(e.target.value)} value={select} />
+                    <CountrySelect  onChange={(e) => setSelect(e.target.value)} value={select} />
                 </div>
             </div>
             
