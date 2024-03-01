@@ -208,7 +208,7 @@ const CountrySelect = ({ onChange, value, ...rest }) => {
   return (
     <div>
     <Select 
-        className='lg:w-[260px] border border-black lg:ms-[24%] rounded mt-3 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-black'
+        className='lg:w-[260px] md:w-[320px] w-[190px] border border-black lg:ms-[24%] rounded mt-3 focus:outline-none focus:ring-2 focus:border-transparent bg-black'
         options={options}
         onChange={onChange}
         value={options.find(option => option.value === value)}
