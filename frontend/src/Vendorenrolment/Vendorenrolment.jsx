@@ -22,7 +22,7 @@ const vendorenrolment = () => {
         city: yup.string().required(),
         state: yup.string().required(),
         postalCode: yup.string().required(),
-        country: yup.string().required(),
+        country: yup.string(),
     })
 
     const store = useSelector(state => state.vendor.vendorData)

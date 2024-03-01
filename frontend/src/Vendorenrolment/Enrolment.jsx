@@ -33,10 +33,10 @@ const Enrolment = () => {
     }
   ])
   return (
-    <section className='bg-blue-100'>
+    <section className='bg-blue-100 h-screen'>
     <div className='lg:ms-[20%] lg:me-[15%] flex gap-8'>
 
-      <div className='stepContainer  border-2 border-black w-[70%]'>
+      <div className='stepContainer  w-[70%]'>
 
         {currentIndex === 0 &&
           (<Vendorenrolment />
