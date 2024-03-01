@@ -32,7 +32,9 @@ const Navbar = ({ openToggle }) => {
   });
 
   const location = useLocation();
+
   const hiddenRoutes = ['/layout/home', '/layout/catalogue', '/layout/product', '/layout/allapp','/layout/enrolment'];
+
   const isHidden = hiddenRoutes.some(route => location.pathname.startsWith(route));
 
   return isHidden ? null : (

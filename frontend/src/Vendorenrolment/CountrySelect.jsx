@@ -2,8 +2,6 @@ import React from 'react';
 import Select from 'react-select';
 
 
-
-
 const countries = [
   { label: 'Afghanistan', value: 'Afghanistan' },
   { label: 'Albania', value: 'Albania' },
@@ -200,7 +198,7 @@ const countries = [
 ];
 
 
-const CountrySelect = () => {
+const CountrySelect = ({ onChange, value, ...rest }) => {
   const options = countries.map(country => ({
     value: country.value,
     label: country.label
@@ -210,10 +208,12 @@ const CountrySelect = () => {
   return (
     <div>
     <Select 
-    className='w-96 border border-black lg:ms-10 rounded mt-3 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-black'
-    options={options} 
-   
-  />
+        className='lg:w-[260px] border border-black lg:ms-[24%] rounded mt-3 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-black'
+        options={options}
+        onChange={onChange}
+        value={options.find(option => option.value === value)}
+        {...rest}
+      />
     </div>
   );
 };
