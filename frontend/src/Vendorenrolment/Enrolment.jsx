@@ -4,15 +4,38 @@ import Fpicredential from './Fpicredential'
 import Fpioption from './Fpioption'
 import Cataloguefilter from './Cataloguefilter'
 import { useSelector } from 'react-redux'
+import { MdCheckBoxOutlineBlank } from "react-icons/md";
+import { FaSquareCheck } from "react-icons/fa6";
 
 const Enrolment = () => {
   const currentIndex = useSelector(state => state.vendor.vendorData.currentStep)
 
+  const myList = ([
+    {
+      name: 'Vendor Enrollment',
+      icon: <MdCheckBoxOutlineBlank />,
+      icon2: <FaSquareCheck />
+    },
+    {
+      name: 'FTP/API Credentials',
+      icon: <MdCheckBoxOutlineBlank />,
+      icon2: <FaSquareCheck />
+    },
+    {
+      name: 'Vendor Options',
+      icon: <MdCheckBoxOutlineBlank />,
+      icon2: <FaSquareCheck />
+    },
+    {
+      name: 'Catalogue Filter',
+      icon: <MdCheckBoxOutlineBlank />,
+      icon2: <FaSquareCheck />
+    }
+  ])
   return (
-    <section className='bg-blue-100 h-screen'>
-    <div className='lg:ms-[20%]'>
-     
-      <div className='stepContainer'>
+    <section className='bg-blue-100'>
+    <div className='lg:ms-[20%] lg:me-[15%] flex gap-8'>
+      <div className='stepContainer  border-2 w-[70%]'>
         {currentIndex === 0 &&
           (<Vendorenrolment />
           )}
@@ -28,6 +51,16 @@ const Enrolment = () => {
           {currentIndex === 4 &&
             (<Thank />
             )}
+      </div>
+      <div className='w-[30%] border-2  bg-white mt-8 h-[30%] shadow'>
+            {
+              myList.map((items, index)=>(
+                <ul key={index} className='flex justify-between border-b border-gray-500 p-5'>
+                    <li className='font-semibold'>{items.name}</li>
+                    <li className={currentIndex >= index ? 'mt-2 text-[#089451]' : 'mt-2'}>{currentIndex >= index ? items.icon2 : items.icon}</li>
+                </ul>
+              ))
+            }
       </div>
     </div>
     </section>
