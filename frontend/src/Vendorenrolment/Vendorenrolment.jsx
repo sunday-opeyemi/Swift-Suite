@@ -35,11 +35,13 @@ const vendorenrolment = () => {
         dispatch(handleNextStep(form))
     }
 
+
     useEffect(() => {
         if (store) {
             setValue("vendorName", store.vendorName)
         }
     }, [])
+
     return (
         <section className='bg-blue-100 mb-10'>
             <form className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:ms-0 ms-5  py-10 lg:mt-8 mt-0' action="" onSubmit={handleSubmit(onSubmit)}>

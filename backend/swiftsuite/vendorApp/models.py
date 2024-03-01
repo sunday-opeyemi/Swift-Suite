@@ -1,9 +1,11 @@
 from django.db import models
+from accounts.models import User
 
 # Create your models here.
 
 class VendoEnronment(models.Model):
     vendor_id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     vendor_name = models.CharField(max_length=30, unique=True, null=False)
     address_street1 = models.CharField(max_length=150, null=False, unique=False)
     address_street2 = models.CharField(max_length=150, null=True, unique=False)
@@ -16,11 +18,85 @@ class VendoEnronment(models.Model):
     ftp_url = models.CharField(max_length=255)
     file_urls = models.TextField()
     host = models.CharField(max_length=255)
-    username = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
+
+
+class Cwr(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cwr_part_number = models.CharField(db_column='CWR Part Number', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    manufacturer_part_number = models.CharField(db_column='Manufacturer Part Number', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    upc_code = models.CharField(db_column='UPC Code', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    quantity_available_to_ship_combined_field = models.IntegerField(db_column='Quantity Available to Ship (Combined)', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    quantity_available_to_ship_nj_field = models.IntegerField(db_column='Quantity Available to Ship (NJ)', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    quantity_available_to_ship_fl_field = models.IntegerField(db_column='Quantity Available to Ship (FL)', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    next_shipment_date_combined_field = models.DateField(db_column='Next Shipment Date (Combined)', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    next_shipment_date_nj_field = models.DateField(db_column='Next Shipment Date (NJ)', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    next_shipment_date_fl_field = models.DateField(db_column='Next Shipment Date (FL)', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    your_cost = models.DecimalField(db_column='Your Cost', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    list_price = models.DecimalField(db_column='List Price', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    m_a_p_price = models.DecimalField(db_column='M.A.P. Price', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    m_r_p_price = models.DecimalField(db_column='M.R.P. Price', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    uppercase_title = models.CharField(db_column='Uppercase Title', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    title = models.CharField(db_column='Title', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    full_description = models.TextField(db_column='Full Description', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    category_id = models.IntegerField(db_column='Category ID', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    category_name = models.CharField(db_column='Category Name', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    manufacturer_name = models.CharField(db_column='Manufacturer Name', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    shipping_weight = models.DecimalField(db_column='Shipping Weight', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    box_height = models.DecimalField(db_column='Box Height', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    box_length = models.DecimalField(db_column='Box Length', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    box_width = models.DecimalField(db_column='Box Width', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    list_of_accessories_by_sku = models.TextField(db_column='List of Accessories by SKU', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    list_of_accessories_by_mfg_field = models.TextField(db_column='List of Accessories by MFG#', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    quick_specs = models.TextField(db_column='Quick Specs', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    image_300x300_url = models.CharField(db_column='Image (300x300) Url', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    image_1000x1000_url = models.CharField(db_column='Image (1000x1000) Url', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    non_stock = models.IntegerField(db_column='Non-stock', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    drop_ships_direct_from_vendor = models.IntegerField(db_column='Drop Ships Direct From Vendor', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    hazardous_materials = models.IntegerField(db_column='Hazardous Materials', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    truck_freight = models.IntegerField(db_column='Truck Freight', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    exportable = models.IntegerField(db_column='Exportable', blank=True, null=True)  # Field name made lowercase.
+    first_class_mail = models.IntegerField(db_column='First Class Mail', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    oversized = models.IntegerField(db_column='Oversized', blank=True, null=True)  # Field name made lowercase.
+    remanufactured = models.IntegerField(db_column='Remanufactured', blank=True, null=True)  # Field name made lowercase.
+    closeout = models.IntegerField(db_column='Closeout', blank=True, null=True)  # Field name made lowercase.
+    harmonization_code = models.CharField(db_column='Harmonization Code', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    country_of_origin = models.CharField(db_column='Country Of Origin', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    sale = models.IntegerField(db_column='Sale', blank=True, null=True)  # Field name made lowercase.
+    original_price_if_on_sale_closeout_field = models.DecimalField(db_column='Original Price (If on Sale/Closeout)', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    sale_start_date = models.DateField(db_column='Sale Start Date', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    sale_end_date = models.DateField(db_column='Sale End Date', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    rebate = models.IntegerField(db_column='Rebate', blank=True, null=True)  # Field name made lowercase.
+    rebate_description = models.TextField(db_column='Rebate Description', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    rebate_start_date = models.DateField(db_column='Rebate Start Date', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    rebate_end_date = models.DateField(db_column='Rebate End Date', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    google_merchant_category = models.CharField(db_column='Google Merchant Category', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    quick_guide_literature_pdf_url = models.CharField(db_column='Quick Guide Literature (pdf) Url', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    owners_manual_pdf_url = models.CharField(db_column='Owners Manual (pdf) Url', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    brochure_literature_pdf_url = models.CharField(db_column='Brochure Literature (pdf) Url', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    installation_guide_pdf_url = models.CharField(db_column='Installation Guide (pdf) Url', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    video_urls = models.TextField(db_column='Video Urls', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    prop_65 = models.IntegerField(db_column='Prop 65', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    prop_65_description = models.TextField(db_column='Prop 65 Description', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    free_shipping = models.IntegerField(db_column='Free Shipping', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    free_shipping_end_date = models.DateField(db_column='Free Shipping End Date', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    returnable = models.IntegerField(db_column='Returnable', blank=True, null=True)  # Field name made lowercase.
+    image_additional_1000x1000_urls = models.TextField(db_column='Image Additional (1000x1000) Urls', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    case_qty_nj_field = models.IntegerField(db_column='Case Qty (NJ)', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    case_qty_fl_field = models.IntegerField(db_column='Case Qty (FL)', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    number_3rd_party_marketplaces = models.TextField(db_column='3rd Party Marketplaces', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it wasn't a valid Python identifier.
+    fcc_id = models.CharField(db_column='FCC ID', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    sku = models.CharField(max_length=255, blank=True, null=True)
+    mfgn = models.CharField(max_length=255, blank=True, null=True)
+    qty = models.IntegerField(blank=True, null=True)
+    qtynj = models.IntegerField(blank=True, null=True)
+    qtyfl = models.IntegerField(blank=True, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    map = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    mrp = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
 
 class Fragrancex(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.CharField(db_column='ITEM', max_length=255, blank=True, null=True)  # Field name made lowercase.
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True)  # Field name made lowercase.
     description = models.TextField(db_column='DESCRIPTION', blank=True, null=True)  # Field name made lowercase.
@@ -42,6 +118,7 @@ class Fragrancex(models.Model):
 
 
 class Lipsey(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     itemnumber = models.TextField(db_column='ItemNumber', blank=True, null=True)  # Field name made lowercase.
     description1 = models.TextField(db_column='Description1', blank=True, null=True)  # Field name made lowercase.
     description2 = models.TextField(db_column='Description2', blank=True, null=True)  # Field name made lowercase.
@@ -120,7 +197,9 @@ class Lipsey(models.Model):
     packageheight = models.TextField(db_column='PackageHeight', blank=True, null=True)  # Field name made lowercase.
     itemgroup = models.TextField(db_column='ItemGroup', blank=True, null=True)  # Field name made lowercase.
 
-class ProductData(models.Model):
+
+class Rsr(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     rsr_stock_number = models.CharField(db_column='RSR_Stock_Number', max_length=255, blank=True, null=True)  # Field name made lowercase.
     upc = models.CharField(db_column='UPC', max_length=255, blank=True, null=True)  # Field name made lowercase.
     dept_number = models.CharField(db_column='Dept_Number', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -202,7 +281,9 @@ class ProductData(models.Model):
     feature_7 = models.TextField(db_column='Feature_7', blank=True, null=True)  # Field name made lowercase.
     feature_8 = models.TextField(db_column='Feature_8', blank=True, null=True)  # Field name made lowercase.
 
+
 class Ssi(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     sku = models.CharField(db_column='SKU', max_length=255, blank=True, null=True)  # Field name made lowercase.
     description = models.CharField(db_column='Description', max_length=255, blank=True, null=True)  # Field name made lowercase.
     datecreated = models.CharField(db_column='DateCreated', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -241,3 +322,84 @@ class Ssi(models.Model):
     price = models.CharField(db_column='Price', max_length=255, blank=True, null=True)  # Field name made lowercase.
     avgshipcost = models.CharField(db_column='AvgShipCost', max_length=255, blank=True, null=True)  # Field name made lowercase.
     qty = models.CharField(db_column='Qty', max_length=255, blank=True, null=True)  # Field name made lowercase.
+
+
+class Zanders(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    available = models.IntegerField(blank=True, null=True)
+    category = models.CharField(max_length=255, blank=True, null=True)
+    desc1 = models.TextField(blank=True, null=True)
+    desc2 = models.TextField(blank=True, null=True)
+    itemnumber = models.CharField(max_length=255, blank=True, null=True)
+    manufacturer = models.CharField(max_length=255, blank=True, null=True)
+    mfgpnumber = models.CharField(max_length=255, blank=True, null=True)
+    msrp = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    price1 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    price2 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    price3 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    qty1 = models.IntegerField(blank=True, null=True)
+    qty2 = models.IntegerField(blank=True, null=True)
+    qty3 = models.IntegerField(blank=True, null=True)
+    upc = models.CharField(max_length=255, blank=True, null=True)
+    weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    serialized = models.IntegerField(blank=True, null=True)
+    mapprice = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    second_itemnumber = models.CharField(max_length=255, blank=True, null=True)
+    second_available = models.IntegerField(blank=True, null=True)
+    second_price1 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    second_price2 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    second_price3 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    second_qty1 = models.IntegerField(blank=True, null=True)
+    second_qty2 = models.IntegerField(blank=True, null=True)
+    second_qty3 = models.IntegerField(blank=True, null=True)
+
+
+class GeneralProducttable(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    sku = models.CharField(db_column='SKU', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    quantity = models.IntegerField(db_column='Quantity', blank=True, null=True)  # Field name made lowercase.
+    upc = models.CharField(db_column='UPC', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    title = models.CharField(db_column='Title', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    detailed_description = models.TextField(db_column='Detailed_Description', blank=True, null=True)  # Field name made lowercase.
+    image = models.CharField(db_column='Image', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    category = models.CharField(db_column='Category', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    category_id = models.IntegerField(db_column='Category_ID', blank=True, null=True)  # Field name made lowercase.
+    msrp = models.DecimalField(db_column='MSRP', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    mpn = models.CharField(db_column='MPN', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    map = models.DecimalField(db_column='MAP', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    dimensionh = models.DecimalField(db_column='DimensionH', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    dimensionl = models.DecimalField(db_column='DimensionL', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    dimensionw = models.DecimalField(db_column='DimensionW', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    shipping_weight = models.DecimalField(db_column='Shipping_Weight', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    shipping_length = models.DecimalField(db_column='Shipping_Length', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    shipping_width = models.DecimalField(db_column='Shipping_Width', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    shipping_height = models.DecimalField(db_column='Shipping_Height', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    attribute_1 = models.CharField(db_column='Attribute_1', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    attribute_2 = models.CharField(db_column='Attribute_2', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    attribute_3 = models.CharField(db_column='Attribute_3', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    attribute_4 = models.CharField(db_column='Attribute_4', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    attribute_5 = models.CharField(db_column='Attribute_5', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    attribute_6 = models.CharField(db_column='Attribute_6', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    attribute_7 = models.CharField(db_column='Attribute_7', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    attribute_8 = models.CharField(db_column='Attribute_8', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    attribute_9 = models.CharField(db_column='Attribute_9', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    attribute_10 = models.CharField(db_column='Attribute_10', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    feature_1 = models.TextField(db_column='Feature_1', blank=True, null=True)  # Field name made lowercase.
+    feature_2 = models.TextField(db_column='Feature_2', blank=True, null=True)  # Field name made lowercase.
+    feature_3 = models.TextField(db_column='Feature_3', blank=True, null=True)  # Field name made lowercase.
+    feature_4 = models.TextField(db_column='Feature_4', blank=True, null=True)  # Field name made lowercase.
+    feature_5 = models.TextField(db_column='Feature_5', blank=True, null=True)  # Field name made lowercase.
+    feature_6 = models.TextField(db_column='Feature_6', blank=True, null=True)  # Field name made lowercase.
+    feature_7 = models.TextField(db_column='Feature_7', blank=True, null=True)  # Field name made lowercase.
+    feature_8 = models.TextField(db_column='Feature_8', blank=True, null=True)  # Field name made lowercase.
+    feature_9 = models.TextField(db_column='Feature_9', blank=True, null=True)  # Field name made lowercase.
+    feature_10 = models.TextField(db_column='Feature_10', blank=True, null=True)  # Field name made lowercase.
+    model = models.CharField(db_column='Model', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    price = models.DecimalField(db_column='Price', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    brand = models.CharField(db_column='Brand', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    manufacturer = models.CharField(db_column='Manufacturer', max_length=255, blank=True, null=True)  # Field name made lowercase.
+    prop_65 = models.IntegerField(db_column='Prop_65', blank=True, null=True)  # Field name made lowercase.
+    prop_65_description = models.TextField(db_column='Prop_65_Description', blank=True, null=True)  # Field name made lowercase.
+    manufacturer_id = models.IntegerField(db_column='Manufacturer_Id', blank=True, null=True)  # Field name made lowercase.
+    date_created = models.DateField(db_column='Date_Created', blank=True, null=True)  # Field name made lowercase.
+    thumbnail = models.CharField(db_column='Thumbnail', max_length=255, blank=True, null=True)  # Field name made lowercase.
