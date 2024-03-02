@@ -9,13 +9,16 @@ return item ? JSON.parse(item) :
  {
         currentStep: 0,
         
-        Name: '',
-        Email: '',
-        Phone: '',
+        vendorName: '',
+        street1: '',
+        street2: '',
+        city: '',
+        state: '',
+        postalCode: '',
+        country: '',
         
-        isYearPlanLength: '',
-        planType: '',
-        planAmount: 0,
+        ftpusername: '',
+        ftppassword: '',
         
         addOnTypes: [],
         addOnTotalAmount: 0
