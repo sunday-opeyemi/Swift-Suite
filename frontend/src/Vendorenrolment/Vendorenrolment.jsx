@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import CountrySelect from './CountrySelect'
 
 
-const vendorenrolment = () => {
+const Vendorenrolment = () => {
     const store = useSelector(state => state.vendor.vendorData)
     const [select, setSelect] = useState("")
     // console.log(select);
@@ -106,4 +106,4 @@ const vendorenrolment = () => {
     )
 }
 
-export default vendorenrolment
+export default Vendorenrolment

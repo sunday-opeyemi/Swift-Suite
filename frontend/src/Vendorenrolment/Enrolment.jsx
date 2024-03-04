@@ -33,14 +33,14 @@ const Enrolment = () => {
     }
   ])
   return (
-    <section className='bg-blue-100 h-full'>
+    <section className='bg-blue-100'>
     <div className='lg:ms-[20%] lg:me-[15%] flex lg:flex-row flex-col gap-8'>
       <div className='stepContainer border-2 w-[70%]'>
         {currentIndex === 0 &&
           (<Vendorenrolment />
           )}
         {currentIndex === 1 &&
-          (<Fpicredential  />
+          (<Fpicredential />
           )}
         {currentIndex === 2 &&
           (<Fpioption />
