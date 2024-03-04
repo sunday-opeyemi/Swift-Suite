@@ -66,7 +66,7 @@ const Cataloguefilter = () => {
       <section className='bg-blue-100 mb-10'>
         <form>
 
-          <div className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:h-[20%] lg:ms-0 ms-5 py-10 lg:mt-8 mt-0'>
+          <div className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:h-[20%] lg:ms-0 ms-3 py-10 lg:mt-8 mt-0'>
             <div>
               <h1 className='ms-5 lg:text-xl text-sm font-bold'>Product Type</h1>
               <div className='flex lg:ms-0 md:ms-0 ms-1 lg:gap-48 gap-10 md:gap-40 border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
@@ -110,7 +110,7 @@ const Cataloguefilter = () => {
 
           </div>
 
-          <div className='bg-white lg:w-[400px] md:w-[300px] lg:ms-0 md:ms-[30%] ms-6 p-5 mt-10'>
+          <div className='bg-white lg:w-[400px] md:w-[300px] w-[270px] lg:ms-0 md:ms-[30%] ms-6 p-5 mt-10'>
             <div className='flex gap-6'>
               <button className='border border-[#089451] font-semibold py-1 lg:px-3 px-2 rounded' onClick={SelectAll}>SelectAll</button>
               <button className='border border-[#089451] font-semibold py-1 lg:px-3 px-2 rounded' onClick={DeselectAll}>DeselectAll</button>
