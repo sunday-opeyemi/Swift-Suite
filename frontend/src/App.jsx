@@ -12,6 +12,8 @@ import React, { useState } from 'react'
 import Navbar from './components/Navbar'
 import Upbar from './components/Upbar'
 import Auth from './pages/Auth'
+import Api from './Vendorenrolment/Api'
+import StateAPi from './Vendorenrolment/StateAPi'
 
 
 
@@ -42,6 +44,8 @@ function App() {
       <Route path='/success'  element={<Regsuccess/>}/>
       <Route path='passreg'   element={<PassSuccess/>}/>
       <Route path='/auth'   element={<Auth/>}/>
+      <Route path='/api'   element={<Api/>}/>
+      <Route path='/state'   element={<StateAPi/>}/>
       <Route path="*" element={<ErrorPage/>}/>
     </Routes>
   </>
