@@ -100,7 +100,7 @@ const Vendorenrolment = () => {
                         <small className='text-red-600 ms-[42%]'>{errors.country?.message}</small>
                     </div>
                 </div>
-                <button type='submit' className='bg-green-800 text-white rounded lg:ms-[50%] ms-[49%] lg:mt-1 mt-10  lg:p-2 p-2 lg:w-[20%] w-[105px]'>Next</button>
+                <button type='submit' className='bg-[#089451] hover:border hover:border-[#089451] hover:bg-white text-white hover:text-[#089451] rounded lg:ms-[50%] ms-[49%] lg:mt-1 mt-10  lg:p-2 p-2 lg:w-[20%] w-[105px]'>Next</button>
             </form>
         </section>
     )

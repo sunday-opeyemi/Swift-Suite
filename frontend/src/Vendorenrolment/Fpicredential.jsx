@@ -74,7 +74,7 @@ const Fpicredential = () => {
               <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftppassword?.message}</small>
             </div>
             <div className='flex flex-col my-10 gap-5 w-1/2 mx-auto'>
-              <button className='bg-[#089451] text-white font-semibold py-1 rounded'>Test Connect</button>
+              <button className='hover:bg-[#36805c] bg-[#089451]  g text-white font-semibold py-1 rounded'>Test Connect</button>
               <div className='grid lg:grid-cols-2 md:grid-cols-2 grid-cols-2 gap-12 lg:gap-10'>
               <button onClick={handlePrevious} className='border border-[#089451] font-semibold py-1 w-20 rounded'>Previous</button>
                 <button type='submit' className='border border-[#089451] font-semibold py-1 w-20 rounded'>Next</button>
