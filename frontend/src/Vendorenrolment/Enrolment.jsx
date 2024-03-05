@@ -2,10 +2,10 @@ import React from 'react'
 import Vendorenrolment from './Vendorenrolment'
 import Fpicredential from './Fpicredential'
 import Fpioption from './Fpioption'
-import Cataloguefilter from './Cataloguefilter'
 import { useSelector } from 'react-redux'
 import { MdCheckBoxOutlineBlank } from "react-icons/md";
 import { FaSquareCheck } from "react-icons/fa6";
+import Producttype from './Producttype'
 
 const Enrolment = () => {
   const currentIndex = useSelector(state => state.vendor.vendorData.currentStep)
@@ -27,7 +27,7 @@ const Enrolment = () => {
       icon2: <FaSquareCheck />
     },
     {
-      name: 'Catalogue Filter',
+      name: 'Product Type',
       icon: <MdCheckBoxOutlineBlank />,
       icon2: <FaSquareCheck />
     }
@@ -46,7 +46,7 @@ const Enrolment = () => {
           (<Fpioption />
           )}
         {currentIndex === 3 &&
-          (<Cataloguefilter />
+          (<Producttype />
           )}
           {currentIndex === 4 &&
             (<Thank />
