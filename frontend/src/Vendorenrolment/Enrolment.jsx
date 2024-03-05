@@ -27,7 +27,7 @@ const Enrolment = () => {
       icon2: <FaSquareCheck />
     },
     {
-      name: 'Catalogue Filter',
+      name: 'Product Type',
       icon: <MdCheckBoxOutlineBlank />,
       icon2: <FaSquareCheck />
     }
