@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { IoIosArrowUp } from 'react-icons/io'
+import { IoChevronDown } from 'react-icons/io5'
 
 
 const Cataloguefilter = () => {
@@ -14,6 +16,7 @@ const Cataloguefilter = () => {
   ]);
   const [isChecked, setIsChecked] = useState(false);
   console.log(isChecked);
+  const [host, setHost] = useState(false)
 
   // const onSubmit = (data) => {
   //   let form = { ...store, ...data }
@@ -46,17 +49,16 @@ const Cataloguefilter = () => {
   };
 
 
-  function handleCbClick(ev) {
-    const { checked, name } = ev.target;
-    // console.log(name);
-    if (checked) {
-      // here, the name parameter is saved to selected then the selected will be used to filter. in form of array
-      setSelected([...selected, name]);
 
-    } else {
-      setSelected([...selected.filter(selectedName => selectedName !== name)]);
-    }
+  const toggleUp = () => {
+    setHost(false);
   };
+
+  const toggleDown = () => {
+    // setHosting(false);
+    setHost(true);
+  };
+
 
 
 
@@ -71,23 +73,56 @@ const Cataloguefilter = () => {
               <h1 className='ms-5 lg:text-xl text-sm font-bold'>Product Type</h1>
               <div className='flex lg:ms-0 md:ms-0 ms-1 lg:gap-48 gap-10 md:gap-40 border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
                 <label className='mt-2 text-sm font-semibold' htmlFor="">Select Products:</label>
-                <select className='border border-gray-500 rounded-lg text-sm lg:pe-20 h-8 lg:w-[220px] w-[150px] md:w-[200px]'>
-                  <option value="select Products">Select Products</option>
-                </select>
+                <div className='border border-gray-500 rounded-lg text-sm lg:pe-20 h-8 lg:w-[220px] w-[150px] md:w-[200px]'>
+
+
+                  <p className="mt-2 cursor-pointer lg:ms-48 md:ms-[90%] ms-32 hover:text-green-700">
+                    <span onClick={toggleUp} className={host ? '' : 'hidden'}>
+                      <IoIosArrowUp  />
+                    </span>
+                    <span onClick={toggleDown} className={host ? 'hidden' : ''}>
+                      <IoChevronDown />
+                    </span>
+                  </p>
+
+
+                  <div className={` p-2 mt-[-4%] ${host ? 'block' : 'hidden'}`}>
+
+                    <div className='bg-white shadow-lg z-100 lg:w-[250px] md:w-[250px] w-[200px] lg:ms-[-20px] md:ms-[-20%] ms-[-20%] p-3 mt-2'>
+                      <div className='flex gap-6'>
+                        <button className='border border-[#089451] font-semibold py-1 lg:px-3 px-2 rounded' onClick={SelectAll}>SelectAll</button>
+                        <button className='border border-[#089451] font-semibold py-1 lg:px-3 px-2 rounded' onClick={DeselectAll}>DeselectAll</button>
+                      </div>
+                      <div className='p-2'>
+                        {checkboxes.map(checkbox => (
+                          <div className='flex justify-between' key={checkbox.id}>
+                            {checkbox.label}
+                            <input
+                              type="checkbox"
+                              checked={checkbox.checked}
+                              onChange={() => handleCheckboxChange(checkbox.id)}
+                            />
+                          </div>
+                        ))}
+                        <button type='submit' className='text-white lg:mt-5 md:mt-5 mt-1 bg-[#089451] font-semibold py-1 px-3 rounded'>submit</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               <h1 className='ms-5 lg:text-xl font-bold mt-5'>Categories</h1>
               <div className='flex lg:gap-48 lg:ms-0 md:ms-0 ms-1 gap-10 md:gap-40 border-gray-300 border-b lg:p-5 p-4'>
                 <label className='mt-2 text-sm font-semibold' htmlFor="">Select Products:</label>
-                <select className='border border-gray-500 rounded-lg text-sm lg:pe-20 h-8 lg:w-[220px] w-[150px] md:w-[200px]'>
-                  <option value="select Products">Select Categories</option>
-                </select>
+                <div className={host ? '-z-1' : `border border-gray-500 rounded-lg text-sm lg:pe-20 h-8 lg:w-[220px] w-[150px] md:w-[200px]`}>
+                 
+                </div>
               </div>
               <h1 className='ms-5 lg:text-xl font-bold mt-2'>Brand</h1>
               <div className='flex lg:gap-48 lg:ms-0 md:ms-0 ms-1 gap-10 md:gap-40 border-gray-300 border-b lg:p-5 p-4'>
                 <label className='mt-2 text-sm font-semibold' htmlFor="">Select Products:</label>
-                <select className='border border-gray-500 rounded-lg text-sm lg:pe-20 h-8 lg:w-[220px] w-[150px] md:w-[200px]'>
-                  <option value="select Products">Select Brand</option>
-                </select>
+                <div className={host ? '-z-1' : `border border-gray-500 rounded-lg text-sm lg:pe-20 h-8 lg:w-[220px] w-[150px] md:w-[200px]`}>
+                 
+                </div>
               </div>
               <h1 className='ms-5 lg:text-xl font-bold mt-2'>Pricing Option</h1>
               <div className='flex justify-between mt-5 px-5'>
