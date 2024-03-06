@@ -144,12 +144,6 @@ const Sidebar = () => {
               </NavLink>
             </li>
             <li>
-              <NavLink to={"/layout/enrolment"} className="link flex gap-8 hover:text-green-700">
-                <BiBorderRight size={23} className="mt-2 min-w-max" />
-              Vendor Enrolment
-              </NavLink>
-            </li>
-            <li>
               <NavLink to={""} className="link flex gap-8 hover:text-green-700">
                 <TbReport size={23} className="mt-2 min-w-max" />
                 Reports
