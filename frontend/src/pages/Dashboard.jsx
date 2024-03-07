@@ -7,6 +7,7 @@ import Overview from '../components/Overview.jsx';
 import Topproduct from '../Customers/Topproduct.jsx';
 import Addvendor from '../Marketplaces/Addmarketplaces.jsx.jsx';
 import Currentcustomer from '../Customers/Currentcustomer.jsx';
+import MarketVendors from '../Marketplaces/MarketVendors.jsx';
 
 
 
@@ -52,6 +53,7 @@ const Dashboard = () => {
           </div>
           <div className='lg:ms-[20%] px-5'>
           <Addvendor/>
+          <MarketVendors/>
           </div>
         </section>
     </>
