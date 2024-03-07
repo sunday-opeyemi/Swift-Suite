@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { MdCheckBoxOutlineBlank } from "react-icons/md";
 import { FaSquareCheck } from "react-icons/fa6";
 import Producttype from './Producttype'
+import Thank from './Thank'
 
 const Enrolment = () => {
   const currentIndex = useSelector(state => state.vendor.vendorData.currentStep)
