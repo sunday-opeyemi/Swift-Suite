@@ -16,6 +16,7 @@ const Fpicredential = () => {
   const [confirmVisible, setConfirmVisible] = useState(false);
 
   const Schema = yup.object().shape({
+    host: yup.string().required(),
     ftpusername: yup.string().required(),
     ftppassword: yup.string().required(),
   })
@@ -41,6 +42,7 @@ const Fpicredential = () => {
   }
   
   useEffect(() => {
+    setValue("host", store.host),
     setValue("ftpusername", store.ftpusername)
     setValue("ftppassword", store.ftppassword)
   }, [])
@@ -57,6 +59,13 @@ const Fpicredential = () => {
       <div className='bg-white mt-8 py-3 shadow lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:ms-0 ms-5'>
           <h1 className='lg:ps-16 ps-5 py-2 border-b border-gray-500 font-bold '>FTP/API Credentials</h1>
           <form action="" className='lg:mx-20 mx-5' onSubmit={handleSubmit(onSubmit)}>
+          <div>
+          <div className='flex justify-between mt-5'>
+            <h3 className='font-semibold'>Host:</h3>
+            <input {...register("host")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] lg:w-[50%] ${errors.host?.message && 'error'}`} />
+          </div>
+          <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.host?.message}</small>
+        </div>
             <div>
               <div className='flex justify-between mt-5'>
                 <h3 className='font-semibold'>FTP Username:</h3>
@@ -69,7 +78,6 @@ const Fpicredential = () => {
                 <h3 className='font-semibold'>FTP Password:</h3>
                 <input {...register("ftppassword")} type={confirmVisible ? 'text' : 'password'} className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] lg:w-[50%] ${errors.ftppassword?.message && 'error'}`} />
                 <span onClick={() => togglePasswordVisibility('ftppassword')} className='absolute right-[43%] top-[48%]'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
-                
               </div>
               <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftppassword?.message}</small>
             </div>

@@ -1,46 +1,33 @@
 import React, { useEffect, useState } from 'react';
 
-const StateAPI = () => {
+const StateApi = () => {
   const [countries, setCountries] = useState([]);
-  const [states, setStates] = useState([]);
 
-  // Fetching countries and states
   useEffect(() => {
-    fetch('https://api.first.org/data/v1/countries')
-      .then(response => response.json())
-      .then(data => {
-        // Extracting country names from the response
-        const countryNames = Object.keys(data.data);
-        setCountries(countryNames);
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch('https://restcountries.com/v3.1/all');
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          setCountries(data);
+        } else {
+          console.error('Failed to fetch data');
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-        // Extracting state names from the response
-        const stateNames = Object.values(data.data).reduce((acc, country) => {
-          return acc.concat(country.regions.map(region => region.name));
-        }, []);
-        setStates(stateNames);
-      })
-      .catch(error => {
-        console.error('Error fetching countries:', error);
-      });
+    fetchCountries();
   }, []);
 
   return (
     <div>
-      <h1>List of Countries</h1>
-      <ul>
-        {countries.map((country, index) => (
-          <li key={index}>{country}</li>
-        ))}
-      </ul>
-
-      <h1>List of States/Provinces</h1>
-      <ul>
-        {states.map((state, index) => (
-          <li key={index}>{state}</li>
-        ))}
-      </ul>
+      <h1>Country List with States</h1>
+     
     </div>
   );
 };
 
-export default StateAPI;
+export default StateApi;

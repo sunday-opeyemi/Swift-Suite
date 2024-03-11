@@ -17,8 +17,14 @@ const initialData = () => {
             postalCode: '',
             country: '',
 
+            host: '',
             ftpusername: '',
             ftppassword: '',
+
+
+            accountnumber: '',
+            dealername: '',
+            dealerzip: '',
 
             selectedProducts: [],
             selectedCategories: [],
