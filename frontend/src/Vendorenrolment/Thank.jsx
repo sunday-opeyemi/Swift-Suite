@@ -1,18 +1,18 @@
 import React from 'react'
 import success from '../Images/success.png'
 
-// import { useDispatch, useSelector } from 'react-redux'
-// import { handlePreviousStep } from '../redux/vendor'
+import { useDispatch, useSelector } from 'react-redux'
+import { handlePreviousStep } from '../redux/vendor'
 
 
 const Thank = () => {
 
-//     const store = useSelector(state => state.vendor.vendorData)
+    const store = useSelector(state => state.vendor.vendorData)
 
-//     const dispatch = useDispatch()
-//     const handlePrevious = () => {
-//         dispatch(handlePreviousStep())
-//     }
+    const dispatch = useDispatch()
+    const handlePrevious = () => {
+        dispatch(handlePreviousStep())
+    }
     return (
         <>
             <div className='text-center mx-auto mt-20 lg:mt-40 text-[15px] font-bold'>

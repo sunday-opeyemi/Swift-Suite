@@ -465,4 +465,6 @@ const Producttype = () => {
   );
 };
 
-export default Producttype 
+
+export default Producttype
+

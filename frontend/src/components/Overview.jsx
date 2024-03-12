@@ -6,14 +6,14 @@ const Overview = () => {
   const kidsPercentage = 20;
 
   return (
-    <section className='rounded-lg p-5 h-[100%] lg:h-[100%] bg-white shadow-lg'>
+    <section className='rounded-lg p-5 h-[100%] lg:mt-0 mt-0  lg:h-[100%] bg-white shadow-lg'>
       <div style={{ position: 'relative' }}>
         <p className='font-bold text-xl '>Stats Overview</p>
         <p className=' mt-2'>Information about store visits</p>
         <div style={{ padding: '20px' }}>
           <h1 className=' mt-5'>Women</h1>
           <div
-            className='lg:w-[430px] md:w-[500px] w-[220px]'
+            className='lg:w-[400px] md:w-[270px] w-[220px]'
             style={{
               height: '10px',
               backgroundColor: 'gray',
@@ -25,7 +25,7 @@ const Overview = () => {
             }}
           ></div>
           <div
-            className='lg:w-[380px] md:w-[250px] w-[180px]'
+            className='lg:w-[350px] md:w-[220px] w-[180px]'
             style={{
               height: '10px',
               backgroundColor: 'green',
@@ -39,7 +39,7 @@ const Overview = () => {
 
           <h1 className='mt-10'>Men</h1>
           <div
-            className='lg:w-[430px] md:w-[300px] w-[220px]'
+            className='lg:w-[400px] md:w-[270px] w-[220px]'
             style={{
               height: '10px',
               backgroundColor: 'gray',
@@ -51,7 +51,7 @@ const Overview = () => {
             }}
           ></div>
           <div
-            className='lg:w-[250px] md:w-[150px] w-[100px]'
+            className='lg:w-[220px] md:w-[120px] w-[100px]'
             style={{
               height: '10px',
               backgroundColor: 'orange',
@@ -65,7 +65,7 @@ const Overview = () => {
 
           <h1 className='mt-10'>Kids</h1>
           <div
-            className='lg:w-[430px] md:w-[300px] w-[200px]'
+            className='lg:w-[400px] md:w-[270px] w-[200px]'
             style={{
               height: '10px',
               backgroundColor: 'gray',
