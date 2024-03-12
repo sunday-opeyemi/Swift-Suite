@@ -9,7 +9,7 @@ import puma from '../assets/puma.png'
 
 const Topproduct = () => {
   return (
-    <section className='bg-white rounded-lg lg:p-4 p-0'>
+    <section className='bg-white rounded-lg lg:p-4 md:p-4 p-0'>
       <div className='grid lg:grid-cols-4 md:grid-cols-2 mt-5 gap-4'>
         <div className='bg-green-700 text-center rounded-lg px-2 p-2 md:w-full lg:w-[100%] text-white text-[12px]'>
           <p className='flex justify-center items-center'><MdOutlinePersonOutline size={20} /></p>
@@ -37,7 +37,7 @@ const Topproduct = () => {
       <div className='mt-10 pb-10'>
         <h2 className='text-lg font-medium px-2 mt-5'>Top Product</h2>
 
-        <div className='flex text-sm bg-gray-300 lg:p-2  py-6 rounded-lg'>
+        <div className='flex text-sm bg-gray-300 lg:p-2 py-6 rounded-lg'>
           <p><img src={bag} alt="" /></p>
           <div>
             <p className='lg:font-medium lg:text-sm font-bold text-[10px]'>Gucci handbag</p>
