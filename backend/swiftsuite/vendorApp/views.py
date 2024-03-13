@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from .models import VendoEnronment
 from .serializers import VendoEnronmentSerializer
 from rest_framework.permissions import IsAuthenticated
-from .models import Fragrancex, Lipsey, Ssi, Cwr
+from .models import Fragrancex, Lipsey, Ssi, Cwr, Zanders
 
 # Create your views here.
 # supplier_name
@@ -65,8 +65,19 @@ def download_csv_from_ftp(userid,ftp_host, ftp_user, ftp_password, ftp_path, fil
                 for row in csv_data:
                     pass
             elif supplier_name == "Zanders":
+                items = []
+                items2 = []
+                items3 = []
                 for row in csv_data:
-                    pass
+                    if index == 1:
+                        items.append(list(row.values()))
+                    elif index == 2:
+                        items2.append(list(row.values()))
+                    elif index == 3:
+                        items3.append(list(row.values()))
+                for ind, data in enumerate(items):
+                    insert_data.append(Cwr(user_id=request.user.id, available=data['available'], category=data['category'], desc1=data['desc1'], desc2=data['desc2'], itemnumber=data['itemnumber'], manufacturer=data['manufacturer'], mfgpnumber=data['mfgpnumber'], msrp=data['msrp'], price1=data['price1'], price2=data['price2'], price3=data['price3'], qty1=data['qty1'], qty2=data['qty2'], qty3=data['qty3'], upc=data['upc'], weight=data['weight'], serialized=data['serialized'], mapprice=data['mapprice'], ImageLink=items2[ind]['ImageLink'], ItemNumberDescription=items3[ind]['ItemNumberDescription']))
+                Zanders.objects.bulk_create(insert_data)
     except Exception as e:
         print(f"Download {file_name} Error: {str(e)}")
 
@@ -81,24 +92,28 @@ def process_supplier(supplier):
 
 suppliers = [
     # [("FragranceX", "ftp2.fragrancex.com", "frgx_temilolaoduola@gmail.com", "ftos3tpi", "/", "outgoingfeed_upc.csv", 1)],
-    # [("Lipsey", "ftp.lipseysdistribution.net", "cat800459", "8b4c531467417ad97e5274d5ecfbc0eb", "/", "catalog.csv", 1),
-    # ("Lipsey", "ftp.lipseysdistribution.net", "cat800459", "8b4c531467417ad97e5274d5ecfbc0eb", "/", "pricingquantity.csv", 2)],
-    [("SSI", "www.rapidretail.net", "ssi_dot774rr", "Rapid_774!", "/Products", "RR_Products.csv", 1),
-    ("SSI", "www.rapidretail.net", "ssi_dot774rr", "Rapid_774!", "/Pricing-Availability", "RR_Pricing_Availability.csv", 2)],
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrinventory-keydlr-new.txt"),
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-product-message.txt"),
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-ship-restrictions.txt"),
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrdeletedinv.txt"),
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "product_sell_descriptions.txt"),
+    # [("Lipsey", "ftp.lipseysdistribution.net", "cat800459", "8b4c531467417ad97e5274d5ecfbc0eb", "/", "catalog.csv", 1),]
+    # [("SSI", "www.rapidretail.net", "ssi_dot774rr", "Rapid_774!", "/Products", "RR_Products.csv", 1),]
+    # [("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrinventory-keydlr-new.txt"),
+    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "product_sell_descriptions.txt"),]
     # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "IM-QTY-CSV.csv"),
-    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "liveinv.csv"),
-    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "iteminfo2.csv"),
-    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "itemimagelinks.csv"),
-    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "zandersinv.csv"),
-    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "detaildesctext.csv"),
+    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-product-message.txt"),
+    # [("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "itemimagelinks.csv", 1),
+    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "zandersinv.csv", 2),
+    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "detaildesctext.csv", 3),]
     # [("CWR", "edi.cwrdistribution.com", "421460", "password_here", "/out", "catalog.csv", 1),
     # ("CWR", "edi.cwrdistribution.com", "421460", "password_here", "/out", "inventory.csv", 2)]
 ]
+
+update_file = [
+    # ("Lipsey", "ftp.lipseysdistribution.net", "cat800459", "8b4c531467417ad97e5274d5ecfbc0eb", "/", "pricingquantity.csv", 2)],
+    # ("SSI", "www.rapidretail.net", "ssi_dot774rr", "Rapid_774!", "/Pricing-Availability", "RR_Pricing_Availability.csv", 2)],
+    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-ship-restrictions.txt"),
+    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrdeletedinv.txt"),
+    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "liveinv.csv"),
+    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "iteminfo2.csv"),
+]
+
 
 def main():
     while True:
