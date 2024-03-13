@@ -76,7 +76,7 @@ def download_csv_from_ftp(userid,ftp_host, ftp_user, ftp_password, ftp_path, fil
                     elif index == 3:
                         items3.append(list(row.values()))
                 for ind, data in enumerate(items):
-                    insert_data.append(Cwr(user_id=request.user.id, available=data['available'], category=data['category'], desc1=data['desc1'], desc2=data['desc2'], itemnumber=data['itemnumber'], manufacturer=data['manufacturer'], mfgpnumber=data['mfgpnumber'], msrp=data['msrp'], price1=data['price1'], price2=data['price2'], price3=data['price3'], qty1=data['qty1'], qty2=data['qty2'], qty3=data['qty3'], upc=data['upc'], weight=data['weight'], serialized=data['serialized'], mapprice=data['mapprice'], ImageLink=items2[ind]['ImageLink'], ItemNumberDescription=items3[ind]['ItemNumberDescription']))
+                    insert_data.append(Cwr(user_id=userid, available=data['available'], category=data['category'], desc1=data['desc1'], desc2=data['desc2'], itemnumber=data['itemnumber'], manufacturer=data['manufacturer'], mfgpnumber=data['mfgpnumber'], msrp=data['msrp'], price1=data['price1'], price2=data['price2'], price3=data['price3'], qty1=data['qty1'], qty2=data['qty2'], qty3=data['qty3'], upc=data['upc'], weight=data['weight'], serialized=data['serialized'], mapprice=data['mapprice'], ImageLink=items2[ind]['ImageLink'], ItemNumberDescription=items3[ind]['ItemNumberDescription']))
                 Zanders.objects.bulk_create(insert_data)
     except Exception as e:
         print(f"Download {file_name} Error: {str(e)}")
@@ -125,12 +125,7 @@ class VendoEnronmentListView(APIView):
     
     permission_classes = [IsAuthenticated]
     def get(self, request):
-        print(request.user.id)
-        vendo_enronments = VendoEnronment.objects.filter(user_id = request.user)
-        if vendo_enronments:
-            print(vendo_enronments)
-        else:
-            print('\nNot available\n')
+        vendo_enronments = VendoEnronment.objects.filter(user_id = request.user.id)
         serializer = VendoEnronmentSerializer(vendo_enronments, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 

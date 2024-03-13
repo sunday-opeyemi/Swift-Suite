@@ -1,15 +1,15 @@
-# import requests
-# import json 
+import requests
+import json 
 
-# user_credentials = {
-#     'email': 'dami@gmail.com',
-#     'password': 'pass1234'
-# }
+user_credentials = {
+    'email': 'dami@gmail.com',
+    'password': 'pass1234'
+}
 
 # # Make a request to obtain authentication token
-# response = requests.post('http://127.0.0.1:8000/accounts/login/', data=user_credentials)
-# token = response.json().get('access_token')  # Adjust to match the actual key returned by the token endpoint
-
+response = requests.post('http://127.0.0.1:8000/accounts/login/', data=user_credentials)
+token = response.json().get('access_token')  # Adjust to match the actual key returned by the token endpoint
+print(token)
 # if token:
 #     # Include the token in the request headers
 #     headers = {'Authorization': f'Token {token}'}
