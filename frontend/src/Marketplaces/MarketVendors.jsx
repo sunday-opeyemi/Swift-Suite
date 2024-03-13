@@ -12,7 +12,7 @@ const MarketVendors = () => {
   return (
     <>
         <p className='my-2 font-semibold text-[#089541]'>Add Vendor</p>
-    <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5'>
+    <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 pb-5'>
         <div className='bg-white flex flex-col justify-center items-center gap-2 p-3 shadow-xl'>
             <img src={img1} width={100} alt="" />
             <p>Send orders and receive tracking with CWR</p>
