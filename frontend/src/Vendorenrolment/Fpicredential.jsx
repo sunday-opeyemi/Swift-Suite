@@ -74,10 +74,10 @@ const Fpicredential = () => {
               <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftpusername?.message}</small>
             </div>
             <div>
-              <div className='flex justify-between mt-5'>
+              <div className='flex justify-between mt-5 relative'>
                 <h3 className='font-semibold'>FTP Password:</h3>
                 <input {...register("ftppassword")} type={confirmVisible ? 'text' : 'password'} className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] lg:w-[50%] ${errors.ftppassword?.message && 'error'}`} />
-                <span onClick={() => togglePasswordVisibility('ftppassword')} className='absolute right-[43%] top-[48%]'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
+                <span onClick={() => togglePasswordVisibility('ftppassword')} className='absolute right-[3%] top-[26%]'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
               </div>
               <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftppassword?.message}</small>
             </div>
