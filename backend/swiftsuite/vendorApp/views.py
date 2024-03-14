@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Fragrancex, Lipsey, Ssi, Cwr, Zanders
 
 # Create your views here.
-# supplier_name
+supplier_name = ''
 index = 0
 def download_csv_from_ftp(userid,ftp_host, ftp_user, ftp_password, ftp_path, file_name, local_dir="."):
     """Download CSV file from FTP server."""
@@ -28,11 +28,28 @@ def download_csv_from_ftp(userid,ftp_host, ftp_user, ftp_password, ftp_path, fil
         print(f"{file_name} downloaded from FTP for {ftp_user}.")
         with open(os.path.join(local_dir, file_name), "r", encoding='utf-8') as file:
             csv_data = csv.DictReader(file)
+            print(csv_data, supplier_name)
             insert_data = []
-            if supplier_name == "Fragrancex":
-                for row in csv_data:
-                    insert_data.append(Fragrancex(user_id=userid, name=row["NAME"], item=row["ITEM"], description=row["DESCRIPTION"], brand=row["BRAND"], title=row["TITLE"], gender=row["GENDER"], size=row["Size"], metric_size=row["Metric_Size"], retail=row["RETAIL"], price=row["PRICE"], eur_price=row["EUR_PRICE"],gbp_price=row["GBP_PRICE"], cad_price=row["CAD_PRICE"], aud_price=row["AUD_PRICE"], image=row["IMAGE"], url=row["URL"], qty=row["QTY"], upc=row["UPC"]))
-                Fragrancex.objects.bulk_create(insert_data)
+            if supplier_name == "FragranceX":
+                try:
+                    print('Trying to upload')
+                    for row in csv_data:
+                        
+                        insert_data.append(Fragrancex(user_id=userid, name=row["NAME"], item=row["ITEM"], description=row["DESCRIPTION"], brand=row["BRAND"], title=row["TITLE"], gender=row["GENDER"], size=row["Size"], metric_size=row["Metric_Size"], retail=row["RETAIL"], price=row["PRICE"], eur_price=row["EUR_PRICE"],gbp_price=row["GBP_PRICE"], cad_price=row["CAD_PRICE"], aud_price=row["AUD_PRICE"], image=row["IMAGE"], url=row["URL"], qty=row["QTY"], upc=row["UPC"]))
+
+                    print(len(insert_data))
+                    start = 0 
+                    end = 500 
+                    while start < len(insert_data):
+                        
+                        Fragrancex.objects.bulk_create(insert_data[start:end])
+                        start += 500
+                        end += 500
+
+                        print('\nUpload successful....', end)
+                    
+                except Exception as e:
+                    print(e)
                 
             elif supplier_name == "Lipsey":
                 for row in csv_data:
@@ -81,26 +98,27 @@ def download_csv_from_ftp(userid,ftp_host, ftp_user, ftp_password, ftp_path, fil
     except Exception as e:
         print(f"Download {file_name} Error: {str(e)}")
 
-def process_supplier(supplier):
+def process_supplier(supplier, userid):
     """Process each supplier."""
-    global supplier_name
-    supplier_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name = supplier
+    global supplier_name, index
+    
+    supplier_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name, index = supplier
     local_dir = os.path.join("local_dir", supplier_name)
     supplier_name=supplier_name
     os.makedirs(local_dir, exist_ok=True)
-    download_csv_from_ftp(ftp_host, ftp_user, ftp_password, ftp_path, file_name, local_dir)
+    download_csv_from_ftp(userid, ftp_host, ftp_user, ftp_password, ftp_path, file_name, local_dir)
 
 suppliers = [
     # [("FragranceX", "ftp2.fragrancex.com", "frgx_temilolaoduola@gmail.com", "ftos3tpi", "/", "outgoingfeed_upc.csv", 1)],
     # [("Lipsey", "ftp.lipseysdistribution.net", "cat800459", "8b4c531467417ad97e5274d5ecfbc0eb", "/", "catalog.csv", 1),]
     # [("SSI", "www.rapidretail.net", "ssi_dot774rr", "Rapid_774!", "/Products", "RR_Products.csv", 1),]
-    # [("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrinventory-keydlr-new.txt"),
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "product_sell_descriptions.txt"),]
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "IM-QTY-CSV.csv"),
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-product-message.txt"),
-    # [("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "itemimagelinks.csv", 1),
-    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "zandersinv.csv", 2),
-    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "detaildesctext.csv", 3),]
+    # [("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrinventory-keydlr-new.txt", 1),
+    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "product_sell_descriptions.txt", 2),
+    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "IM-QTY-CSV.csv", 3),
+    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-product-message.txt", 4),]
+    # [(ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "itemimagelinks.csv", 1),
+    # (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "zandersinv.csv", 2),
+    # (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "detaildesctext.csv", 3),]
     # [("CWR", "edi.cwrdistribution.com", "421460", "password_here", "/out", "catalog.csv", 1),
     # ("CWR", "edi.cwrdistribution.com", "421460", "password_here", "/out", "inventory.csv", 2)]
 ]
@@ -110,16 +128,15 @@ update_file = [
     # ("SSI", "www.rapidretail.net", "ssi_dot774rr", "Rapid_774!", "/Pricing-Availability", "RR_Pricing_Availability.csv", 2)],
     # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-ship-restrictions.txt"),
     # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrdeletedinv.txt"),
-    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "liveinv.csv"),
-    # ("Zanders", "ftp2.gzanders.com", "DotfakGroup", "password_here", "/Inventory", "iteminfo2.csv"),
+    # (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "liveinv.csv"),
+    # (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "iteminfo2.csv"),
 ]
 
 
-def main():
-    while True:
-        for sub_supplier in suppliers:
-            process_supplier(sub_supplier)
-        time.sleep(3600)
+def main( suppliers, userid):
+    for sub_supplier in suppliers:
+        process_supplier(sub_supplier, userid)
+        
 
 class VendoEnronmentListView(APIView):
     
@@ -130,10 +147,34 @@ class VendoEnronmentListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = VendoEnronmentSerializer(data=request.data)
+        serializer = VendoEnronmentSerializer(data=request.data, context = {'request':request})
         if serializer.is_valid():
             serializer.save()
-            print(serializer.data)
+            vendor = serializer.data
+
+            userid = request.user.id
+            ftp_name = vendor['vendor_name']
+            ftp_host = vendor['host']
+            ftp_user = vendor['ftp_username']
+            ftp_password = vendor['ftp_password']
+            ftp_path = vendor['ftp_url']
+            file_name = vendor['file_urls']
+
+            # supplier = (ftp_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name)
+            if ftp_name == 'FragranceX':
+                suppliers = [(ftp_name, ftp_host, ftp_user, ftp_password, "/", "outgoingfeed_upc.csv", 1)]
+            
+            elif ftp_name == 'Zanders' :
+                suppliers = [
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "itemimagelinks.csv", 1),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "zandersinv.csv", 2),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "detaildesctext.csv", 3),
+                    ]
+                
+
+
+            main(suppliers, userid)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
