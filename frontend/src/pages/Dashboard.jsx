@@ -40,7 +40,6 @@ const Dashboard = () => {
             <h3 className='text-center text-sm font-bold'>Retarget Customers</h3>
             </div>
           </div>
-
         </div>
         <div className='grid lg:grid-cols-2 lg:ms-[19%] md:grid-cols-2 lg:px-10 px-5 lg:w-[83%] w-[100%] grid-cols-1 p-5 gap-4'>
         <div>
