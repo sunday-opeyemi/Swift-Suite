@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import VendoEnronment
-from .serializers import VendoEnronmentSerializer
+from .serializers import VendoEnronmentSerializer, VendorEnrolmentTestSerializer
 from rest_framework.permissions import IsAuthenticated
 from .models import Fragrancex, Lipsey, Ssi, Cwr, Zanders
 
@@ -182,6 +182,30 @@ def main( suppliers, userid):
     for sub_supplier in suppliers:
         process_supplier(sub_supplier, userid)
         
+
+class VendorEnrolmentTestView(APIView):
+    def post(self, request):
+        serializer = VendorEnrolmentTestSerializer(data=request.data)
+        serializer.is_valid()
+        vendor = serializer.data
+        ftp_host = vendor['host']
+        ftp_user = vendor['ftp_username']
+        ftp_password = vendor['ftp_password']
+
+        try:
+            with FTP(ftp_host) as ftp:
+                login = ftp.login(user=ftp_user, passwd=ftp_password)
+                print(login)
+                if 'logged in' in login:
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Exception as e:
+            print(e)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class VendoEnronmentListView(APIView):
     

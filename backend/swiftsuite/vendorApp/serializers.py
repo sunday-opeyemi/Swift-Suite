@@ -17,3 +17,13 @@ class VendoEnronmentSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         validated_data.pop('user_id', None)
         return super().update(instance, validated_data)
+    
+class VendorEnrolmentTestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VendoEnronment
+        fields = [
+            'vendor_name',
+            'ftp_username', 
+            'ftp_password',
+            'host',
+        ]
