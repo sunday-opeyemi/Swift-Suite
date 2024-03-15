@@ -184,6 +184,7 @@ def main( suppliers, userid):
         
 
 class VendorEnrolmentTestView(APIView):
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         serializer = VendorEnrolmentTestSerializer(data=request.data)
         serializer.is_valid()
@@ -226,8 +227,7 @@ class VendoEnronmentListView(APIView):
             ftp_host = vendor['host']
             ftp_user = vendor['ftp_username']
             ftp_password = vendor['ftp_password']
-            ftp_path = vendor['ftp_url']
-            file_name = vendor['file_urls']
+            
 
             # supplier = (ftp_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name)
             if ftp_name == 'FragranceX':
