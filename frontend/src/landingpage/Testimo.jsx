@@ -6,9 +6,9 @@ import lisa from '../Images/lisa.png'
 const Testimo = () => {
     return (
         <div className='mb-10'>
-            <h1 className='text-center p-2 font-[font-PlayfairDisplay] text-2xl mt-10 font-bold'>Customers Testimonials</h1>
+            <h1 className='text-center p-2  text-2xl mt-10 font-bold'>Customers Testimonials</h1>
             <div className='grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 p-5 lg:px-20'>
-                <div className='testimonial-item border font-[font-PlayfairDisplay] border-white shadow-lg p-5 px-[12%] transition duration-500 ease-in-out transform hover:scale-105'>
+                <div className='testimonial-item border f border-white shadow-lg p-5 px-[12%] transition duration-500 ease-in-out transform hover:scale-105'>
                     <div className='flex gap-5'>
                         <img className='w-[17%] h-[55px]' src={sarah} alt="" />
                         <div>
@@ -19,7 +19,7 @@ const Testimo = () => {
                     <p className='mt-5'>As a small business owner, time is my worst valuable asset. Swift Suite has simplified our catalogue management and made tracking inventory a breeze. The support team is responsive and always ready to help. Highly recommended!</p>
                 </div>
 
-                <div className='testimonial-item border font-[font-PlayfairDisplay] border-white shadow-lg p-5 px-[12%] transition duration-500 ease-in-out transform hover:scale-105'>
+                <div className='testimonial-item border  border-white shadow-lg p-5 px-[12%] transition duration-500 ease-in-out transform hover:scale-105'>
                     <div className='flex gap-5'>
                         <img className='w-[17%] h-[55px]' src={mike} alt="" />
                         <div>
@@ -30,7 +30,7 @@ const Testimo = () => {
                     <p className='mt-5'>The scalability of Swift Suite is unmatched. It seamlessly adapts to our growth, providing unparallel insights. The dashboard has transformed the way we approach logistics, making daily operations smoother than ever.</p>
                 </div>
 
-                <div className='testimonial-item border font-[font-PlayfairDisplay] border-white shadow-lg p-5 px-[12%] transition duration-500 ease-in-out transform hover:scale-105'>
+                <div className='testimonial-item border border-white shadow-lg p-5 px-[12%] transition duration-500 ease-in-out transform hover:scale-105'>
                 <div className='flex gap-5'>
                 <img className='w-[17%] h-[55px]' src={lisa} alt="" />
                 <div>

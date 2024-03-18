@@ -5,8 +5,8 @@ import Fpioption from './Fpioption'
 import { useSelector } from 'react-redux'
 import { MdCheckBoxOutlineBlank } from "react-icons/md";
 import { FaSquareCheck } from "react-icons/fa6";
-import Producttype from './Producttype'
 import Thank from './Thank'
+import Productype from './Productype'
 
 const Enrolment = () => {
   const currentIndex = useSelector(state => state.vendor.vendorData.currentStep)
@@ -34,9 +34,9 @@ const Enrolment = () => {
     }
   ])
   return (
-    <section className='bg-blue-100'>
+    <section className='bg-green-50'>
     <div className='lg:ms-[22%] lg:me-[15%] flex lg:flex-row flex-col gap-8'>
-      <div className='stepContainer border-2 w-[70%]'>
+      <div className='stepContainer w-[70%]'>
         {currentIndex === 0 &&
           (<Vendorenrolment />
           )}
@@ -47,7 +47,7 @@ const Enrolment = () => {
           (<Fpioption />
           )}
         {currentIndex === 3 &&
-          (<Producttype />
+          (<Productype />
           )}
           {currentIndex === 4 &&
             (<Thank />

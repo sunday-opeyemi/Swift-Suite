@@ -54,7 +54,7 @@ const Fpicredential = () => {
 
   return (
     <>
-    <section className='bg-blue-100 h-screen'>
+    <section className='bg-green-50 h-screen'>
    
       <div className='bg-white mt-8 py-3 shadow lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:ms-0 ms-5'>
           <h1 className='lg:ps-16 ps-5 py-2 border-b border-gray-500 font-bold '>FTP/API Credentials</h1>

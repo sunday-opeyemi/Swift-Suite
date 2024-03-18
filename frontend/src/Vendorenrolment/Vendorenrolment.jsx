@@ -45,7 +45,7 @@ const Vendorenrolment = () => {
     }, [])
 
     return (
-        <section className='bg-blue-100 mb-10'>
+        <section className='bg-green-50 mb-10'>
             <form className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:ms-0 ms-5  py-10 lg:mt-8 mt-0' action="" onSubmit={handleSubmit(onSubmit)}>
                 <h1 className='lg:text-xl text-sm font-bold font-sans border-gray-500 border-b lg:p-4 p-0 py-2 px-4'>Vendor Enrollment</h1>
                 <div className=''>
