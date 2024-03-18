@@ -9,7 +9,7 @@ import puma from '../assets/puma.png'
 
 const Topproduct = () => {
   return (
-    <section className='bg-white rounded-lg lg:p-4 md:p-4 p-0'>
+    <section className='rounded-lg bg-white shadow-lg lg:p-4 md:p-4 p-0'>
       <div className='grid lg:grid-cols-4 md:grid-cols-2 mt-5 gap-4'>
         <div className='bg-green-700 text-center rounded-lg px-2 p-2 md:w-full lg:w-[100%] text-white text-[12px]'>
           <p className='flex justify-center items-center'><MdOutlinePersonOutline size={20} /></p>
@@ -28,7 +28,7 @@ const Topproduct = () => {
         </div>
         <div className='bg-green-500 text-center rounded-lg md:w-full lg:w-[106%] px-2 p-2 text-white text-[12px]'>
           <p className='flex justify-center items-center'><TbBorderNone size={20} /></p>
-          <p>Orders Completed</p>
+          <p className='lg:w-[100px]'>Orders Completed</p>
           <p>30,900</p>
         </div>
 
@@ -40,8 +40,8 @@ const Topproduct = () => {
         <div className='flex text-sm bg-gray-300 lg:p-2 py-6 rounded-lg'>
           <p><img src={bag} alt="" /></p>
           <div>
-            <p className='lg:font-medium lg:text-sm font-bold text-[10px]'>Gucci handbag</p>
-            <p className='text-[10px] text-center'>Black-20 orders </p>
+            <p className='lg:font-medium w-[100px] lg:text-sm font-bold text-[10px]'>Gucci handbag</p>
+            <p className='text-[10px]'>Black-20 orders </p>
           </div>
 
           <div className='lg:ms-28 ms-5 flex lg:gap-5 gap-2'>
@@ -66,10 +66,10 @@ const Topproduct = () => {
 
 
         <div className='flex text-sm bg-gray-300 mt-5 lg:p-2 py-6 rounded-lg'>
-        <p><img src={puma} alt="" /></p>
+        <p><img className='' src={puma} alt="" /></p>
         <div>
-          <p className='lg:font-medium lg:text-sm text-[10px] font-bold'>Gucci handbag</p>
-          <p className='text-[10px] text-center'>Black-20 orders </p>
+          <p className='lg:font-medium  lg:text-sm w-[100px] text-[10px] font-bold'>Puma handbag</p>
+          <p className='text-[10px] '>Black-20 orders </p>
         </div>
 
         <div className='lg:ms-28 ms-5 flex lg:gap-5 gap-2'>

@@ -50,7 +50,7 @@ const Newcustomer = () => {
 
   return (
     <div>
-      <ReactApexChart
+      <ReactApexChart 
         options={options}
         series={series}
         type="radialBar"
