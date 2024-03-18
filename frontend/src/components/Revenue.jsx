@@ -88,24 +88,22 @@ const Revenue = () => {
     };
 
     return (
-        <div className="col-span-12 rounded-lg border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default sm:px-7.5">
-            <div className='flex lg:gap-[50%] text-sm gap-[37%] mt-10'>
+        <div className="col-span-12 rounded-lg bg-white lg:h-[99%] px-5 pt-7.5 pb-5 shadow-lg sm:px-7.5">
+            <div className='flex lg:gap-[50%] text-sm gap-[37%] pt-10'>
                 <div>
                     <p>Total Revenue</p>
                     <h3 className="text-xl font-bold text-black dark:text-white">
                         $70,000
                     </h3>
                 </div>
-                
             </div>
-
             <div className="mb-2">
                 <div className="-ml-5">
                     <ReactApexChart
                         options={options}
                         series={state.series}
                         type="bar"
-                        height={248}
+                        height={348}
                     />
                 </div>
             </div>

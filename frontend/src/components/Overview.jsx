@@ -13,7 +13,7 @@ const Overview = () => {
         <div style={{ padding: '20px' }}>
           <h1 className=' mt-5'>Women</h1>
           <div
-            className='lg:w-[400px] md:w-[270px] w-[220px]'
+            className='lg:w-[340px] md:w-[270px] w-[280px]'
             style={{
               height: '10px',
               backgroundColor: 'gray',
@@ -25,7 +25,7 @@ const Overview = () => {
             }}
           ></div>
           <div
-            className='lg:w-[350px] md:w-[220px] w-[180px]'
+            className='lg:w-[240px] md:w-[220px] w-[240px]'
             style={{
               height: '10px',
               backgroundColor: 'green',
@@ -39,7 +39,7 @@ const Overview = () => {
 
           <h1 className='mt-10'>Men</h1>
           <div
-            className='lg:w-[400px] md:w-[270px] w-[220px]'
+            className='lg:w-[340px] md:w-[270px] w-[280px]'
             style={{
               height: '10px',
               backgroundColor: 'gray',
@@ -51,7 +51,7 @@ const Overview = () => {
             }}
           ></div>
           <div
-            className='lg:w-[220px] md:w-[120px] w-[100px]'
+            className='lg:w-[160px] md:w-[120px] w-[160px]'
             style={{
               height: '10px',
               backgroundColor: 'orange',
@@ -65,7 +65,7 @@ const Overview = () => {
 
           <h1 className='mt-10'>Kids</h1>
           <div
-            className='lg:w-[400px] md:w-[270px] w-[200px]'
+            className='lg:w-[340px] md:w-[270px] w-[280px]'
             style={{
               height: '10px',
               backgroundColor: 'gray',
@@ -77,7 +77,7 @@ const Overview = () => {
             }}
           ></div>
           <div
-            className='lg:w-20 md:w-10 w-[50px]'
+            className='lg:w-20 md:w-10 w-[130px]'
             style={{
               height: '10px',
               backgroundColor: 'green',

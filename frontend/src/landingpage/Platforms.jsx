@@ -12,8 +12,8 @@ const Platforms = () => {
 
     return (
         <>
-            <h1 className='font-[font-PlayfairDisplay] text-center text-2xl font-bold'>Supported Platforms</h1>
-            <div className='font-[font-PlayfairDisplay] text-2xl lg:text-xl grid lg:grid-cols-5 md:grid-cols-2 grid-cols-1 text-center lg:px-10 lg:mt-0 mt-3 p-5'>
+            <h1 className=' text-center text-2xl font-bold'>Supported Platforms</h1>
+            <div className='text-2xl lg:text-xl grid lg:grid-cols-5 md:grid-cols-2 grid-cols-1 text-center lg:px-10 lg:mt-0 mt-3 p-5'>
                 <div className='border shadow-lg lg:w-[80%] w-[80%] bg-gray-300 p-2 mx-auto py-5 lg:h-[95%] md:h-[100%] rounded transition duration-500 ease-in-out transform hover:scale-105'>
                     <img className='w-[50%] mx-auto' src={walmart} alt="" />
                     <p className='lg:text-xl text-xl md:text-xl'>Direct Integration with <br /> walmart for a <br /> streamlined selling <br />  experience </p>

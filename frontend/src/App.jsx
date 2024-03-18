@@ -32,6 +32,7 @@ function App() {
   }
   return (
   <> 
+  <div className='font-[Mirza]'>
       <Navbar openToggle={toggleIsOpen}/>
       {isOpen && <Upbar onClickHandler={handleClose} />}
       <Routes>
@@ -48,6 +49,7 @@ function App() {
       <Route path='/state'   element={<StateAPi/>}/>
       <Route path="*" element={<ErrorPage/>}/>
     </Routes>
+  </div>
   </>
   )
 }

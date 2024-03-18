@@ -11,7 +11,7 @@ import feat3 from "../Images/feat3.png"
 
 const Features = () => {
     return (
-        <section className='font-[font-PlayfairDisplay]'>
+        <section className=''>
             <div className='text-center mt-8 text-2xl font-bold'>Key Features</div>
             <div className='grid lg:grid-cols-2 grid-cols-1 md:grid-cols-2 lg:px-[28%] lg:gap-0 md:gap-28 p-10 lg:p-10'>
             <div className='flex flex-col justify-center'>

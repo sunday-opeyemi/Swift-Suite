@@ -4,9 +4,10 @@ import { AppContext } from '../context/Dashboard'
 import Header from '../Nav/Header'
 import { Route, Routes } from 'react-router-dom'
 import Dashboard from '../pages/Dashboard'
-import Allapp from '../pages/Allapp'
 import Product from '../pages/Product'
 import Enrolment from '../Vendorenrolment/Enrolment'
+import Catalogue from '../pages/Catalogue'
+import Inventory from '../pages/Inventory'
 
 
 
@@ -21,7 +22,7 @@ const Rootlayout = ({children}) => {
   return (
     <>
     
-    <div className="h-28 duration-200 ease-in-out z-1 bg-blue-100" >
+    <div className="h-28 duration-200 ease-in-out z-1 bg-green-50" >
               <Header/>
               <div className="flex max-w-full">
                 <Sidebar />
@@ -36,8 +37,9 @@ const Rootlayout = ({children}) => {
 
         <Routes>
           <Route path='/home' element={<Dashboard/>}/>
-          <Route path='/allapp' element={<Allapp/>}/>
           <Route path='/product' element={<Product/>}/>
+          <Route path='/catalogue' element={<Catalogue/>}/>
+          <Route path='/inventory' element={<Inventory/>}/>
           <Route path='/enrolment' element={<Enrolment/>}/>
         </Routes>
    
