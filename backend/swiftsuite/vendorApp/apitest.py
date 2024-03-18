@@ -1,4 +1,4 @@
-import requests
+# import requests
 import json 
 
 user_credentials = {
@@ -7,9 +7,9 @@ user_credentials = {
 }
 
 # # Make a request to obtain authentication token
-response = requests.post('http://127.0.0.1:8000/accounts/login/', data=user_credentials)
-token = response.json().get('access_token')  # Adjust to match the actual key returned by the token endpoint
-print(token)
+# response = requests.post('http://127.0.0.1:8000/accounts/login/', data=user_credentials)
+# token = response.json().get('access_token')  # Adjust to match the actual key returned by the token endpoint
+# print(token)
 # if token:
 #     # Include the token in the request headers
 #     headers = {'Authorization': f'Token {token}'}

@@ -2,7 +2,6 @@ from django.shortcuts import render
 from ftplib import FTP
 import time, os
 import csv
-from .models import Fragrancex, Lipsey
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,6 +10,9 @@ from .models import VendoEnronment
 from .serializers import VendoEnronmentSerializer, VendorEnrolmentTestSerializer
 from rest_framework.permissions import IsAuthenticated
 from .models import Fragrancex, Lipsey, Ssi, Cwr, Zanders
+from rest_framework.generics import GenericAPIView
+from rest_framework.serializers import ModelSerializer
+from django.http import JsonResponse
 
 # Create your views here.
 supplier_name = ''
@@ -142,6 +144,8 @@ def download_csv_from_ftp(userid,ftp_host, ftp_user, ftp_password, ftp_path, fil
                 
     except Exception as e:
         print(f"Download {file_name} Error: {str(e)}")
+        return e
+        
 
 def process_supplier(supplier, userid):
     """Process each supplier."""
@@ -197,16 +201,10 @@ class VendorEnrolmentTestView(APIView):
             with FTP(ftp_host) as ftp:
                 login = ftp.login(user=ftp_user, passwd=ftp_password)
                 print(login)
-                if 'logged in' in login:
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
+                return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class VendoEnronmentListView(APIView):
     
@@ -219,8 +217,8 @@ class VendoEnronmentListView(APIView):
     def post(self, request):
         serializer = VendoEnronmentSerializer(data=request.data, context = {'request':request})
         if serializer.is_valid():
-            serializer.save()
-            vendor = serializer.data
+            
+            vendor = serializer.validated_data
 
             userid = request.user.id
             ftp_name = vendor['vendor_name']
@@ -257,15 +255,64 @@ class VendoEnronmentListView(APIView):
             
             elif ftp_name == 'SSI':
                 suppliers = [(ftp_name, ftp_host, ftp_user, ftp_password, "/Products", "RR_Products.csv", 1),]
-                            
+                     
+            val = main(suppliers, userid)
+            if val ==  '[Errno 11001] getaddrinfo failed':
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            else: 
+                serializer.save()
 
-
-            main(suppliers, userid)
-
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
+class CatalogueFrangracexView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        fragrancex = Fragrancex.objects.filter(user_id=pk).values()
+        fragrancex = list(fragrancex)
+        return JsonResponse(fragrancex, safe=False)
+    
+class CatalogueZandersView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        zanders = Zanders.objects.filter(user_id=pk).values()
+        zanders = list(zanders)
+        return JsonResponse(zanders, safe=False)
+    
+class CatalogueLipseyView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        lipsey = Lipsey.objects.filter(user_id=pk).values()
+        lipsey = list(lipsey)
+        return JsonResponse(lipsey, safe=False)
+    
+class CatalogueSsiView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        ssi = Ssi.objects.filter(user_id=pk).values()
+        ssi = list(ssi)
+        return JsonResponse(ssi, safe=False)
+    
+class CatalogueCwrView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        cwr = Cwr.objects.filter(user_id=pk).values()
+        cwr = list(cwr)
+        return JsonResponse(cwr, safe=True)
+    
+class AllCatalogueView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request, pk):
+        fragrancex_products = Fragrancex.objects.filter(user_id=pk).values()
+        cwr_products = Cwr.objects.filter(user_id=pk).values()
+        lipsey_products = Lipsey.objects.filter(user_id=pk).values()
+        ssi_products = Ssi.objects.filter(user_id=pk).values()
+        zanders_products = Zanders.objects.filter(user_id=pk).values()
+
+        all_products = list(fragrancex_products) + list(cwr_products) + list(lipsey_products) + list(ssi_products) + list(zanders_products)
+
+        return JsonResponse(all_products, safe=False)
 
 # class VendoEnronmentDetailView(APIView):
 #     permission_classes = [IsAuthenticated]
