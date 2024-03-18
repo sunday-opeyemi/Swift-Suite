@@ -201,16 +201,10 @@ class VendorEnrolmentTestView(APIView):
             with FTP(ftp_host) as ftp:
                 login = ftp.login(user=ftp_user, passwd=ftp_password)
                 print(login)
-                if 'logged in' in login:
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                else:
-                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-            
+                return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
 
 class VendoEnronmentListView(APIView):
     
