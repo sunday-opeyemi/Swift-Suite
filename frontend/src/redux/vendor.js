@@ -26,12 +26,9 @@ const initialData = () => {
             dealername: '',
             dealerzip: '',
 
-            selectedProducts: [],
-            selectedCategories: [],
-            selectedBrand: [],
 
             productChecked: [],
-            changeChecked: [],
+            categoryChecked: [],
             brandChecked: [],
 
             percentagemarkup: '',

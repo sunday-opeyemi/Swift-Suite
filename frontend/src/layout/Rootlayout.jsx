@@ -15,7 +15,7 @@ import Inventory from '../pages/Inventory'
 
 const Rootlayout = ({children}) => {
     const { sideBarOpen} = useContext(AppContext)
-    console.log(sideBarOpen);
+    // console.log(sideBarOpen);
 
 
     
