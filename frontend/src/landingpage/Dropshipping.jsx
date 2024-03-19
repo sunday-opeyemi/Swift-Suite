@@ -12,8 +12,8 @@ const Dropshipping = () => {
                     <p className='lg:text-4xl md:text-4xl text-2xl font-bold'>Dropshipping Experience</p>
                     <p className='lg:text-2xl md:text-2xl mt-5'>Elevate Your E-Commerce</p>
                     <p className='lg:text-2xl md:text-2xl'>Dropshipping Experience</p>
-                    <div className='bg-green-600 hover:bg-green-900 lg:w-[150px] md:w-[150px] w-[180px] cursor-pointer p-2 px-5 lg:px-2 md:px-2 mt-5 rounded-lg'>
-                    <Link to='/signup'>Get Started for free</Link>
+                    <div className='bg-[#089451] pt-1 lg:w-[150px] md:w-[150px] w-[180px] cursor-pointer p-2 px-5 lg:px-2 md:px-2 mt-5 rounded-lg'>
+                    <Link to='/signup' className='ps-2'>Get Started for free</Link>
                     </div>
                 </div>
             </div>

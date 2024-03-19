@@ -114,7 +114,7 @@ const SignUp = () => {
                   <span className='text-red-500 my-1'>{formik.touched.password2 && formik.errors.password2}</span>
                   <span onClick={() => togglePasswordVisibility('confirm')} className='absolute top-[42px] right-5'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
                 </div>
-                <button type='submit' className='w-full bg-[#089451] flex justify-center items-center text-white font-bold py-3 mt-5 mb-10'>{myloader? <img src={gif} alt="" className='w-[25px] ' /> : 'Sign Up'}</button>
+                <button type='submit' className='w-full bg-[#089451] flex justify-center items-center h-[40px] rounded text-white font-bold py-3 mt-5 mb-10'>{myloader? <img src={gif} alt="" className='w-[25px] ' /> : 'Sign Up'}</button>
               </form>
             </div>
         </section>

@@ -66,7 +66,7 @@ const Navbar = ({ openToggle }) => {
           </ul>
         </div>
         <div className='hidden lg:flex justify-center items-center gap-6 md:me-10 mt-1'>
-          <Link to="/signup" className='border w-[165px] font-semibold text-white text-center py-1 bg-[#089451] hover:border-[#089451] hover:bg-white hover:text-[#089451] rounded-[6px]'>Get Started For Free</Link>
+          <Link to="/signup" className='border w-[165px] font-semibold text-white text-center pb-[5px] pt-[3px] bg-[#089451] hover:border-[#089451] hover:bg-white hover:text-[#089451] rounded-[6px]'>Get Started For Free</Link>
           <Link to="/signin" className='border w-[150px] font-semibold border-[#089451] hover:border-green-900 text-center py-1 text-[#089451] hover:text-white rounded-[6px] hover:bg-[#089451]'>Sign in</Link>
         </div>
         <button ref={trigger} onClick={() => setDropdownOpen(!dropdownOpen)} className='lg:hidden block mt-1 W-[200PX] text-green-700 font-bold '>
