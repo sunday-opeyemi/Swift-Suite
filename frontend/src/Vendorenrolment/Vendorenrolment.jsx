@@ -8,11 +8,13 @@ import CountrySelect from './CountrySelect'
 
 
 const Vendorenrolment = () => {
+    let vendorName = JSON.parse(localStorage.getItem('vendorName'))
+    console.log(vendorName);
     const store = useSelector(state => state.vendor.vendorData)
     const [select, setSelect] = useState("")
     // console.log(select);
     const Schema = yup.object().shape({
-        vendorName: yup.string().required(),
+        // vendorName: yup.string().required(),
         street1: yup.string().required(),
         street2: yup.string().required(),
         city: yup.string().required(),
@@ -27,14 +29,14 @@ const Vendorenrolment = () => {
 
     const dispatch = useDispatch()
     const onSubmit = (data) => {
-        let form = { ...store, ...data, country: select }
+        let form = { ...store,  ...data, vendorName: vendorName, country: select }
         console.log(form);
         dispatch(handleNextStep(form))
     }
 
     useEffect(() => {
         if (store) {
-            setValue("vendorName", store.vendorName)
+            // setValue("vendorName", store.vendorName)
             setValue("street1", store.street1)
             setValue("street2", store.street2)
             setValue("city", store.city)
@@ -51,7 +53,7 @@ const Vendorenrolment = () => {
                 <div className=''>
                     <div className='flex lg:gap-10 gap-3 border-gray-500 border-b lg:p-5 p-4'>
                         <label className='font-bold lg:mt-5 mt-2 lg:text-xl text-sm' htmlFor="">Vendor Name:</label>
-                        <input {...register("vendorName")} type="text" className={`border border-black focus:outline-none py-2 lg:w-[50%] w-[65%] lg:ms-0 rounded lg:mt-3 mt-0 ${errors.vendorName?.message && 'error'}`} />
+                        <input {...register("vendorName")} type="text" disabled value={`${vendorName}`} className={`border border-black focus:outline-none py-2 lg:w-[50%] w-[65%] lg:ms-0 rounded lg:mt-3 mt-0 ${errors.vendorName?.message && 'error'}`} />
                     </div>
                     <small className='text-red-600 ms-[42%]'>{errors.vendorName?.message}</small>
                 </div>
