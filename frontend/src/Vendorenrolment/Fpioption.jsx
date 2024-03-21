@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form'
 
 const Fpioption = () => {
   const store = useSelector(state => state.vendor.vendorData)
+  console.log(store);
 
 
   const Schema = yup.object().shape({

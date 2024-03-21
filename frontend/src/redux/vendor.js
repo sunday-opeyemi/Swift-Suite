@@ -61,6 +61,10 @@ export const slice = createSlice({
             state.vendorData.planLength = action.payload
         },
 
+        handleConfirm: (state, action) => {
+            
+        },
+
         handlePreviousStep: (state, action) => {
             state.vendorData.currentStep--
         },
