@@ -1,8 +1,8 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import Sidebar from '../Side/Sidebar'
 import { AppContext } from '../context/Dashboard'
 import Header from '../Nav/Header'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import Dashboard from '../pages/Dashboard'
 import Product from '../pages/Product'
 import Enrolment from '../Vendorenrolment/Enrolment'
@@ -14,10 +14,20 @@ import Inventory from '../pages/Inventory'
 
 
 const Rootlayout = ({children}) => {
+  let navigate= useNavigate()
     const { sideBarOpen} = useContext(AppContext)
     console.log(sideBarOpen);
 
+    let token = JSON.parse(localStorage.getItem('token'))
+    console.log(token);
 
+
+    useEffect(() => {
+      if(!token){
+        navigate('/signin')
+      }
+    }, [])
+    
     
   return (
     <>

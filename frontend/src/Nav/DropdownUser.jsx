@@ -35,7 +35,7 @@ const DropdownUser = () => {
   });
 
   return (
-    <div className="relative flex  gap-3">
+    <div className="relative flex gap-3">
     <Profileimage/>
       <Link
         ref={trigger}
@@ -83,7 +83,7 @@ const DropdownUser = () => {
           <li>
             <Link
               to="/profile"
-              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out font-[Mirza]hover:text-green-700 lg:text-base"
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-green-700 lg:text-base"
             >
               <svg
                 className="fill-current"
@@ -108,7 +108,7 @@ const DropdownUser = () => {
           <li>
             <Link
               to="#"
-              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out font-[Mirza] hover:text-green-700 lg:text-base"
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out  hover:text-green-700 lg:text-base"
             >
               <svg
                 className="fill-current"
@@ -129,7 +129,7 @@ const DropdownUser = () => {
           <li>
             <Link
               to="/settings"
-              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out font-[Mirza]  hover:text-green-700 lg:text-base"
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out  hover:text-green-700 lg:text-base"
             >
               <svg
                 className="fill-current"
@@ -152,7 +152,7 @@ const DropdownUser = () => {
             </Link>
           </li>
         </ul>
-        <button className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out font-[Mirza] hover:text-green-700 lg:text-base">
+        <button className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out  hover:text-green-700 lg:text-base">
           <svg
             className="fill-current"
             width="22"

@@ -17,9 +17,9 @@ const Features = () => {
             <div className='flex flex-col justify-center'>
                     <img className='lg:w-[86%]' src={feat5} alt="" />
                 </div>
-                <div className='m-0'>
+                <div className='lg:ms-10 m-0'>
                     <h2 className='font-bold lg:mt-0 mb-4 text-xl'>Full Product Data Integration</h2>
-                    <p>Automatically upload comprehensive product data various suppliers into  your eCommerce store. Effortlessly  manages images, descriptions and other  essential details.</p>
+                    <p >Automatically upload comprehensive product data various suppliers into  your eCommerce store. Effortlessly  manages images, descriptions and other  essential details.</p>
                 </div>
             </div>
             <div className='grid lg:grid-cols-2 grid-cols-1 md:grid-cols-2 md:gap-28 lg:gap-10 lg:px-[24%] px-10 lg:p-10 border'>
@@ -36,7 +36,7 @@ const Features = () => {
             <div className='flex flex-col justify-center'>
                     <img className='lg:w-[86%]' src={feat2} alt="" />
                 </div>
-                <div>
+                <div className='lg:ms-10 m-0'>
                     <h2 className='font-bold lg:mt-0 mt-4 text-xl my-5'>Synchronized Inventory Management</h2>
                     <p>Keep your Inventory in Sync with allvendors. Swift Suite processes feeds from suppliers and updates your inventory in real time, ensuring accurate stock levels across all platforms.</p>
                 </div>
@@ -55,7 +55,7 @@ const Features = () => {
                     <img className='lg:w-[86%]' src={feat3} alt="" />
                 </div>
                 
-                <div>
+                <div className='ms-5'>
                     <h2 className='font-bold lg:mt-0 mt-4 text-xl py-5'>Multiple Supplier Integration</h2>
                     <p>Connect one product to multiple  <br />suppliers and intelligently route orders <br />to the best possible. This ensures optimal <br />fulfillment and customer satisfaction.</p>
                 </div>

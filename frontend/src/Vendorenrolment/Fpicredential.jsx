@@ -6,14 +6,23 @@ import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
+import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify'
 
 
 
 const Fpicredential = () => {
   const store = useSelector(state => state.vendor.vendorData)
 
+  const token = JSON.parse(localStorage.getItem('token'))
+  // console.log(token);
+
+  
+
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
+  const [dispatchCheck, setDispatchCheck] = useState(false)
 
   const Schema = yup.object().shape({
     host: yup.string().required(),
@@ -33,13 +42,78 @@ const Fpicredential = () => {
     }
 };  
 
-  const dispatch = useDispatch()
-  const onSubmit = (data) => {
-    console.log(data);
+let endpoint = 'https://service.swiftsuite.app/vendor/vendor-enrolment-test/'
+
+// console.log(endpoint);
+
+
+ 
+// const testConnect = (data) => {
+//   console.log(data);
+//   // let form = { ...store, ...data }
+//   // console.log(store);
+  
+//   axios.post(
+//     endpoint,
+//        {
+//          vendor_name: 'FragranceX',
+//          ftp_username: form.ftpusername,
+//          ftp_password: form.ftppassword,
+//          host: form.host
+//        },
+//        {
+//          headers: {
+//            Authorization: `Bearer ${token}`
+//           }
+//         }
+//         )
+//         .then((response) =>{
+//           // console.log(response);
+//         })
+//         .catch((err)=>{
+//           // console.log(err);
+//         })
+     
+  //  } 
+   
+
+
+const dispatch = useDispatch()
+const onSubmit = (data) => {
+  console.log(data);
     let form = { ...store, ...data }
-    console.log(form);
-    dispatch(handleNextStep(form))
-  }
+    // console.log(form);
+     axios.post(
+    endpoint,
+       {
+         vendor_name: 'FragranceX',
+         ftp_username: form.ftpusername,
+         ftp_password: form.ftppassword,
+         host: form.host
+       },
+       {
+         headers: {
+           Authorization: `Bearer ${token}`
+          }
+        }
+        )
+        .then((response) =>{
+          console.log(response);
+          toast.success("Connection Successful!");
+          setDispatchCheck(true)
+          
+        })
+        .catch((err)=>{
+          console.log(err);
+          toast("Connection not Successful!")
+        })
+
+
+        if(dispatchCheck===true){
+          dispatch(handleNextStep(form))
+        }
+
+}
   
   useEffect(() => {
     setValue("host", store.host),
@@ -47,7 +121,9 @@ const Fpicredential = () => {
     setValue("ftppassword", store.ftppassword)
   }, [])
   
-  
+ 
+
+
   const handlePrevious =()=>{
     dispatch(handlePreviousStep())
   }
@@ -81,13 +157,17 @@ const Fpicredential = () => {
               </div>
               <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftppassword?.message}</small>
             </div>
-            <div className='flex flex-col my-10 gap-5 w-1/2 mx-auto'>
-              <button className='hover:bg-[#36805c] bg-[#089451]  g text-white font-semibold py-1 rounded'>Test Connect</button>
+            <div className='flex flex-col my-10 gap-8 w-2/3 mx-auto'>
               <div className='grid lg:grid-cols-2 md:grid-cols-2 grid-cols-2 gap-12 lg:gap-10'>
-              <button onClick={handlePrevious} className='border border-[#089451] font-semibold py-1 w-20 rounded'>Previous</button>
-                <button type='submit' className='border border-[#089451] font-semibold py-1 w-20 rounded'>Next</button>
+              <button onClick={handlePrevious} className='border hover:bg-[#089451] hover:text-white border-[#089451] font-semibold py-1 rounded'>Previous</button>
+              <div>
+             { dispatchCheck ? '' : <button className=' border hover:text-[#089451] hover:bg-white hover:border-[#089451] bg-[#089451] lg:w-40 md:40 w-32   text-white font-semibold py-1 rounded'>Test Connect</button>}
+                {!dispatchCheck? '' : <button onClick={handleNextStep} className='border border-[#089451] font-semibold py-1 px-10 rounded hover:bg-[#089451]'>Next</button>}
+
+              </div>
               </div>
             </div>
+            <ToastContainer/>
           </form>
           </div>
         </section>
