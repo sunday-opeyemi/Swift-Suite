@@ -16,7 +16,7 @@ import Inventory from '../pages/Inventory'
 const Rootlayout = ({children}) => {
   let navigate= useNavigate()
     const { sideBarOpen} = useContext(AppContext)
-    console.log(sideBarOpen);
+    // console.log(sideBarOpen);
 
     let token = JSON.parse(localStorage.getItem('token'))
     console.log(token);
