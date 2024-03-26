@@ -13,8 +13,10 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { MdOutlineInventory2 } from "react-icons/md";
 import { FaRegAddressBook } from 'react-icons/fa'
 import { IoIosArrowUp } from 'react-icons/io'
+import { IoBagHandleOutline } from "react-icons/io5";
 import {IoChevronDown} from 'react-icons/io5'
 import swift from '../Images/swift.png'
+import {MdOutlineReorder} from 'react-icons/md'
 import { AppContext } from "../context/Dashboard";
 
 
@@ -123,15 +125,14 @@ const Sidebar = () => {
                   <p>
                     Catalogue
                   </p>
-                 
                 </div>
               </NavLink>
               <p className="mt-3 cursor-pointer hover:text-green-600">
               <span onClick={toggleUp} className={host ? '' : 'hidden'}>
-                <IoIosArrowUp />
+                <IoIosArrowUp  size={18}/>
               </span>
               <span onClick={toggleDown} className={host ? 'hidden' : ''}>
-                <IoChevronDown />
+                <IoChevronDown size={18} />
               </span>
             </p>
             </li>
@@ -149,7 +150,19 @@ const Sidebar = () => {
                 Inventory
               </NavLink>
             </li>
+            <li>
+              <NavLink to={"/layout/inventory"} className="link flex gap-8 hover:text-green-600">
+                <IoBagHandleOutline size={23} className="mt-2 min-w-max" />
+                Marketplace
+              </NavLink>
+            </li>
             
+            <li>
+              <NavLink to={"/layout/inventory"} className="link flex gap-8 hover:text-green-600">
+              <MdOutlineReorder size={23} className="mt-2 min-w-max" />
+                Orders
+              </NavLink>
+            </li>
             <li>
               <NavLink to={""} className="link flex gap-8 hover:text-green-600">
                 <TbReport size={23} className="mt-2 min-w-max" />

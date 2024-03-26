@@ -13,9 +13,9 @@ const initialData = () => {
             street1: '',
             street2: '',
             city: '',
-            state: '',
             postalCode: '',
-            country: '',
+            selectedCountry: '',
+            selectedState : '',
 
             host: '',
             ftpusername: '',
