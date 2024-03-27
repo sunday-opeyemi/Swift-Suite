@@ -266,7 +266,7 @@ const Productype = () => {
   const onSubmit = (data) => {
     // const formData = { ...store, ...data, selectedProducts, selectedCategories, selectedBrand, productChecked, categoryChecked, brandChecked };
     const formData = { ...store, ...data, productChecked, categoryChecked, brandChecked };
-    console.log(formData);
+    // console.log(formData);
     dispatch(handleNextStep(formData));
   };
 

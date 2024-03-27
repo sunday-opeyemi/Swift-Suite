@@ -34,9 +34,9 @@ const Fpioption = () => {
 
   const dispatch = useDispatch()
   const onSubmit = (data) => {
-    console.log(data);
+    // console.log(data);
     let form = { ...store, ...data }
-    console.log(form);
+    // console.log(form);
     dispatch(handleNextStep(form))
   }
 
