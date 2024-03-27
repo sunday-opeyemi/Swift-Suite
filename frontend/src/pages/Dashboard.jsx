@@ -7,8 +7,10 @@ import Overview from "../components/Overview.jsx";
 import Topproduct from "../Customers/Topproduct.jsx";
 import Currentcustomer from "../Customers/Currentcustomer.jsx";
 import MarketVendors from "../Marketplaces/MarketVendors.jsx";
+import Addvendor from "../Marketplaces/Addmarketplaces.jsx.jsx";
 
 const Dashboard = () => {
+
   return (
     <>
       <section className="bg-green-50 h-100vh">
@@ -16,7 +18,7 @@ const Dashboard = () => {
           <div className=" grid-cols-1 lg:px-10 px-5 lg:w-[115%] w-[100%] ">
             <Revenue />
           </div>
-          <div className="grid rounded-lg  bg-white px-5 pb-5 shadow-lg sm:px-7.5 lg:grid-cols-2 md:grid-cols-2 grid-cols-2 gap-4 lg:w-[80%] w-[90%] lg:h-[100%] lg:ms-[12%] ms-5">
+          <div className="grid rounded-lg bg-white px-5 pb-5 shadow-lg sm:px-7.5 lg:grid-cols-2 md:grid-cols-2 grid-cols-2 gap-4 lg:w-[80%] w-[90%] lg:h-[99%] lg:ms-[12%] ms-5">
             <div>
               <h1 className="font-bold px-2 mt-10">Customers</h1>
               <p className="lg:w-[500px] w-[300px] px-2">Information about your Customers</p>
@@ -53,7 +55,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="lg:ms-[20%] md:ms-[0%] ms-0 px-5">
-         
+         <Addvendor/>
           <MarketVendors />
         </div>
       </section>
