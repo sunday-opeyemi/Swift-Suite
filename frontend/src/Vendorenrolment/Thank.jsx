@@ -24,6 +24,10 @@ const Thank = () => {
                 <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>Go To Catalogue</button>
             </div>
 
+            <div className='text-center my-5'>
+                <button type='submit' onClick={handlePrevious} className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>Go To Previous</button>
+            </div>
+
         </>
     )
 }

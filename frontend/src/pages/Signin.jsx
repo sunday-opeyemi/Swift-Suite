@@ -34,7 +34,8 @@ const SignIn = () => {
       // console.log(values);
       axios.post(endpoint, values)
       .then((result)=>{
-        console.log(result);
+        console.log(result.data.access_token);
+        localStorage.setItem('token', JSON.stringify(result.data.access_token))
         toast.success("Sign in Successful!");
         setMyLoader(false)
         navigate('/layout/home')
@@ -81,14 +82,14 @@ const SignIn = () => {
             <div className='flex gap-3 font-semibold'>
             <input type="checkbox" /> <span>Remember Me</span>
             </div>
-              <Link to="/enteremail" className='font-semibold'>Forgot password?</Link>
+              <Link to="/enteremail" className='font-semibold hover:text-[#089451]'>Forgot password?</Link>
             </div>
             <button type='submit' className='w-full bg-[#089451] flex justify-center items-center h-[40px] rounded text-white font-bold py-3 mt-5'>{myLoader? <img src={gif} alt="" className='w-[25px] ' /> : 'Sign In'}</button>
             <div className='flex justify-between my-2'>
               <div>
                 <span className='font-semibold'>Don't have an Account?</span>
               </div>
-              <Link to='/signup' className='font-bold text-[#089451]'>Sign Up</Link>
+              <Link to='/signup' className='font-bold text-[#089451] hover:text-black'>Sign Up</Link>
             </div>
           </form>
         </div>

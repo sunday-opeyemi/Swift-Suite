@@ -13,9 +13,9 @@ const initialData = () => {
             street1: '',
             street2: '',
             city: '',
-            state: '',
             postalCode: '',
-            country: '',
+            selectedCountry: '',
+            selectedState : '',
 
             host: '',
             ftpusername: '',
@@ -59,6 +59,10 @@ export const slice = createSlice({
 
         handlePlanLength: (state, action) => {
             state.vendorData.planLength = action.payload
+        },
+
+        handleConfirm: (state, action) => {
+            
         },
 
         handlePreviousStep: (state, action) => {

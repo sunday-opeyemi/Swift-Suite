@@ -7,8 +7,10 @@ import Overview from "../components/Overview.jsx";
 import Topproduct from "../Customers/Topproduct.jsx";
 import Currentcustomer from "../Customers/Currentcustomer.jsx";
 import MarketVendors from "../Marketplaces/MarketVendors.jsx";
+import Addvendor from "../Marketplaces/Addmarketplaces.jsx.jsx";
 
 const Dashboard = () => {
+
   return (
     <>
       <section className="bg-green-50 h-100vh">
@@ -53,7 +55,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="lg:ms-[20%] md:ms-[0%] ms-0 px-5">
-         
+         <Addvendor/>
           <MarketVendors />
         </div>
       </section>
