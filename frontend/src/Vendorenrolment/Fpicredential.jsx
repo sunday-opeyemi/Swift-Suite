@@ -60,10 +60,7 @@ let endpoint = 'https://service.swiftsuite.app/vendor/vendor-enrolment-test/'
 const dispatch = useDispatch()
 const onSubmit = (data) => {
   setMyLoader(true)
-<<<<<<< HEAD
   // console.log(data);
-=======
->>>>>>> 9d17bb464f49a759061fcd4fbd9fd5003d42b479
     let form = { ...store, ...data }
     // console.log(form);
      axios.post(
@@ -81,11 +78,7 @@ const onSubmit = (data) => {
         }
         )
         .then((response) =>{
-<<<<<<< HEAD
           // console.log(response);
-=======
-
->>>>>>> 9d17bb464f49a759061fcd4fbd9fd5003d42b479
           setMyLoader(false)
           toast.success("Connection Successful!");
           setDispatchCheck(true)
