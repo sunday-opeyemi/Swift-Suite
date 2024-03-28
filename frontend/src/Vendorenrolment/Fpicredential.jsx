@@ -61,7 +61,6 @@ const dispatch = useDispatch()
 const onSubmit = (data) => {
   setMyLoader(true)
   // console.log(data);
-
     let form = { ...store, ...data }
     // console.log(form);
      axios.post(
@@ -80,7 +79,6 @@ const onSubmit = (data) => {
         )
         .then((response) =>{
           // console.log(response);
-
           setMyLoader(false)
           toast.success("Connection Successful!");
           setDispatchCheck(true)
