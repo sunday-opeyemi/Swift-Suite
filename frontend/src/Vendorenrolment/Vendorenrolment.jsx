@@ -342,4 +342,3 @@ const Vendorenrolment = () => {
 };
 
 export default Vendorenrolment;
-

@@ -17,7 +17,7 @@ const MarketVendors = () => {
   return (
     <div className='bg-green-50 h-screen'>
     <h1 className='text-green-600 font-bold lg:mt-20 mt-[310%] md:mt-[50%]'>Add Vendor</h1>
-  
+
             <div className='grid lg:grid-cols-3 md:grid-cols-2 h-[500px] my-5 grid-cols-1 mt-3 gap-4'>
                 {Vendordata.map((item, i) => (
                     <div key={i} className=' bg-white shadow-lg py-10 text-center text-sm font-semibold'>
