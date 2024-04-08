@@ -38,7 +38,7 @@ const Catalogue = () => {
     price: "",
     brand: "",
     title: "",
-    gender: "",
+    description: "",
   });
 
   let endpoint =
@@ -90,7 +90,6 @@ const Catalogue = () => {
     console.log("Selected formFilters:", formFilters);
     // Perform filtering logic here...
     filterCatalogueProduct();
-    setFormFilters({ ...formFilters, title: "" });
   };
 
   const filterCatalogueProduct = () => {
@@ -121,9 +120,9 @@ const Catalogue = () => {
       );
     }
 
-    if (formFilters.gender !== "") {
+    if (formFilters.description !== "") {
       filteredItems = filteredItems.filter(
-        (item) => item.gender.toLowerCase() === formFilters.gender.toLowerCase()
+        (item) => item.description.toLowerCase() === formFilters.description.toLowerCase()
       );
     }
 
@@ -144,6 +143,13 @@ const Catalogue = () => {
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
+
+  // useEffect(() => {
+  //   if (catalogueProduct) {
+  //     const brand = [...new Set(catalogueProduct.map((item) => item.brand))];
+  //     setUniqueBrand(brand);
+  //   }
+  // }, [catalogueProduct]);
 
   useEffect(() => {
     if (catalogueProduct) {
@@ -240,9 +246,22 @@ const Catalogue = () => {
               </option>
             ))}
           </select>
+{/* 
+          <select
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            name="brand"
+            value={formFilters.brand}
+            onChange={handleFormInputChange}
+          >
+            {uniqueBrand.map((name, index) => (
+              <option key={index} value={name}>
+                {name}
+              </option>
+            ))}
+          </select> */}
 
 
-          <input
+<input
             className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
             type="text"
             placeholder="Filter by brand"
@@ -251,21 +270,19 @@ const Catalogue = () => {
             onChange={handleFormInputChange}
           />
 
-
           <input
             className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
             type="text"
-            placeholder="Filter by gender"
-            name="gender"
-            value={formFilters.gender}
+            placeholder="Filter by description"
+            name="description"
+            value={formFilters.description}
             onChange={handleFormInputChange}
           />
-      
 
           {currentItems.length > 0 && (
             <p>{currentItems.length} products match your criteria.</p>
           )}
-          <button className="bg-white rounded-xl w-[40%] mt-3 text-black" type="submit">Search</button>
+          <button type="submit">Submit</button>
         </form>
         {/* <Sort
           className="ms-[80%]"
@@ -303,15 +320,26 @@ const Catalogue = () => {
                       />
                     </div>
                     <div className="p-4 bg-green-50 my-5 rounded-xl">
+                      <p>ID: {product.id}</p>
                       <p>NAME: {product.name}</p>
                       <p>BRAND: {product.brand}</p>
                       <p>PRICE: {product.aud_price}</p>
+                      <p>CAD_PRICE: {product.cad_price}</p>
+                      <p>EUD_PRICE: {product.eur_price}</p>
+                      <p>GBP_PRICE: {product.gbp_price}</p>
                       <p>GENDER: {product.gender}</p>
+                      <p>ITEM: {product.item}</p>
+                      <p>QTY: {product.qty}</p>
+                      <p>SIZE: {product.size}</p>
                       <p>TITLE: {product.title}</p>
                       <p>UPC: {product.upc}</p>
                       <p>PRICE: {product.price}</p>
                     </div>
                     <div className="p-4">
+                      <p>METRIC_SIZE: {product.metric_size}</p>
+                      <p>Description: {product.description}</p>
+                      <p>USER ID: {product.user_id}</p>
+                      <p>RETAIL: {product.retail}</p>
                       <p className="text-green-300 hover:text-black">
                         URL: {product.url}
                       </p>
@@ -339,25 +367,16 @@ const Catalogue = () => {
             <ModalBody>
               {selectedProduct && (
                 <>
-                      <p>METRIC_SIZE: {selectedProduct.metric_size}</p>
-                      <p>Description: {selectedProduct.description}</p>
-                      <p>USER ID: {selectedProduct.user_id}</p>
-                      <p>RETAIL: {selectedProduct.retail}</p>
-                      <p>CAD_PRICE: {selectedProduct.cad_price}</p>
-                      <p>EUD_PRICE: {selectedProduct.eur_price}</p>
-                      <p>GBP_PRICE: {selectedProduct.gbp_price}</p>
-                      <p>ITEM: {selectedProduct.item}</p>
-                      <p>QTY: {selectedProduct.qty}</p>
-                      <p>SIZE: {selectedProduct.size}</p>
+                  <p>Description: {selectedProduct.description}</p>
                 </>
               )}
             </ModalBody>
             <ModalFooter>
               <Button color="danger" variant="light" onPress={onClose}>
-                CANCEL
+                Close
               </Button>
               <Button className="bg-[#089451] text-white" onPress={onClose}>
-                ADD TO PRODUCT
+                Action
               </Button>
             </ModalFooter>
           </ModalContent>
