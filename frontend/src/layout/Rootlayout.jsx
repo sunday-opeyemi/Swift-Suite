@@ -14,23 +14,23 @@ const Rootlayout = ({ children }) => {
   const navigate = useNavigate();
   const { sideBarOpen } = useContext(AppContext);
 
-  useEffect(() => {
-    const token = JSON.parse(localStorage.getItem('token'));
+  // useEffect(() => {
+  //   const token = JSON.parse(localStorage.getItem('token'));
 
-    if (!token) {
-      navigate('/signin');
-    } else {
-      const currentTime = Date.now();
-      const expiryTime = token.exp * 1000; // Convert to milliseconds
-      const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
+  //   if (!token) {
+  //     navigate('/signin');
+  //   } else {
+  //     const currentTime = Date.now();
+  //     const expiryTime = token.exp * 1000; // Convert to milliseconds
+  //     const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
 
-      if (currentTime >= expiryTime || expiryTime - currentTime < thirtyMinutesInMilliseconds) {
-        // Token expired or will expire within 30 minutes
-        localStorage.removeItem('token'); // Remove the expired token from localStorage
-        navigate('/signin'); // Redirect to sign-in page
-      }
-    }
-  }, [navigate]);
+  //     if (currentTime >= expiryTime || expiryTime - currentTime < thirtyMinutesInMilliseconds) {
+  //       // Token expired or will expire within 30 minutes
+  //       localStorage.removeItem('token'); // Remove the expired token from localStorage
+  //       navigate('/signin'); // Redirect to sign-in page
+  //     }
+  //   }
+  // }, [navigate]);
 
   return (
     <>
