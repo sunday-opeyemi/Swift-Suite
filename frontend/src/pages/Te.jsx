@@ -1,10 +1,12 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import axios from "axios";
 import CustomPagination from "./CustomPagination";
-import gif from '../Images/gif.gif'
-import Sort from "../components/Sortcomponent/Sort";
-
+import gif from "../Images/gif.gif";
+import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { BsFillFilterSquareFill } from "react-icons/bs";
+import { FaList, FaTh } from 'react-icons/fa';
 import {
   Modal,
   ModalContent,
@@ -16,59 +18,44 @@ import {
 } from "@nextui-org/react";
 
 const Catalogue = () => {
+  const navigate = useNavigate()
   const token = JSON.parse(localStorage.getItem("token"));
   console.log(token);
   const [catalogueProduct, setCatalogueProduct] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [title, setTitle] = useState([]);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [viewMode, setViewMode] = useState('list'); // 'list' or 'grid'
 
   const itemsPerPage = 99;
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const observer = useRef(null);
+  const [formFilters, setFormFilters] = useState({
+    name: "",
+    price: "",
+    brand: "",
+    title: "",
+    gender: "",
+  });
 
-  let endpoint =
-    "https://service.swiftsuite.app/vendor/catalogue-fragrancex/46/";
+  let endpoint = "https://service.swiftsuite.app/vendor/catalogue-fragrancex/46/";
 
   useEffect(() => {
     fetchData();
-  }, [token, currentPage]);
+  }, [token]);
 
   useEffect(() => {
     filterCatalogueProduct();
   }, [catalogueProduct, searchQuery, currentPage]);
 
-  useEffect(() => {
-    const options = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.5, // Trigger when 50% of the element is visible
-    };
-
-    observer.current = new IntersectionObserver(handleObserver, options);
-
-    return () => {
-      if (observer.current) {
-        observer.current.disconnect();
-      }
-    };
-  }, []);
-
-  const handleObserver = (entities) => {
-    const target = entities[0];
-    if (target.isIntersecting) {
-      setCurrentPage((prevPage) => prevPage + 1); // Load next page
-    }
-  };
-
   const fetchData = async () => {
     try {
       setLoader(true);
-      const response = await axios.get(`${endpoint}?page=${currentPage}`, {
+      const response = await axios.get(endpoint, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -76,33 +63,161 @@ const Catalogue = () => {
         },
       });
       console.log(response.data);
-      setCatalogueProduct((prevProducts) => [...prevProducts, ...response.data]);
+      setCatalogueProduct(response.data);
       setLoader(false);
     } catch (error) {
       setLoader(false);
       console.log(error);
+      if(error.response.data.detail){
+        console.log('Token has expired');
+        toast.error("Token has expired");
+        localStorage.removeItem("token")
+          navigate('/signin')
+      }
     }
-  };
-
-  const filterCatalogueProduct = () => {
-    const filteredItems = catalogueProduct.filter((item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setCurrentItems(filteredItems);
   };
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
-    setCurrentPage(0); // Reset currentPage when search query changes
+    setCurrentPage(0);
   };
 
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
+
+  useEffect(() => {
+    if (catalogueProduct) {
+      const title = [...new Set(catalogueProduct.map((item) => item.title))];
+      setTitle(title);
+    }
+  }, [catalogueProduct]);
+
   const handleProductClick = (product) => {
     setSelectedProduct(product);
     onOpen();
   };
+
+  const handleFormInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormFilters({ ...formFilters, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Selected formFilters:", formFilters);
+    filterCatalogueProduct();
+    setFormFilters({ ...formFilters, title: "" });
+  };
+
+  const filterCatalogueProduct = () => {
+    let filteredItems = [...catalogueProduct];
+
+    if (formFilters.name.trim() !== "") {
+      filteredItems = filteredItems.filter((item) =>
+        item.name.toLowerCase().includes(formFilters.name.toLowerCase())
+      );
+    }
+
+    if (formFilters.title.trim() !== "") {
+      filteredItems = filteredItems.filter((item) =>
+        item.title.toLowerCase().includes(formFilters.title.toLowerCase())
+      );
+    }
+
+    if (formFilters.price !== "") {
+      filteredItems = filteredItems.filter(
+        (item) => item.price === parseFloat(formFilters.price)
+      );
+    }
+
+    if (formFilters.brand !== "") {
+      filteredItems = filteredItems.filter(
+        (item) => item.brand.toLowerCase() === formFilters.brand.toLowerCase()
+      );
+    }
+
+    if (formFilters.gender !== "") {
+      filteredItems = filteredItems.filter(
+        (item) => item.gender.toLowerCase() === formFilters.gender.toLowerCase()
+      );
+    }
+
+    filteredItems = filteredItems.filter((item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    setCurrentItems(filteredItems);
+  };
+
+  const toggleViewMode = () => {
+    setViewMode((prevMode) => (prevMode === 'list' ? 'grid' : 'list'));
+  };
+
+
+  const renderListItem = (product, index) => (
+    <div
+      key={index}
+      onClick={() => handleProductClick(product)}
+      className="your-list-item-styles"
+    >
+      {/* Render list view content here */}
+      <div className="p-4">
+          <img
+            src={product.image}
+            alt={product.image}
+            className="w-60 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
+          />
+        </div>
+        <div className="p-4 bg-green-50 my-5 rounded-xl">
+          <p>NAME: {product.name}</p>
+          <p>BRAND: {product.brand}</p>
+          <p>PRICE: {product.aud_price}</p>
+          <p>GENDER: {product.gender}</p>
+          <p>TITLE: {product.title}</p>
+          <p>UPC: {product.upc}</p>
+          <p>PRICE: {product.price}</p>
+        </div>
+        <div className="p-4">
+          <p className="text-green-300 hover:text-black">
+            URL: {product.url}
+          </p>
+        </div>
+    </div>
+  );
+
+  // Function to render product item in grid view
+  const renderGridItem = (product, index) => (
+    <div
+      key={index}
+      onClick={() => handleProductClick(product)}
+      className="grid grid-cols-3 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+    >
+      {/* Render grid view content here */}
+      <div className="p-4">
+          <img
+            src={product.image}
+            alt={product.image}
+            className="w-60 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
+          />
+        </div>
+        <div className="p-4 bg-green-50 my-5 rounded-xl">
+          <p>NAME: {product.name}</p>
+          <p>BRAND: {product.brand}</p>
+          <p>PRICE: {product.aud_price}</p>
+          <p>GENDER: {product.gender}</p>
+          <p>TITLE: {product.title}</p>
+          <p>UPC: {product.upc}</p>
+          <p>PRICE: {product.price}</p>
+        </div>
+        <div className="p-4">
+          <p className="text-green-300 hover:text-black">
+            URL: {product.url}
+          </p>
+        </div>
+    </div>
+  );
+
 
   const startIndex = currentPage * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -110,14 +225,16 @@ const Catalogue = () => {
   const paginatedItems = currentItems.slice(startIndex, endIndex);
 
   return (
-    <div className="bg-green-50 h-screen">
-      <section className="fixed h-[40%] border lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-40 lg:ms-[22%] lg:me-[2%]">
+    <div className="bg-green-50 h-screen ">
+      <section className={filterOpen ? "fixed border h-[40%] lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 lg:ms-[22%] lg:me-[2%]" : "fixed border lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 lg:ms-[22%] lg:me-[2%]"}>
         <div className="flex h-[25%] gap-10">
-          <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white">
-            <span value="">Adv Search</span>
+          <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white h-[40px]">
+            <button className="flex gap-1" onClick={() => setFilterOpen(!filterOpen)}>
+              <span className="mt-1">Filter</span>
+              <span className="mt-[9px] text-[#089451]"><BsFillFilterSquareFill /></span>
+            </button>
           </div>
-
-          <div className="flex lg:w-[45%] md:w-[100%] rounded-2xl  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
+          <div className="flex lg:w-[45%] md:w-[100%] rounded-2xl h-[40px]  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
             <input
               className="lg:block py-3 hidden bg-transparent outline-none px-2  w-[120px] md:w-[100%]"
               type="text"
@@ -132,83 +249,103 @@ const Catalogue = () => {
               <BsSearch className="lg:block hidden" />
             </button>
           </div>
+          <div className="flex gap-2 bg-white rounded-xl h-[40px] p-2">
+            <button onClick={toggleViewMode} className="text-[#089451]">
+              {viewMode === 'list' ? <FaTh size={20} /> : <FaList size={20} />}
+            </button>
+          </div>
         </div>
       </section>
-      <div className="ms-[26%] mt-14 fixed  text-white">
-        {/* Pagination */}
-        {currentItems.length > 0 && (
-          <CustomPagination
-            pageCount={Math.ceil(currentItems.length / itemsPerPage)}
-            onPageChange={handlePageChange}
-            currentPage={currentPage}
-            itemsPerPage={itemsPerPage}
-            totalItems={currentItems.length}
+      <div className={filterOpen ? "ms-[26%] mt-14 fixed  text-white" : 'hidden'}>
+        <form
+          className="w-full grid lg:grid-cols-4 my-4 lg:ms-[12%]"
+          onSubmit={handleSubmit}
+        >
+          <input
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            type="text"
+            placeholder="Search by name"
+            name="name"
+            value={formFilters.name}
+            onChange={handleFormInputChange}
           />
-        )}
-        <Sort
-          className="ms-[80%]"
-          setCurrentItems={setCurrentItems}
-          catalogueProduct={catalogueProduct}
-        />
+          <input
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            type="number"
+            placeholder="Filter by price"
+            name="price"
+            value={formFilters.price}
+            onChange={handleFormInputChange}
+          />
+          <select
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            name="title"
+            value={formFilters.title}
+            onChange={handleFormInputChange}
+          >
+            <option value="title">Title</option>
+            {title.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+          <input
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            type="text"
+            placeholder="Filter by brand"
+            name="brand"
+            value={formFilters.brand}
+            onChange={handleFormInputChange}
+          />
+          <input
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            type="text"
+            placeholder="Filter by gender"
+            name="gender"
+            value={formFilters.gender}
+            onChange={handleFormInputChange}
+          />
+          {currentItems.length > 0 && (
+            <p>{currentItems.length} products match your criteria.</p>
+          )}
+          <button className="bg-white rounded-xl w-[40%] mt-3 text-black" type="submit">Search</button>
+        </form>
       </div>
 
       <div className="lg:ms-[22%] py-40 bg-green-50 p-10">
         <div className="flex gap-6 mb-34">
-          <div className=" rounded-lg overflow-hidden">
-            {loader && (
-              <div className="flex justify-center items-center">
-                <img src={gif} alt="Loading..." className="w-[100px] mt-20" />
-              </div>
-            )}
-            {!loader && paginatedItems.length > 0 ? (
-              paginatedItems.map((product, index) => (
-                <div
-                  onClick={() => handleProductClick(product)}
-                  className="grid grid-cols-3 mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                  key={index}
-                >
-                  <div className="p-4">
-                    <img
-                      src={product.image}
-                      alt={product.image}
-                      className="w-60 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
-                    />
-                  </div>
-                  <div className="p-4 bg-green-50 my-5 rounded-xl">
-                    <p>ID: {product.id}</p>
-                    <p>NAME: {product.name}</p>
-                    <p>BRAND: {product.brand}</p>
-                    <p>PRICE: {product.aud_price}</p>
-                    <p>CAD_PRICE: {product.cad_price}</p>
-                    <p>EUD_PRICE: {product.eur_price}</p>
-                    <p>GBP_PRICE: {product.gbp_price}</p>
-                    <p>GENDER: {product.gender}</p>
-                    <p>ITEM: {product.item}</p>
-                    <p>QTY: {product.qty}</p>
-                    <p>SIZE: {product.size}</p>
-                    <p>TITLE: {product.title}</p>
-                    <p>UPC: {product.upc}</p>
-                    <p>PRICE: {product.price}</p>
-                  </div>
-                  <div className="p-4">
-                    <p>METRIC_SIZE: {product.metric_size}</p>
-                    <p>Description: {product.description}</p>
-                    <p>USER ID: {product.user_id}</p>
-                    <p>RETAIL: {product.retail}</p>
-                    <p className="text-green-300 hover:text-black">
-                      URL: {product.url}
-                    </p>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-black text-xl lg:ms-[100px] w-[90%] mt-20">
-                Sorry, we couldn't find any results
-              </div>
-            )}
-          </div>
+        <div className="rounded-lg overflow-hidden">
+  {loader && (
+    <div className="flex justify-center items-center">
+      <img
+        src={gif}
+        alt="Loading..."
+        className="lg:ms-[400px] w-[100px] mt-10"
+      />
+    </div>
+  )}
+  {!loader && currentItems.length > 0 ? (
+    <>
+      {viewMode === 'list' ? (
+        <div className="list-view-container">
+          {/* Render list view content */}
+          {currentItems.map((product, index) => renderListItem(product, index))}
         </div>
-
+      ) : (
+        <div className="grid-view-container">
+          {/* Render grid view content */}
+          {currentItems.map((product, index) => renderGridItem(product, index))}
+        </div>
+      )}
+    </>
+  ) : (
+    <div className="text-black text-xl lg:ms-[100px] w-[90%] mt-20">
+      Sorry, we couldn't find any results
+    </div>
+  )}
+</div>
+        </div>
         <Modal
           className="p-5"
           isOpen={isOpen}
@@ -222,22 +359,31 @@ const Catalogue = () => {
             <ModalBody>
               {selectedProduct && (
                 <>
-                  <p>Description: {selectedProduct.description}</p>
+                      <p>METRIC_SIZE: {selectedProduct.metric_size}</p>
+                      <p>Description: {selectedProduct.description}</p>
+                      <p>USER ID: {selectedProduct.user_id}</p>
+                      <p>RETAIL: {selectedProduct.retail}</p>
+                      <p>CAD_PRICE: {selectedProduct.cad_price}</p>
+                      <p>EUD_PRICE: {selectedProduct.eur_price}</p>
+                      <p>GBP_PRICE: {selectedProduct.gbp_price}</p>
+                      <p>ITEM: {selectedProduct.item}</p>
+                      <p>QTY: {selectedProduct.qty}</p>
+                      <p>SIZE: {selectedProduct.size}</p>
                 </>
               )}
             </ModalBody>
             <ModalFooter>
               <Button color="danger" variant="light" onPress={onClose}>
-                Close
+                CANCEL
               </Button>
               <Button className="bg-[#089451] text-white" onPress={onClose}>
-                Action
+                ADD TO PRODUCT
               </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
       </div>
-      <div ref={observer} className="loader" /> {/* Intersection Observer target */}
+      <ToastContainer />
     </div>
   );
 };
