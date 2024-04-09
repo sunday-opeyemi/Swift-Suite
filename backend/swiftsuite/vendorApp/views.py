@@ -219,7 +219,7 @@ def main( suppliers):
 
 
 VENDORS = {
-    "frangrancex":[
+    "fragrancex":[
         ('Fragrancex', "ftp2.fragrancex.com", "frgx_temilolaoduola@gmail.com", "ftos3tpi", "/", "outgoingfeed_upc.csv", 1),
     ],
 
@@ -291,7 +291,7 @@ class VendoEnronmentView(APIView):
     permission_classes = [IsAuthenticated]
 
     VENDOR_FLAGS = {
-    'frangrancex': 'has_frangrancex',
+    'fragrancex': 'has_fragrancex',
     'zanders': 'has_zanders',
     'rsr': 'has_rsr',
     'cwr': 'has_cwr',
@@ -313,13 +313,10 @@ class VendoEnronmentView(APIView):
             for vendor, flag in self.VENDOR_FLAGS.items():
                 if vendor_name == vendor:
                     validated_data[flag] = True
-                else:
-                    validated_data[flag] = False
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
 class CatalogueBaseView(APIView):
     permission_classes = [IsAuthenticated]
     model = None  # Subclasses must override this
@@ -338,7 +335,7 @@ class CatalogueBaseView(APIView):
         except VendoEnronment.DoesNotExist:
             return JsonResponse({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         
-class CatalogueFrangracexView(CatalogueBaseView):
+class CatalogueFragrancexView(CatalogueBaseView):
     model = Fragrancex
 class CatalogueZandersView(CatalogueBaseView):
     model = Zanders

@@ -18,7 +18,7 @@ class VendoEnronment(models.Model):
     ftp_url = models.CharField(max_length=255)
     file_urls = models.TextField()
     host = models.CharField(max_length=255)
-    has_frangrancex = models.BooleanField(default=False)
+    has_fragrancex = models.BooleanField(default=False)
     has_lipsey = models.BooleanField(default=False)
     has_zanders = models.BooleanField(default=False)
     has_cwr = models.BooleanField(default=False)
