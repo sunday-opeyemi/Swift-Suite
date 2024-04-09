@@ -18,10 +18,15 @@ class VendoEnronment(models.Model):
     ftp_url = models.CharField(max_length=255)
     file_urls = models.TextField()
     host = models.CharField(max_length=255)
+    has_frangrancex = models.BooleanField(default=False)
+    has_lipsey = models.BooleanField(default=False)
+    has_zanders = models.BooleanField(default=False)
+    has_cwr = models.BooleanField(default=False)
+    has_ssi = models.BooleanField(default=False)
+    has_rsr = models.BooleanField(default=False)
 
 
 class Cwr(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     cwr_part_number = models.CharField(db_column='CWR Part Number', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     manufacturer_part_number = models.CharField(db_column='Manufacturer Part Number', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     upc_code = models.CharField(db_column='UPC Code', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
@@ -96,7 +101,6 @@ class Cwr(models.Model):
 
 
 class Fragrancex(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.CharField(db_column='ITEM', max_length=255, blank=True, null=True)  # Field name made lowercase.
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True)  # Field name made lowercase.
     description = models.TextField(db_column='DESCRIPTION', blank=True, null=True)  # Field name made lowercase.
@@ -118,7 +122,6 @@ class Fragrancex(models.Model):
 
 
 class Lipsey(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     itemnumber = models.TextField(db_column='ItemNumber', blank=True, null=True)  # Field name made lowercase.
     description1 = models.TextField(db_column='Description1', blank=True, null=True)  # Field name made lowercase.
     description2 = models.TextField(db_column='Description2', blank=True, null=True)  # Field name made lowercase.
@@ -199,7 +202,6 @@ class Lipsey(models.Model):
 
 
 class Rsr(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     rsr_stock_number = models.CharField(db_column='RSR_Stock_Number', max_length=255, blank=True, null=True)  # Field name made lowercase.
     upc = models.CharField(db_column='UPC', max_length=255, blank=True, null=True)  # Field name made lowercase.
     dept_number = models.CharField(db_column='Dept_Number', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -283,7 +285,6 @@ class Rsr(models.Model):
 
 
 class Ssi(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     sku = models.CharField(db_column='SKU', max_length=255, blank=True, null=True)  # Field name made lowercase.
     description = models.CharField(db_column='Description', max_length=255, blank=True, null=True)  # Field name made lowercase.
     datecreated = models.CharField(db_column='DateCreated', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -325,7 +326,6 @@ class Ssi(models.Model):
 
 
 class Zanders(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     available = models.IntegerField(blank=True, null=True)
     category = models.CharField(max_length=255, blank=True, null=True)
     desc1 = models.TextField(blank=True, null=True)
