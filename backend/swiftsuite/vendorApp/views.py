@@ -320,13 +320,14 @@ class VendoEnronmentView(APIView):
 class CatalogueBaseView(APIView):
     permission_classes = [IsAuthenticated]
     model = None  # Subclasses must override this
+    vendor_name = ''
 
     def get_queryset(self, user_id):
         return self.model.objects.all().values()
 
     def get(self, request, pk):
         try:
-            user = VendoEnronment.objects.get(user_id=pk)
+            user = VendoEnronment.objects.get(user_id=pk, vendor_name = self.vendor_name)
             if getattr(user, f'has_{self.model._meta.object_name.lower()}'):
                 queryset = self.get_queryset(pk)
                 return JsonResponse(list(queryset), safe=False)
@@ -337,15 +338,19 @@ class CatalogueBaseView(APIView):
         
 class CatalogueFragrancexView(CatalogueBaseView):
     model = Fragrancex
+    vendor_name = 'FragranceX'
 class CatalogueZandersView(CatalogueBaseView):
     model = Zanders
+    vendor_name = 'Zanders'
 class CatalogueLipseyView(CatalogueBaseView):
     model = Lipsey
+    vendor_name = 'Lipsey'
 class CatalogueSsiView(CatalogueBaseView):
     model = Ssi
+    vendor_name = 'SSI'
 class CatalogueCwrView(CatalogueBaseView):
     model = Cwr
-
+    vendor_name = 'CWR'
 class AllCatalogueView(APIView):
     permission_classes = [IsAuthenticated]
 
