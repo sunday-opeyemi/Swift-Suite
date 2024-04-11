@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
-    "@nextui-org/react": "^2.2.9",
+    "@nextui-org/react": "^2.2.10",
     "@reduxjs/toolkit": "^2.2.1",
     "axios": "^1.6.7",
     "esbuild": "^0.20.2",

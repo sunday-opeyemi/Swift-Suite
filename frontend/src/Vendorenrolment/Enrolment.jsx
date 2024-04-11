@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Vendorenrolment from './Vendorenrolment'
 import Fpicredential from './Fpicredential'
 import Fpioption from './Fpioption'
@@ -7,9 +7,43 @@ import { MdCheckBoxOutlineBlank } from "react-icons/md";
 import { FaSquareCheck } from "react-icons/fa6";
 import Thank from './Thank'
 import Productype from './Productype'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Enrolment = () => {
+  const token = JSON.parse(localStorage.getItem('token'));
+  // console.log(token);
+
+  const navigate = useNavigate()
+
   const currentIndex = useSelector(state => state.vendor.vendorData.currentStep)
+
+  let endpoint = 'https://service.swiftsuite.app/vendor/vendor-enrolment/'
+
+
+
+
+
+    // useEffect(() => {
+    //   axios.get(endpoint, {
+    //     headers:{
+    //       "Authorization" : `Bearer ${token}`,
+    //       "Content-Type" : "application/json",
+    //       "Accept" : "application/json"
+    //     }
+    //   })
+    //   .then((response)=>{
+    //     console.log(response);
+    //     if(!response.data.status){
+    //       localStorage.removeItem("token")
+    //       navigate('/signin')
+    //     }
+    //   })
+    //   .catch((err)=>{
+    //     console.log(err);
+    //   })
+    // }, [])
+    
 
   const myList = ([
     {
