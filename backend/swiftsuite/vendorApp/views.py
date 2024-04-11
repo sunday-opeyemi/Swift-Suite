@@ -156,7 +156,7 @@ update_file = [
 ]
 
 
-def main():
+def main(suppliers):
     for sub_supplier in suppliers:
         process_supplier(sub_supplier)       
 
