@@ -122,11 +122,10 @@ const Productype = () => {
       }
       return checkbox;
     });
-
     setCheckBoxesProduct(updatedCheckboxes);
 
     const product = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    console.log(product);
+    // console.log(product);
     setProductChecked(product)
   };
 
@@ -134,9 +133,14 @@ const Productype = () => {
   const selectallProducts = (e) => {
     e.preventDefault();
     const updatedCheckboxes = checkBoxesProduct.map(checkbox => ({ ...checkbox, checked: true }));
+    // Here we get all the info in our checkBoxesProduct
+    // console.log(updatedCheckboxes);
+    // we update our checkBoxesBrand here by setting the new value inside it at setCheckBoxesBrand
     setCheckBoxesProduct(updatedCheckboxes);
+    // we filter it here and save it in theSelectedProducts
     const theSelectedProducts = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    setSelectedProducts(theSelectedProducts);
+    // console.log(theSelectedProducts);
+    setProductChecked(theSelectedProducts);
   };
 
 
@@ -144,7 +148,7 @@ const Productype = () => {
   const deselectallProducts = (e) => {
     e.preventDefault()
     const Deselect = checkBoxesProduct.map(checkbox => ({ ...checkbox, checked: false }));
-    console.log(Deselect);
+    // console.log(Deselect);
     setCheckBoxesProduct(Deselect)
   };
 
@@ -176,7 +180,7 @@ const Productype = () => {
     const updatedCheckboxes = checkBoxesCategory.map(checkbox => ({ ...checkbox, checked: true }));
     setCheckBoxesCategory(updatedCheckboxes);
     const theSelectedCategories = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    setSelectedCategories(theSelectedCategories);
+    setCategoryChecked(theSelectedCategories);
   };
 
 
@@ -184,6 +188,7 @@ const Productype = () => {
   const deselectallCategory = (e) => {
     e.preventDefault()
     const deselect = checkBoxesCategory.map(checkbox => ({ ...checkbox, checked: false }));
+    console.log(deselect);
     setCheckBoxesCategory(deselect)
   };
 
@@ -213,7 +218,7 @@ const Productype = () => {
     const updatedCheckboxes = checkBoxesBrand.map(checkbox => ({ ...checkbox, checked: true }));
     setCheckBoxesBrand(updatedCheckboxes);
     const theSelectedBrand = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    setSelectedBrand(theSelectedBrand);
+    setBrandChecked(theSelectedBrand);
   };
 
 
@@ -259,8 +264,9 @@ const Productype = () => {
   let dispatch = useDispatch();
 
   const onSubmit = (data) => {
-    const formData = { ...store, ...data, selectedProducts, selectedCategories, selectedBrand, productChecked, categoryChecked, brandChecked };
-    console.log(formData);
+    // const formData = { ...store, ...data, selectedProducts, selectedCategories, selectedBrand, productChecked, categoryChecked, brandChecked };
+    const formData = { ...store, ...data, productChecked, categoryChecked, brandChecked };
+    // console.log(formData);
     dispatch(handleNextStep(formData));
   };
 
@@ -278,16 +284,16 @@ const Productype = () => {
           <div className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:h-[20%] lg:ms-0 ms-3 py-10 lg:mt-8 mt-0'>
             <div>
               <h1 className='ms-5 lg:text-xl text-sm font-bold'>Product Type</h1>
-              <div className='flex lg:ms-0 md:ms-0 ms-1 lg:gap-[32%] gap-8 md:gap-40 border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
+              <div className='flex lg:ms-0 md:ms-0 ms-1 lg:gap-[32%] gap-[25%] md:gap-[32%] border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
                 <label className='mt-2 text-sm font-semibold h-8' htmlFor="">Select Products:</label>
-                <div className='border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[260px] w-[160px] md:w-[200px]'>
+                <div className='border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[230px] w-[160px] md:w-[200px]'>
                   <span className='text-gray-500 p-1'>Select Products</span>
                   <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-32 hover:text-green-700">
                     <span onClick={toggleUp} className={host ? '' : 'hidden'}>
                       <IoIosArrowUp size={18}  />
                     </span>
                     <span onClick={toggleDown} className={host ? 'hidden' : ''}>
-                      <IoChevronDown size={18}  className={(hostCategory || brand) ? 'disable' : 'block'}/>
+                      <IoChevronDown size={18}  className={(hostCategory || brand) ? 'hidden' : 'block'}/>
                     </span>
                   </p>
                   <div className={`p-2 mt-[-4%] ${host ? 'block' : 'hidden'}`}>
@@ -318,9 +324,9 @@ const Productype = () => {
 
 
               <h1 className='ms-5 lg:text-xl font-bold mt-5'>Categories</h1>
-              <div className='flex lg:gap-[30%] md:gap-[30%] lg:ms-0 md:ms-0 ms-1 gap-5 border-gray-300 border-b lg:p-5 p-4'>
+              <div className='flex lg:gap-[30%] md:gap-[30%] lg:ms-0 md:ms-0 ms-1 gap-[23%] border-gray-300 border-b lg:p-5 p-4'>
                 <label className=' text-sm font-semibold h-8' htmlFor="">Select Categories:</label>
-                <div className={host ? '-z-1' : `border border-gray-500 rounded text-sm lg:pe-20 h-8 py-1 lg:w-[259px] w-[160px] md:w-[200px]`}>
+                <div className={host ? '-z-1' : `border border-gray-500 rounded text-sm lg:pe-20 h-8 py-1 lg:w-[230px] w-[160px] md:w-[200px]`}>
                   <span className={host ? 'hidden' : `text-gray-500 p-1`}>Select Categories</span>
                   <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-[85%] hover:text-green-700">
                     <span onClick={toggleUpCategory} className={hostCategory ? '' : 'hidden'}>
@@ -356,9 +362,9 @@ const Productype = () => {
 
 
               <h1 className='ms-5 mt-5 lg:text-xl font-bold'>Brand</h1>
-              <div className='flex lg:gap-[36%] lg:ms-0 md:ms-0 ms-1 gap-12 md:gap-[36%] border-gray-300 border-b lg:p-5 p-4'>
+              <div className='flex lg:gap-[36%] lg:ms-0 md:ms-0 ms-1 gap-[30%] md:gap-[36%] border-gray-300 border-b lg:p-5 p-4'>
                 <label className='mt-2 text-sm font-semibold h-8' htmlFor="">Select Brand:</label>
-                <div className={(host || hostCategory) ? '-z-1' : `border border-gray-500 rounded text-sm lg:pe-20 h-8 lg:w-[260px] py-1  w-[160px] md:w-[200px]`}>
+                <div className={(host || hostCategory) ? '-z-1' : `border border-gray-500 rounded text-sm lg:pe-20 h-8 lg:w-[230px] py-1  w-[160px] md:w-[200px]`}>
                   <span className={(host || hostCategory) ? 'hidden' : `text-gray-500 p-1`}>Select Brand</span>
                   <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-32 hover:text-green-700">
                     <span onClick={toggleUpBrand} className={brand ? '' : 'hidden'}>
@@ -396,59 +402,59 @@ const Productype = () => {
 
               <h1 className='ms-5 lg:text-xl font-bold mt-2'>Pricing Option</h1>
               <div>
-                <div className='flex justify-between mt-5 px-5'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] lg:w-[50%]'>Percentage Markup:</h3>
-                  <input {...register("percentagemarkup")} type="text" className={brand || hostCategory ? 'hidden' : `border h-[35px] w-[55%] lg:w-[50%] border-gray-500 focus:outline-none py-1 rounded`} />
+                <div className='flex  mt-5 px-5'>
+                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Percentage Markup:</h3>
+                  <input {...register("percentagemarkup")} type="text" className={brand || hostCategory ? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.percentagemarkup?.message}</small>
               </div>
 
               <div>
-                <div className='flex justify-between mt-5 px-5'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] lg:w-[50%]'>Fixed Markup:</h3>
-                  <input {...register("fixedmarkup")} type="text" className={brand || hostCategory ? 'hidden' : `border h-[35px] w-[55%] lg:w-[50%] border-gray-500 focus:outline-none py-1 rounded `} />
+                <div className='flex mt-5 px-5'>
+                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Fixed Markup:</h3>
+                  <input {...register("fixedmarkup")} type="text" className={brand || hostCategory ? 'hidden' : `border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded `} />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.fixedmarkup?.message}</small>
               </div>
 
               <div>
-                <div className='flex justify-between mt-5 px-5'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] lg:w-[50%]'>Shipping Cost:</h3>
-                  <input {...register("shippingcost")} type="text" className={brand ? 'hidden' : `border h-[35px] w-[55%] lg:w-[50%] border-gray-500 focus:outline-none py-1 rounded`} />
+                <div className='flex mt-5 px-5'>
+                  <h3 className='mt-2 text-sm font-semibold h-[35px] md:w-[52%] w-[55%] lg:w-[50%]'>Shipping Cost:</h3>
+                  <input {...register("shippingcost")} type="text" className={brand ? 'hidden' : `border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded`} />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.shippingcost?.message}</small>
               </div>
 
-              <div className='flex gap-5 lg:gap-0 border-b md:gap-[70px] mt-5 h-10 px-5'>
+              <div className='flex gap-5 lg:gap-5 border-b md:gap-[70px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold'>Use Shipping Cost Average:</h3>
                 <input {...register("costaverage")} type="checkbox" onChange={() => setIsChecked(!isChecked)} checked={isChecked} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
 
               <h1 className='ms-5 lg:text-xl font-bold mt-10'>Inventory</h1>
               <div>
-                <div className='flex justify-between mt-5 px-5'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] lg:w-[50%]'>Stock Minimum:</h3>
-                  <input {...register("stockminimum")} type="text" className='border h-[35px] w-[55%] lg:w-[50%] border-gray-500 focus:outline-none py-1 rounded' />
+                <div className='flex mt-5 px-5'>
+                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Stock Minimum:</h3>
+                  <input {...register("stockminimum")} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stockminimum?.message}</small>
               </div>
 
               <div>
-                <div className='flex justify-between mt-5 px-5 pb-5 border-b'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] lg:w-[50%]'>Stock Maximum:</h3>
-                  <input {...register("stockmaximum")} type="text" className='border h-[35px] w-[55%] lg:w-[50%] border-gray-500 focus:outline-none py-1 rounded' />
+                <div className='flex  mt-5 px-5 pb-5 border-b'>
+                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Stock Maximum:</h3>
+                  <input {...register("stockmaximum")} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stockmaximum?.message}</small>
               </div>
-              <div className='flex gap-20 lg:gap-14 md:gap-[142px] mt-5 h-10 px-5'>
+              <div className='flex gap-20 lg:gap-[70px] md:gap-[142px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold'>Update Inventory:</h3>
                 <input type="checkbox" {...register("inventory")} onChange={() => setInventory(!inventory)} checked={inventory} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
-              <div className='flex gap-[38%] lg:gap-[90px] md:gap-[175px] mt-5 h-10 px-5'>
+              <div className='flex gap-[32%] lg:gap-[100px] md:gap-[170px]  mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold'>Send Orders:</h3>
                 <input type="checkbox" {...register("orders")} onChange={() => setOrder(!order)} checked={order} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
-              <div className='flex gap-[30%] lg:gap-[65px] md:gap-[150px] mt-5 h-10 px-5'>
+              <div className='flex gap-[26%] lg:gap-[80px] md:gap-[150px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold'>Update Tracking:</h3>
                 <input type="checkbox" {...register("tracking")} onChange={() => setTracking(!tracking)} checked={tracking} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>

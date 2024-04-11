@@ -4,12 +4,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 
 
 
 
 const Fpioption = () => {
+  const navigate = useNavigate()
+  let token = JSON.parse(localStorage.getItem('token'))
   const store = useSelector(state => state.vendor.vendorData)
+
+
+    useEffect(() => {
+      if(!token){
+        navigate('/signin')
+      }
+    }, [])
 
 
   const Schema = yup.object().shape({
@@ -24,9 +34,9 @@ const Fpioption = () => {
 
   const dispatch = useDispatch()
   const onSubmit = (data) => {
-    console.log(data);
+    // console.log(data);
     let form = { ...store, ...data }
-    console.log(form);
+    // console.log(form);
     dispatch(handleNextStep(form))
   }
 
@@ -51,21 +61,21 @@ const Fpioption = () => {
             <div>
               <div className='flex justify-between my-2'>
                 <h3 className='font-semibold'>Account Number:</h3>
-                <input {...register("accountnumber")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] lg:w-[50%] ${errors.accountnumber?.message && 'error'}`} />
+                <input {...register("accountnumber")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.accountnumber?.message && 'error'}`} />
               </div>
               <small className='text-red-600 ms-[42%] lg:ms-[53%]'>{errors.accountnumber?.message}</small>
             </div>
             <div>
               <div className='flex justify-between my-2'>
                 <h3 className='font-semibold'>Dealer Name:</h3>
-                <input {...register("dealername")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] lg:w-[50%] ${errors.dealername?.message && 'error'}`} />
+                <input {...register("dealername")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.dealername?.message && 'error'}`} />
               </div>
               <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.dealername?.message}</small>
             </div>
             <div>
               <div className='flex justify-between my-2'>
                 <h3 className='font-semibold'>Dealer Zip:</h3>
-                <input {...register("dealerzip")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] lg:w-[50%] ${errors.dealerzip?.message && 'error'}`} />
+                <input {...register("dealerzip")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.dealerzip?.message && 'error'}`} />
               </div>
               <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.dealerzip?.message}</small>
             </div>

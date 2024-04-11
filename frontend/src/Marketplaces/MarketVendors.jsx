@@ -1,50 +1,33 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import img1 from '../Images/vendorone.png'
-import img2 from '../Images/vendortwo.png'
-import img3 from '../Images/vendorthree.png'
-import img4 from '../Images/vendorfour.png'
-import img5 from '../Images/vendorfive.png'
+import { Vendordata } from './Vendordata'
+import { useNavigate } from 'react-router-dom'
+
 
 
 
 const MarketVendors = () => {
+    const navigate = useNavigate()
+
+    const vendor=(e)=>{
+        console.log(e);
+        localStorage.setItem('vendorName', JSON.stringify(e))
+        navigate('/layout/enrolment')
+    }
+
   return (
-    <>
-        <p className='my-2 font-semibold text-[#089541]'>Add Vendor</p>
-    <div className='grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-5 pb-5'>
-        <div className='bg-white flex flex-col justify-center items-center  gap-2 h-[250px] shadow-xl'>
-            <img src={img1} width={100} alt="" />
-            <p className='text-center px-2'>Send orders and receive tracking with CWR</p>
-            <p className='font-semibold'>$50/month</p>
-            <Link to='/layout/enrolment' className='bg-[#089451] text-white font-bold px-3 hover:bg-white border rounded hover:border-[#089451] hover:text-[#089451] py-1'>Add Vendor</Link>
-        </div>
-        <div className='bg-white flex h-[250px] flex-col justify-center items-center gap-2 shadow-xl'>
-            <img src={img2} width={100} alt="" />
-            <p className='text-center px-2'>Send orders and receive tracking with Zanders</p>
-            <p className='font-semibold'>$50/month</p>
-            <Link to='/layout/enrolment' className='bg-[#089451] text-white font-bold px-3 hover:bg-white border rounded hover:border-[#089451] hover:text-[#089451] py-1'>Add Vendor</Link>
-        </div>
-        <div className='bg-white flex flex-col justify-center items-center gap-2 h-[250px] shadow-xl'>
-            <img src={img3} width={100} alt="" />
-            <p className='text-center px-2'>Send orders and receive tracking with RSR Group</p>
-            <p className='font-semibold'>$50/month</p>
-            <Link to='/layout/enrolment' className='bg-[#089451] text-white font-bold px-3 hover:bg-white border rounded hover:border-[#089451] hover:text-[#089451] py-1'>Add Vendor</Link>
-        </div>
-        <div className='bg-white flex flex-col justify-center items-center gap-2 h-[250px] shadow-xl'>
-            <img src={img4} width={100} alt="" />
-            <p className='text-center'>Send orders and receive tracking with FragranceX</p>
-            <p className='font-semibold'>$50/month</p>
-            <Link to='/layout/enrolment' className='bg-[#089451] text-white font-bold px-3 hover:bg-white border rounded hover:border-[#089451] hover:text-[#089451] py-1'>Add Vendor</Link>
-        </div>
-        <div className='bg-white flex flex-col justify-center items-center gap-2 h-[250px] shadow-xl'>
-            <img src={img5} width={100} alt="" />
-            <p className='text-center'>Send orders and receive tracking with Lipsey's</p>
-            <p className='font-semibold'>$50/month</p>
-            <Link to='/layout/enrolment' className='bg-[#089451] text-white font-bold px-3 hover:bg-white border rounded hover:border-[#089451] hover:text-[#089451] py-1'>Add Vendor</Link>
-        </div>
+    <div className='bg-green-50 h-screen'>
+    <h1 className='text-green-600 font-bold lg:mt-20 mt-[310%] md:mt-[50%]'>Add Vendor</h1>
+            <div className='grid lg:grid-cols-3 md:grid-cols-2 h-[500px] my-5 grid-cols-1 mt-3 gap-4'>
+                {Vendordata.map((item, i) => (
+                    <div key={i} className=' bg-white shadow-lg py-10 text-center text-sm font-semibold'>
+                        <div className='my-2'><img src={item.image} width={150} className='mx-auto' alt="" /></div>
+                        <div className='text-center px-1 text-[15px] my-2'>{item.summaries}</div>
+                        <div className='my-2'>{item.price}</div>
+                        <button onClick={()=> vendor(item.name)} className='bg-[#089451] text-white font-bold px-5  hover:bg-white border rounded hover:border-[#089451] hover:text-[#089451] py-1'>Add Vendor</button>
+                    </div>
+                ))}
+            </div>
     </div>
-    </>
   )
 }
 
