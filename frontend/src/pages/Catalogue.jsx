@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import axios from "axios";
 import CustomPagination from "./CustomPagination";
@@ -17,6 +17,7 @@ import {
   useDisclosure,
   ModalFooter,
 } from "@nextui-org/react";
+import { AppContext } from "../context/Dashboard";
 
 const Catalogue = () => {
   const navigate = useNavigate();
@@ -37,6 +38,8 @@ const Catalogue = () => {
   const itemsPerPage = 99;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {sideBarOpen, setSideBarOpen, isTablet} = useContext(AppContext)
+  console.log(sideBarOpen);
 
   const [formFilters, setFormFilters] = useState({
     name: "",
@@ -68,7 +71,7 @@ const Catalogue = () => {
           Accept: "application/json",
         },
       });
-      console.log(response.data);
+      console.log(response);
       setCatalogueProduct(response.data);
       setLoader(false);
     } catch (error) {
@@ -82,6 +85,14 @@ const Catalogue = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (isTablet) {
+      setSideBarOpen(false)
+    } else {
+      setSideBarOpen(true)
+    }
+  }, [isTablet]);
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
@@ -223,18 +234,33 @@ const Catalogue = () => {
       <section
         className={
           filterOpen
-            ? "fixed border h-[40%] lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 lg:ms-[22%] lg:me-[2%]"
+            ? "fixed border h-[45%] lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 lg:ms-[22%] lg:me-[2%]"
             : "fixed border lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 lg:ms-[22%] lg:me-[2%]"
         }
       >
         <div className="flex h-[25%] gap-10">
           <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white h-[40px]">
-            <button className="flex gap-1" onClick={filterControl}>
+            {/* <button className="flex gap-1" onClick={filterControl}>
               <span className="mt-1">Filter</span>
               <span className="mt-[9px] text-[#089451]">
                 <BsFillFilterSquareFill />
               </span>
-            </button>
+            </button> */}
+            <button 
+  className="flex gap-1"
+  onClick={() => {
+    if (loader == false ) {
+      filterControl();
+    }
+  }}
+  disabled={loader == true}
+>
+  <span className="mt-1">Filter</span>
+  <span className="mt-[9px] text-[#089451]">
+    <BsFillFilterSquareFill />
+  </span>
+</button>
+            
           </div>
           <div className="flex lg:w-[45%] md:w-[100%] rounded-2xl h-[40px]  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
             <input
@@ -252,7 +278,7 @@ const Catalogue = () => {
             </button>
           </div>
           <div className="flex gap-2 bg-white rounded-xl px-2">
-            <button onClick={toggleViewMode} className="text-[#089451]">
+            <button onClick={() => {toggleViewMode(); setSideBarOpen(!sideBarOpen);}} className="text-[#089451]">
               {viewMode === "list" ? <FaTh size={20} /> : <FaList size={20} />}
             </button>
           </div>
@@ -275,11 +301,11 @@ const Catalogue = () => {
         )}
 
         <form
-          className="w-full grid lg:grid-cols-4 my-4 lg:ms-[1%]"
+          className="w-full grid lg:grid-cols-4 md:grid-cols-4 grid-cols-2 lg:gap-5 md:gap-10 my-4 lg:ms-[1%]"
           onSubmit={handleSubmit}
         >
           <input
-            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black h-[35px] w-[80%] focus:bg-black"
             type="text"
             placeholder="Search by name"
             name="name"
@@ -288,7 +314,7 @@ const Catalogue = () => {
           />
 
           <input
-            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black h-[35px] w-[80%] focus:bg-black"
             type="number"
             placeholder="Filter by price"
             name="price"
@@ -297,7 +323,7 @@ const Catalogue = () => {
           />
 
           <select
-            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black h-[35px] w-[80%] focus:bg-black"
             name="title"
             value={formFilters.title}
             onChange={handleFormInputChange}
@@ -311,7 +337,7 @@ const Catalogue = () => {
           </select>
 
           <input
-            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border h-[35px] border-black w-[80%] focus:bg-black"
             type="text"
             placeholder="Filter by brand"
             name="brand"
@@ -320,7 +346,7 @@ const Catalogue = () => {
           />
 
           <input
-            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
+            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border h-[35px] border-black w-[80%] focus:bg-black"
             type="text"
             placeholder="Filter by gender"
             name="gender"
@@ -328,14 +354,14 @@ const Catalogue = () => {
             onChange={handleFormInputChange}
           />
 
-          <SortByPrices
+          {/* <SortByPrices
             setSelectedPriceRange={setSelectedPriceRange}
             catalogueProduct={catalogueProduct}
             selectedPriceRange={selectedPriceRange}
             setCurrentItems={setCurrentItems}
-          />
+          /> */}
           <button
-            className="bg-white rounded-xl w-[40%] mt-3 text-black"
+            className="bg-white rounded text-[#089451] w-[40%] h-[35px]"
             type="submit"
           >
             Search
