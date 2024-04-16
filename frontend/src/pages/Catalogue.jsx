@@ -37,7 +37,18 @@ const Catalogue = () => {
   const [filterType, setFilterType] = useState("Greater than");
   const [filterValue, setFilterValue] = useState("");
   const [filterByUPC, setFilterByUPC] = useState(false);
-  console.log(filterByUPC);
+
+  const [openQuantity, setOpenQuantity] = useState(false);
+  const [filterQuantityType, setFilterQuantityType] = useState("Greater than");
+  const [filterQuantityValue, setFilterQuantityValue] = useState("");
+
+
+
+
+  // toggleQuantityDropdown,
+  // handleQuantityClick,
+  // quantityMap,
+
 
   const itemsPerPage = 99;
 
@@ -132,6 +143,16 @@ const Catalogue = () => {
     "is not": "!=",
   };
 
+
+  const quantityMap = {
+    "Greater than": ">",
+    "Greater than or equal": ">=",
+    Is: "=",
+    "Less than": "<",
+    "Less than or equal": "<=",
+    "is not": "!=",
+  };
+
   const filterCatalogueProduct = () => {
     // note my filteredItems is my catalogueProduct
     let filteredItems = [...catalogueProduct];
@@ -155,6 +176,11 @@ const Catalogue = () => {
       );
     }
 
+    if (filterByUPC) {
+      // If filter by UPC is enabled, filter items where UPC exists
+      filteredItems = filteredItems.filter((item) => item.upc !== "");
+    }
+// PRICE FILTER
     if (filterType && filterValue !== "") {
       if (filterType === "Greater than") {
         filteredItems = filteredItems.filter(
@@ -180,11 +206,39 @@ const Catalogue = () => {
         filteredItems = filteredItems.filter(
           (item) => parseFloat(item.aud_price) != parseFloat(filterValue)
         );
-      } 
-      if (filterByUPC) {
-        // If filter by UPC is enabled, filter items where UPC exists
-        filteredItems = filteredItems.filter((item) => item.upc !== "");
       }
+    }
+
+// QUANTITY FILTER
+    if (filterQuantityType && filterQuantityValue !== "") {
+      if (filterQuantityType === "Greater than") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) > parseFloat(filterQuantityValue)
+        );
+      }
+      else if (filterQuantityType === "Greater than or equal") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) >= parseFloat(filterQuantityValue)
+        );
+      } else if (filterQuantityType === "Is") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) === parseFloat(filterQuantityValue)
+        );
+      } else if (filterQuantityType === "Less than") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) < parseFloat(filterQuantityValue)
+        )
+      }
+      else if (filterQuantityType === "Less than or equal") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) <= parseFloat(filterQuantityValue)
+        )
+      } else if (filterQuantityType === "Is not") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) != parseFloat(filterQuantityValue)
+        )
+      }
+
     }
     // Apply other filters, This is responsible for filter input.
     filteredItems = filteredItems.filter(
@@ -211,9 +265,25 @@ const Catalogue = () => {
   const toggleDropdown = () => {
     setOpen(!open);
   };
+
   const onFilterValueChange = (e) => {
     setFilterValue(e.target.value);
   };
+
+
+
+  const handleQuantityClick = (value) => {
+    setFilterQuantityType(value);
+    setOpenQuantity(false);
+  };
+
+  const toggleQuantityDropdown = () => {
+    setOpenQuantity(!openQuantity);
+  };
+  const onFilterQuantityChange = (e) => {
+    setFilterQuantityValue(e.target.value);
+  };
+
 
   const handleFilterByUPCChange = (event) => {
     setFilterByUPC(event.target.checked);
@@ -237,8 +307,8 @@ const Catalogue = () => {
       <section
         className={
           filterOpen
-            ? "fixed border h-[45%] lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 lg:ms-[22%] lg:me-[2%]"
-            : "fixed border lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 lg:ms-[22%] lg:me-[2%]"
+            ? "fixed border h-[50%] lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 md:ps-10 ps-10  lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+            : "fixed border lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 md:ps-10 ps-10 lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
         <div className="flex h-[25%] gap-10">
@@ -260,7 +330,7 @@ const Catalogue = () => {
           </div>
           <div className="flex lg:w-[45%] md:w-[100%] rounded-2xl h-[40px]  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
             <input
-              className="py-3 bg-transparent outline-none px-2  w-[120px] md:w-[100%]"
+              className="py-3 bg-transparent outline-none px-2  w-[200px] md:w-[100%]"
               type="text"
               placeholder="Search by keyword..."
               value={searchQuery}
@@ -274,7 +344,7 @@ const Catalogue = () => {
             </button>
           </div>
           {/* Toggle on big screen */}
-          <div className="lg:block md:hidden hidden flex gap-2 bg-white rounded-xl p-2 h-[36px]">
+          <div className="lg:block md:hidden hidden gap-2 bg-white rounded-xl p-2 h-[36px]">
             <button
               onClick={() => {
                 toggleViewMode();
@@ -286,7 +356,7 @@ const Catalogue = () => {
             </button>
           </div>
           {/* Toggle on medium and small screen */}
-          <div className="lg:hidden md:block block flex gap-2 bg-white rounded-xl h-[36px] p-2">
+          <div className="lg:hidden md:block block gap-2 bg-white rounded-xl h-[36px] p-2">
           <button
               onClick={() => {
                 toggleViewMode();
@@ -300,7 +370,7 @@ const Catalogue = () => {
         </div>
       </section>
       <div
-        className={filterOpen ? "ms-[24%] mt-14 fixed  text-white" : "hidden"}
+        className={filterOpen ? "lg:ms-[24%] ms-10 mt-14 fixed  text-white" : "hidden"}
       >
         {/* Pagination */}
         {currentItems.length > 0 && (
@@ -315,24 +385,33 @@ const Catalogue = () => {
 
         {/* Forms */}
         <FilterComponent
-        filterOpen={filterOpen}
-        setfilterOpen={setfilterOpen}
-        open={open}
-        toggleDropdown={toggleDropdown}
-        handleOptionClick={handleOptionClick}
-        symbolMap={symbolMap}
-        filterType={filterType}
-        filterValue={filterValue}
-        onFilterValueChange={onFilterValueChange}
-        handleFilterByUPCChange={handleFilterByUPCChange}
-        formFilters={formFilters}
-        handleFormInputChange={handleFormInputChange}
-        handleSubmit={handleSubmit}
-        filterByUPC={filterByUPC}
+          filterOpen={filterOpen}
+          setfilterOpen={setfilterOpen}
+          open={open}
+          toggleDropdown={toggleDropdown}
+          handleOptionClick={handleOptionClick}
+          symbolMap={symbolMap}
+          filterType={filterType}
+          filterValue={filterValue}
+          onFilterValueChange={onFilterValueChange}
+          handleFilterByUPCChange={handleFilterByUPCChange}
+          formFilters={formFilters}
+          handleFormInputChange={handleFormInputChange}
+          handleSubmit={handleSubmit}
+          filterByUPC={filterByUPC}
+          openQuantity={openQuantity}
+          toggleQuantityDropdown={toggleQuantityDropdown}
+          handleQuantityClick={handleQuantityClick}
+          quantityMap={quantityMap}
+          filterQuantityType={filterQuantityType}
+          filterQuantityValue={filterQuantityValue}
+          onFilterQuantityChange={onFilterQuantityChange}
         />
+        {/* <div>
         {currentItems.length > 0 && (
-                <p>{currentItems.length} products match your criteria.</p>
-              )}
+          <p className="lg:ms-4">{currentItems.length} products match your criteria.</p>
+        )}
+        </div> */}
       </div>
       {/* Modal */}
       <Modal
@@ -402,7 +481,7 @@ const Catalogue = () => {
                           }`}
                           key={index}
                         >
-                          <div className="p-4">
+                          <div className="">
                             <img
                               src={product.image}
                               alt={product.image}
