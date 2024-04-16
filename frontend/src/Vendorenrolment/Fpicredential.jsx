@@ -20,12 +20,6 @@ const Fpicredential = () => {
   const store = useSelector(state => state.vendor.vendorData)
 
 
-    // useEffect(() => {
-    //   if(!token){
-    //     navigate('/signin')
-    //   }
-    // }, [])
-
   
 
 

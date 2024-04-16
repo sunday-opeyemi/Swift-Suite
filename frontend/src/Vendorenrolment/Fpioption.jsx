@@ -15,11 +15,11 @@ const Fpioption = () => {
   const store = useSelector(state => state.vendor.vendorData)
 
 
-    // useEffect(() => {
-    //   if(!token){
-    //     navigate('/signin')
-    //   }
-    // }, [])
+    useEffect(() => {
+      if(!token){
+        navigate('/signin')
+      }
+    }, [])
 
 
   const Schema = yup.object().shape({
