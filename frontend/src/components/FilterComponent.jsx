@@ -73,7 +73,7 @@ const FilterComponent = ({
      
                   <div
                     className="flex text-black cursor-pointer px-1 py-1 border border-gray-300"
-                    onClick={toggleQuantityDropdown}
+                    onClick={toggleDropdown}
                   >
                     <div>
                       <FaCaretDown className="mt-1" />
