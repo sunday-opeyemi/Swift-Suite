@@ -1,11 +1,28 @@
+// /** @type {import('tailwindcss').Config} */
+// export default {
+//   content: [
+//     "./index.html",
+//     "./src//*.{js,ts,jsx,tsx}",
+//   ],
+//   theme: {
+//     extend: {},
+//   },
+//   plugins: [],
+// }
+
+
+
+
+
 const { nextui } = require("@nextui-org/react");
 
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
   content: [
     // ...
-    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
+    "./node_modules/@nextui-org/theme/dist//*.{js,ts,jsx,tsx}",
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src//*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -17,5 +34,5 @@ module.exports = {
     },
   },
   darkMode: "class",
-  plugins: [nextui()],
-};
+  plugins: [nextui()]
+}
