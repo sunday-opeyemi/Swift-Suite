@@ -29,25 +29,15 @@ const Catalogue = () => {
   const [currentItems, setCurrentItems] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loader, setLoader] = useState(false);
-  const [title, setTitle] = useState([]);
   const [filterOpen, setfilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState("list"); // 'list' or 'grid'
-  const [selectedPriceRange, setSelectedPriceRange] = useState("all");
   const [open, setOpen] = useState(false);
   const [filterType, setFilterType] = useState("Greater than");
   const [filterValue, setFilterValue] = useState("");
   const [filterByUPC, setFilterByUPC] = useState(false);
-
   const [openQuantity, setOpenQuantity] = useState(false);
   const [filterQuantityType, setFilterQuantityType] = useState("Greater than");
   const [filterQuantityValue, setFilterQuantityValue] = useState("");
-
-
-
-
-  // toggleQuantityDropdown,
-  // handleQuantityClick,
-  // quantityMap,
 
 
   const itemsPerPage = 99;
@@ -85,7 +75,6 @@ const Catalogue = () => {
       console.log(response.data);
       setCatalogueProduct(response.data);
       setLoader(false);
-      setSelectedPriceRange("all");
     } catch (error) {
       setLoader(false);
       console.log(error);
