@@ -18,7 +18,16 @@ import {
 } from "@nextui-org/react";
 
 const Catalogue = () => {
-  const navigate = useNavigate()
+  // URL:
+  //                             <a
+  //                               href={product.url}
+  //                               className="max-w-[200px] truncate inline-block"
+  //                               target="_blank"
+  //                               rel="noopener noreferrer"
+  //                             >
+  //                               {product.url}
+  //                             </a>
+  // const navigate = useNavigate()
   const token = JSON.parse(localStorage.getItem("token"));
   console.log(token);
   const [catalogueProduct, setCatalogueProduct] = useState([]);
