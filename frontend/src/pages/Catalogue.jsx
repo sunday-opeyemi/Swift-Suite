@@ -38,6 +38,9 @@ const Catalogue = () => {
   const [openQuantity, setOpenQuantity] = useState(false);
   const [filterQuantityType, setFilterQuantityType] = useState("Greater than");
   const [filterQuantityValue, setFilterQuantityValue] = useState("");
+  const [productChange, setProductChange] = useState("All")
+  console.log(productChange);
+
 
 
   const itemsPerPage = 99;
@@ -75,6 +78,7 @@ const Catalogue = () => {
       console.log(response.data);
       setCatalogueProduct(response.data);
       setLoader(false);
+      setSelectedPriceRange("all");
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -278,6 +282,10 @@ const Catalogue = () => {
     setFilterByUPC(event.target.checked);
   };
 
+  const handleProductChange=(event)=>{
+    setProductChange(event.target.value)
+  }
+
   const toggleViewMode = () => {
     setViewMode((prevMode) => (prevMode === "list" ? "grid" : "list"));
   };
@@ -296,11 +304,11 @@ const Catalogue = () => {
       <section
         className={
           filterOpen
-            ? "fixed border h-[50%] lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 md:ps-10 ps-10  lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
-            : "fixed border lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 md:ps-10 ps-10 lg:ms-[22%] lg:me-[2] md:me-[5%]"
+            ? "fixed border md:h-[50%] h-[55%] md:gap-14 w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
-        <div className="flex h-[25%] gap-10">
+        <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center">
           <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white h-[40px]">
             <button
               className="flex gap-1"
@@ -355,6 +363,17 @@ const Catalogue = () => {
             >
               {viewMode === "list" ? <FaTh size={15} /> : <FaList size={15} />}
             </button>
+          </div>
+          <div>
+          <select className="cursor-pointer h-9 rounded-xl px-2 outline-none" onChange={handleProductChange}>
+            <option value="All">All</option>
+            <option value="Zanders">Zanders</option>
+            <option value="FragranceX">FragranceX</option>
+            <option value="Lipsey">Lipsey</option>
+            <option value="SSi">SSI</option>
+            <option value="RSR">RSR</option>
+            <option value="CWR">CWR</option>
+          </select>
           </div>
         </div>
       </section>
@@ -444,13 +463,13 @@ const Catalogue = () => {
 
       <div className="lg:ms-[22%] py-40 bg-green-50 p-10">
         <div className="flex gap-6 mb-34">
-          <div className="rounded-lg overflow-hidden">
+        <div className="rounded-lg overflow-hidden">
             {loader && (
               <div className="flex justify-center items-center">
                 <img
                   src={gif}
                   alt="Loading..."
-                  className="lg:ms-[400px] w-[100px] mt-10"
+                  className="lg:ms-[400px] border p-3 shadow-xl rounded-xl w-[50px] mt-10"
                 />
               </div>
             )}
