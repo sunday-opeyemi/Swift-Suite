@@ -13,12 +13,12 @@ const Dashboard = () => {
 
   return (
     <>
-      <section className="bg-green-50 h-100vh">
+      <section className="bg-green-50 lg:h-[2150px] md:h-[2800px] h-[5200px]">
         <div className="grid lg:grid-cols-2 lg:ms-[19%] ms-0 md:grid-cols-2 ">
           <div className=" grid-cols-1 lg:px-10 px-5 lg:w-[115%] w-[100%] ">
             <Revenue />
           </div>
-          <div className="grid rounded-lg bg-white px-5 pb-5 shadow-lg sm:px-7.5 lg:grid-cols-2 md:grid-cols-2 grid-cols-2 gap-4 lg:w-[80%] w-[90%] lg:h-[99%] lg:ms-[12%] ms-5">
+          <div className="grid rounded-lg bg-white px-5 pb-5 shadow-lg sm:px-7.5 lg:grid-cols-2 md:grid-cols-2 grid-cols-2 gap-4 lg:w-[80%] w-[90%] lg:h-[99%] lg:ms-[12%] mt-5 lg:mt-0 md:mt-0 ms-5">
             <div>
               <h1 className="font-bold px-2 mt-10">Customers</h1>
               <p className="lg:w-[500px] w-[300px] px-2">Information about your Customers</p>

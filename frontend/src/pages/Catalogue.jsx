@@ -463,7 +463,7 @@ const Catalogue = () => {
 
       <div className="lg:ms-[22%] py-40 bg-green-50 p-10">
         <div className="flex gap-6 mb-34">
-        <div className="rounded-lg overflow-hidden">
+          <div className="rounded-lg overflow-hidden">
             {loader && (
               <div className="flex justify-center items-center">
                 <img
