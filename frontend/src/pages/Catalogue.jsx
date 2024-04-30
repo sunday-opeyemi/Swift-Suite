@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import axios from "axios";
 import CustomPagination from "./CustomPagination";
 import gif from "../Images/gif.gif";
-import SortByPrices from "../components/Sortcomponent/SortByPrices";
 import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { BsFillFilterSquareFill } from "react-icons/bs";
@@ -17,6 +16,8 @@ import {
   useDisclosure,
   ModalFooter,
 } from "@nextui-org/react";
+import { AppContext } from "../context/Dashboard";
+import FilterComponent from "../components/FilterComponent";
 
 const Catalogue = () => {
   const navigate = useNavigate();
@@ -28,23 +29,29 @@ const Catalogue = () => {
   const [currentItems, setCurrentItems] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [loader, setLoader] = useState(false);
-  // const [uniqueBrand, setUniqueBrand] = useState([]);
-  const [title, setTitle] = useState([]);
   const [filterOpen, setfilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState("list"); // 'list' or 'grid'
-  const [selectedPriceRange, setSelectedPriceRange] = useState("all");
+  const [open, setOpen] = useState(false);
+  const [filterType, setFilterType] = useState("Greater than");
+  const [filterValue, setFilterValue] = useState("");
+  const [filterByUPC, setFilterByUPC] = useState(false);
+  const [openQuantity, setOpenQuantity] = useState(false);
+  const [filterQuantityType, setFilterQuantityType] = useState("Greater than");
+  const [filterQuantityValue, setFilterQuantityValue] = useState("");
+  const [productChange, setProductChange] = useState("All")
+  console.log(productChange);
+
+
 
   const itemsPerPage = 99;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { sideBarOpen, setSideBarOpen, isTablet } = useContext(AppContext);
 
   const [formFilters, setFormFilters] = useState({
     name: "",
-    price: "",
     brand: "",
-    title: "",
     gender: "",
-    priceRanges: "",
   });
 
   let endpoint =
@@ -71,6 +78,7 @@ const Catalogue = () => {
       console.log(response.data);
       setCatalogueProduct(response.data);
       setLoader(false);
+      setSelectedPriceRange("all");
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -83,6 +91,14 @@ const Catalogue = () => {
     }
   };
 
+  useEffect(() => {
+    if (isTablet) {
+      setSideBarOpen(false);
+    } else {
+      setSideBarOpen(true);
+    }
+  }, [isTablet]);
+
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
     setCurrentPage(0); // Reset currentPage when search query changes
@@ -91,13 +107,6 @@ const Catalogue = () => {
   const handlePageChange = ({ selected }) => {
     setCurrentPage(selected);
   };
-
-  useEffect(() => {
-    if (catalogueProduct) {
-      const title = [...new Set(catalogueProduct.map((item) => item.title))];
-      setTitle(title);
-    }
-  }, [catalogueProduct]);
 
   const handleProductClick = (product) => {
     // Step 2: Function to handle product click
@@ -115,28 +124,36 @@ const Catalogue = () => {
     console.log("Selected formFilters:", formFilters);
     // Perform filtering logic here...
     filterCatalogueProduct();
-    setFormFilters({ ...formFilters, title: "" });
+    setFormFilters({ ...formFilters });
+  };
+
+  const symbolMap = {
+    "Greater than": ">",
+    "Greater than or equal": ">=",
+    Is: "=",
+    "Less than": "<",
+    "Less than or equal": "<=",
+    "is not": "!=",
+  };
+
+
+  const quantityMap = {
+    "Greater than": ">",
+    "Greater than or equal": ">=",
+    Is: "=",
+    "Less than": "<",
+    "Less than or equal": "<=",
+    "is not": "!=",
   };
 
   const filterCatalogueProduct = () => {
+    // note my filteredItems is my catalogueProduct
     let filteredItems = [...catalogueProduct];
 
     // Apply form filters
     if (formFilters.name.trim() !== "") {
       filteredItems = filteredItems.filter((item) =>
         item.name.toLowerCase().includes(formFilters.name.toLowerCase())
-      );
-    }
-
-    if (formFilters.title.trim() !== "") {
-      filteredItems = filteredItems.filter((item) =>
-        item.title.toLowerCase().includes(formFilters.title.toLowerCase())
-      );
-    }
-
-    if (formFilters.price !== "") {
-      filteredItems = filteredItems.filter(
-        (item) => item.price === parseFloat(formFilters.price)
       );
     }
 
@@ -152,58 +169,122 @@ const Catalogue = () => {
       );
     }
 
-    if (selectedPriceRange !== "all") {
-      const { min, max } = priceRanges[selectedPriceRange];
-      filteredItems = filteredItems.filter(
-        (item) =>
-          parseFloat(item.aud_price) >= min && parseFloat(item.aud_price) <= max
-      );
+    if (filterByUPC) {
+      // If filter by UPC is enabled, filter items where UPC exists
+      filteredItems = filteredItems.filter((item) => item.upc !== "");
+    }
+// PRICE FILTER
+    if (filterType && filterValue !== "") {
+      if (filterType === "Greater than") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.aud_price) > parseFloat(filterValue)
+        );
+      } else if (filterType === "Greater than or equal") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.aud_price) >= parseFloat(filterValue)
+        );
+      } else if (filterType === "Is") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.aud_price) === parseFloat(filterValue)
+        );
+      } else if (filterType === "Less than") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.aud_price) < parseFloat(filterValue)
+        );
+      } else if (filterType === "Less than or equal") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.aud_price) <= parseFloat(filterValue)
+        );
+      } else if (filterType === "Is not") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.aud_price) != parseFloat(filterValue)
+        );
+      }
     }
 
-    // Apply other filters
-    filteredItems = filteredItems.filter((item) =>
-      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+// QUANTITY FILTER
+    if (filterQuantityType && filterQuantityValue !== "") {
+      if (filterQuantityType === "Greater than") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) > parseFloat(filterQuantityValue)
+        );
+      }
+      else if (filterQuantityType === "Greater than or equal") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) >= parseFloat(filterQuantityValue)
+        );
+      } else if (filterQuantityType === "Is") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) === parseFloat(filterQuantityValue)
+        );
+      } else if (filterQuantityType === "Less than") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) < parseFloat(filterQuantityValue)
+        )
+      }
+      else if (filterQuantityType === "Less than or equal") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) <= parseFloat(filterQuantityValue)
+        )
+      } else if (filterQuantityType === "Is not") {
+        filteredItems = filteredItems.filter(
+          (item) => parseFloat(item.qty) != parseFloat(filterQuantityValue)
+        )
+      }
+
+    }
+    // Apply other filters, This is responsible for filter input.
+    filteredItems = filteredItems.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.brand.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     // Update the current items
     setCurrentItems(filteredItems);
   };
 
-  const priceRanges = {
-    all: { min: 0, max: Infinity },
-    "1-50": { min: 1, max: 50 },
-    "51-100": { min: 51, max: 100 },
-    "101-150": { min: 101, max: 150 },
-    "151-200": { min: 151, max: 200 },
-    "201-250": { min: 201, max: 250 },
-    "251-300": { min: 251, max: 300 },
-    "301-350": { min: 301, max: 350 },
-    "351-400": { min: 351, max: 400 },
-    "401-450": { min: 401, max: 450 },
-    "451-500": { min: 451, max: 500 },
-    "501-550": { min: 501, max: 550 },
-    "551-600": { min: 551, max: 600 },
-    "601-650": { min: 601, max: 650 },
-    "651-700": { min: 651, max: 700 },
-    "701-750": { min: 701, max: 750 },
-    "751-800": { min: 751, max: 800 },
-    "801-850": { min: 801, max: 850 },
-    "851-900": { min: 851, max: 900 },
-    "901-950": { min: 901, max: 950 },
-    "951-1000": { min: 951, max: 1000 },
-    "1001-1050": { min: 1001, max: 1050 },
-    "1051-1100": { min: 1051, max: 1100 },
-    "1101-1150": { min: 1101, max: 1150 },
-    "1151-1200": { min: 1151, max: 1200 },
-    "1201-1250": { min: 1201, max: 1250 },
-    "1251-1300": { min: 1251, max: 1300 },
-    "1300+": { min: 1300, max: Infinity },
-  };
-
   const filterControl = () => {
     setfilterOpen(!filterOpen);
     console.log(filterOpen);
   };
+
+  const handleOptionClick = (value) => {
+    setFilterType(value);
+    setOpen(false);
+  };
+
+  const toggleDropdown = () => {
+    setOpen(!open);
+  };
+
+  const onFilterValueChange = (e) => {
+    setFilterValue(e.target.value);
+  };
+
+
+
+  const handleQuantityClick = (value) => {
+    setFilterQuantityType(value);
+    setOpenQuantity(false);
+  };
+
+  const toggleQuantityDropdown = () => {
+    setOpenQuantity(!openQuantity);
+  };
+  const onFilterQuantityChange = (e) => {
+    setFilterQuantityValue(e.target.value);
+  };
+
+
+  const handleFilterByUPCChange = (event) => {
+    setFilterByUPC(event.target.checked);
+  };
+
+  const handleProductChange=(event)=>{
+    setProductChange(event.target.value)
+  }
 
   const toggleViewMode = () => {
     setViewMode((prevMode) => (prevMode === "list" ? "grid" : "list"));
@@ -223,13 +304,21 @@ const Catalogue = () => {
       <section
         className={
           filterOpen
-            ? "fixed border h-[40%] lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 lg:ms-[22%] lg:me-[2%]"
-            : "fixed border lg:gap-14 w-[100%] top-14 bg-[#089451] py-10 lg:ps-32 lg:ms-[22%] lg:me-[2%]"
+            ? "fixed border md:h-[50%] h-[55%] md:gap-14 w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
-        <div className="flex h-[25%] gap-10">
+        <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center">
           <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white h-[40px]">
-            <button className="flex gap-1" onClick={filterControl}>
+            <button
+              className="flex gap-1"
+              onClick={() => {
+                if (loader == false) {
+                  filterControl();
+                }
+              }}
+              disabled={loader == true}
+            >
               <span className="mt-1">Filter</span>
               <span className="mt-[9px] text-[#089451]">
                 <BsFillFilterSquareFill />
@@ -238,31 +327,59 @@ const Catalogue = () => {
           </div>
           <div className="flex lg:w-[45%] md:w-[100%] rounded-2xl h-[40px]  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
             <input
-              className="lg:block py-3 hidden bg-transparent outline-none px-2  w-[120px] md:w-[100%]"
+              className="py-3 bg-transparent outline-none px-2  w-[200px] md:w-[100%]"
               type="text"
-              placeholder="Search for products by keyword"
+              placeholder="Search by keyword..."
               value={searchQuery}
               onChange={handleSearch}
             />
             <button
               type="submit"
-              className="lg:block hidden text-white bg-[#089451] px-3 h-[34px] rounded-r-2xl cursor-pointer lg:ms-28"
+              className="text-white bg-[#089451] px-3 h-[34px] rounded-r-2xl cursor-pointer lg:ms-28"
             >
-              <BsSearch className="lg:block hidden" />
+              <BsSearch className="" />
             </button>
           </div>
-          <div className="flex gap-2 bg-white rounded-xl px-2">
-            <button onClick={toggleViewMode} className="text-[#089451]">
-              {viewMode === "list" ? <FaTh size={20} /> : <FaList size={20} />}
+          {/* Toggle on big screen */}
+          <div className="lg:block md:hidden hidden gap-2 bg-white rounded-xl p-2 h-[36px]">
+            <button
+              onClick={() => {
+                toggleViewMode();
+                setSideBarOpen(!sideBarOpen);
+              }}
+              className="text-[#089451]"
+            >
+              {viewMode === "list" ? <FaTh size={15} /> : <FaList size={15} />}
             </button>
+          </div>
+          {/* Toggle on medium and small screen */}
+          <div className="lg:hidden md:block block gap-2 bg-white rounded-xl h-[36px] p-2">
+          <button
+              onClick={() => {
+                toggleViewMode();
+                
+              }}
+              className="text-[#089451]"
+            >
+              {viewMode === "list" ? <FaTh size={15} /> : <FaList size={15} />}
+            </button>
+          </div>
+          <div>
+          <select className="cursor-pointer h-9 rounded-xl px-2 outline-none" onChange={handleProductChange}>
+            <option value="All">All</option>
+            <option value="Zanders">Zanders</option>
+            <option value="FragranceX">FragranceX</option>
+            <option value="Lipsey">Lipsey</option>
+            <option value="SSi">SSI</option>
+            <option value="RSR">RSR</option>
+            <option value="CWR">CWR</option>
+          </select>
           </div>
         </div>
       </section>
       <div
-        className={filterOpen ? "ms-[24%] mt-14 fixed  text-white" : "hidden"}
+        className={filterOpen ? "lg:ms-[24%] ms-10 mt-14 fixed  text-white" : "hidden"}
       >
-        {/* {message} */}
-
         {/* Pagination */}
         {currentItems.length > 0 && (
           <CustomPagination
@@ -274,85 +391,39 @@ const Catalogue = () => {
           />
         )}
 
-        <form
-          className="w-full grid lg:grid-cols-4 my-4 lg:ms-[1%]"
-          onSubmit={handleSubmit}
-        >
-          <input
-            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
-            type="text"
-            placeholder="Search by name"
-            name="name"
-            value={formFilters.name}
-            onChange={handleFormInputChange}
-          />
-
-          <input
-            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
-            type="number"
-            placeholder="Filter by price"
-            name="price"
-            value={formFilters.price}
-            onChange={handleFormInputChange}
-          />
-
-          <select
-            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
-            name="title"
-            value={formFilters.title}
-            onChange={handleFormInputChange}
-          >
-            <option value="title">Title</option>
-            {title.map((item, index) => (
-              <option key={index} value={item}>
-                {item}
-              </option>
-            ))}
-          </select>
-
-          <input
-            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
-            type="text"
-            placeholder="Filter by brand"
-            name="brand"
-            value={formFilters.brand}
-            onChange={handleFormInputChange}
-          />
-
-          <input
-            className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent border border-black w-[80%] focus:bg-black"
-            type="text"
-            placeholder="Filter by gender"
-            name="gender"
-            value={formFilters.gender}
-            onChange={handleFormInputChange}
-          />
-
-          <SortByPrices
-            setSelectedPriceRange={setSelectedPriceRange}
-            catalogueProduct={catalogueProduct}
-            selectedPriceRange={selectedPriceRange}
-            setCurrentItems={setCurrentItems}
-          />
-          <button
-            className="bg-white rounded-xl w-[40%] mt-3 text-black"
-            type="submit"
-          >
-            Search
-          </button>
-          {currentItems.length > 0 && (
-            <p>{currentItems.length} products match your criteria.</p>
-          )}
-        </form>
-        {/* <Sort
-          className="ms-[80%]"
-          setCurrentItems={setCurrentItems}
-          catalogueProduct={catalogueProduct}
-        /> */}
+        {/* Forms */}
+        <FilterComponent
+          filterOpen={filterOpen}
+          setfilterOpen={setfilterOpen}
+          open={open}
+          toggleDropdown={toggleDropdown}
+          handleOptionClick={handleOptionClick}
+          symbolMap={symbolMap}
+          filterType={filterType}
+          filterValue={filterValue}
+          onFilterValueChange={onFilterValueChange}
+          handleFilterByUPCChange={handleFilterByUPCChange}
+          formFilters={formFilters}
+          handleFormInputChange={handleFormInputChange}
+          handleSubmit={handleSubmit}
+          filterByUPC={filterByUPC}
+          openQuantity={openQuantity}
+          toggleQuantityDropdown={toggleQuantityDropdown}
+          handleQuantityClick={handleQuantityClick}
+          quantityMap={quantityMap}
+          filterQuantityType={filterQuantityType}
+          filterQuantityValue={filterQuantityValue}
+          onFilterQuantityChange={onFilterQuantityChange}
+        />
+        {/* <div>
+        {currentItems.length > 0 && (
+          <p className="lg:ms-4">{currentItems.length} products match your criteria.</p>
+        )}
+        </div> */}
       </div>
-
+      {/* Modal */}
       <Modal
-        className="p-5"
+        className="p-5" style={{ maxHeight: "80vh", overflowY: "auto" }}
         isOpen={isOpen}
         onClose={onClose}
         isDismissable={false}
@@ -374,6 +445,8 @@ const Catalogue = () => {
                 <p>ITEM: {selectedProduct.item}</p>
                 <p>QTY: {selectedProduct.qty}</p>
                 <p>SIZE: {selectedProduct.size}</p>
+                <p>URL: {selectedProduct.url}</p>
+                <p>PRICE: {selectedProduct.price}</p>
               </>
             )}
           </ModalBody>
@@ -396,7 +469,7 @@ const Catalogue = () => {
                 <img
                   src={gif}
                   alt="Loading..."
-                  className="lg:ms-[400px] w-[100px] mt-10"
+                  className="lg:ms-[400px] border p-3 shadow-xl rounded-xl w-[50px] mt-10"
                 />
               </div>
             )}
@@ -416,7 +489,7 @@ const Catalogue = () => {
                           }`}
                           key={index}
                         >
-                          <div className="p-4">
+                          <div className="">
                             <img
                               src={product.image}
                               alt={product.image}
@@ -424,18 +497,15 @@ const Catalogue = () => {
                             />
                           </div>
                           <div className="p-4 bg-green-50 my-5 rounded-xl">
+                            <p>TITLE: {product.title}</p>
                             <p>NAME: {product.name}</p>
+                          </div>
+                          <div className="p-4">
+                            <p>UPC: {product.upc}</p>
                             <p>BRAND: {product.brand}</p>
                             <p>PRICE: {product.aud_price}</p>
                             <p>GENDER: {product.gender}</p>
-                            <p>PRICE: {product.price}</p>
-                          </div>
-                          <div className="p-4">
-                            <p>TITLE: {product.title}</p>
-                            <p>UPC: {product.upc}</p>
-                            <p className="text-green-300 hover:text-black">
-                              URL: {product.url}
-                            </p>
+                            <p className="text-green-300 hover:text-black"></p>
                           </div>
                         </div>
                       ))}
@@ -453,30 +523,19 @@ const Catalogue = () => {
                           }`}
                           key={index}
                         >
-                          <div className="p-4">
+                          <div className="px-4">
                             <img
                               src={product.image}
                               alt={product.image}
-                              className="w-60 mt-10 justify-center items-center rounded-md mx-auto object-cover"
+                              className="w-20 justify-center items-center rounded-md mx-auto object-cover"
                             />
+                            <p>TITLE: {product.title}</p>
                             <p>NAME: {product.name}</p>
+                            <p>UPC: {product.upc}</p>
                             <p>BRAND: {product.brand}</p>
                             <p>PRICE: {product.aud_price}</p>
                             <p>GENDER: {product.gender}</p>
-                            <p>TITLE: {product.title}</p>
-                            <p>UPC: {product.upc}</p>
-                            <p>PRICE: {product.price}</p>
-                            <p className="text-green-300 hover:text-black">
-                              URL:
-                              <a
-                                href={product.url}
-                                className="max-w-[200px] truncate inline-block"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {product.url}
-                              </a>
-                            </p>
+                            <p className="text-green-300 hover:text-black"></p>
                           </div>
                         </div>
                       ))}

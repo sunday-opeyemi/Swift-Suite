@@ -18,6 +18,8 @@ import {IoChevronDown} from 'react-icons/io5'
 import swift from '../Images/swift.png'
 import {MdOutlineReorder} from 'react-icons/md'
 import { AppContext } from "../context/Dashboard";
+import { IoIosArrowBack } from "react-icons/io";
+
 
 
 const Sidebar = () => {
@@ -111,7 +113,7 @@ const Sidebar = () => {
         </div>
 
         <div className="flex flex-col text-4xl bg-white text-black h-full">
-          <ul className=" px-2.5 text-[0.9rem] py-5 flex flex-col gap-2  dark:scrollbar-track-slate-400  dark:scrollbar-thumb-slate-700  md:h-[78%] h-[75%]">
+          <ul className=" px-2.5 text-[0.9rem] py-5 flex flex-col gap-2  dark:scrollbar-track-slate-400  dark:scrollbar-thumb-slate-700  md:h-[78%] h-[75%] overflow-x-hidden">
             <li>
               <NavLink to={"/layout/home"} className="link flex gap-8 hover:text-green-600 ">
                 <AiOutlineAppstore size={23} className="mt-2 min-w-max" />
@@ -181,9 +183,31 @@ const Sidebar = () => {
                 Sign Out
               </NavLink>
             </li>
-          </ul>
-        </div>
+          
+     
 
+            
+          </ul>
+        
+          </div>
+        <motion.div onClick={() => {setSideBarOpen(!sideBarOpen) }
+        }
+          animate={
+            sideBarOpen
+              ? {
+                x: 0,
+                y: -10,
+                rotate: 0,
+              }
+              : {
+                x: -10,
+                y: 50,
+                rotate: 180,
+              }
+          }
+          transition={{ duration: 0 }} className="absolute w-fit h-fit z-50  right-2 bottom-24 cursor-pointer bg-blue-50 dark:text-black rounded-full p-2 my-auto">
+          <IoIosArrowBack size={25} />
+        </motion.div>
       </motion.div>
 
     </div>
