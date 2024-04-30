@@ -202,21 +202,6 @@ VENDORS = {
 }
 
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-@user_passes_test(lambda u: u.is_staff)
-def admin_pull(request, vendor):
-    vendor = vendor.lower()
-    if vendor in [x for x in  VENDORS.keys()]:
-        try:
-            suppliers = VENDORS[vendor]
-            val = main(suppliers)
-            return JsonResponse({'Status': 'Done'}, status=status.HTTP_200_OK)
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            return JsonResponse({'Error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else:
-        return JsonResponse({'Error': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class VendorEnrolmentTestView(APIView):
     permission_classes = [IsAuthenticated]
@@ -239,15 +224,6 @@ class VendorEnrolmentTestView(APIView):
 class VendoEnronmentView(APIView):
     permission_classes = [IsAuthenticated]
 
-    VENDOR_FLAGS = {
-    'fragrancex': 'has_fragrancex',
-    'zanders': 'has_zanders',
-    'rsr': 'has_rsr',
-    'cwr': 'has_cwr',
-    'lipsey': 'has_lipsey',
-    'ssi': 'has_ssi',
-    }
-
     def get(self, request):
         vendo_enronments = VendoEnronment.objects.filter(user_id = request.user.id)
         serializer = VendoEnronmentSerializer(vendo_enronments, many=True)
@@ -256,13 +232,48 @@ class VendoEnronmentView(APIView):
     def post(self, request):
         serializer = VendoEnronmentSerializer(data=request.data, context = {'request':request})
         if serializer.is_valid():
-            validated_data = serializer.validated_data
-            vendor_name = validated_data.get('vendor_name', '').lower()
-            # Update flags based on vendor name
-            for vendor, flag in self.VENDOR_FLAGS.items():
-                if vendor_name == vendor:
-                    validated_data[flag] = True
             serializer.save()
+            vendor = serializer.data
+
+            userid = request.user.id
+            ftp_name = vendor['vendor_name']
+            ftp_host = vendor['host']
+            ftp_user = vendor['ftp_username']
+            ftp_password = vendor['ftp_password']
+            ftp_path = vendor['ftp_url']
+            file_name = vendor['file_urls']
+
+            # supplier = (ftp_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name)
+            if ftp_name == 'FragranceX':
+                suppliers = [(ftp_name, ftp_host, ftp_user, ftp_password, "/", "outgoingfeed_upc.csv", 1)]
+            
+            elif ftp_name == 'Zanders' :
+                suppliers = [
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "itemimagelinks.csv", 1),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "zandersinv.csv", 2),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "detaildesctext.csv", 3),
+                    ]
+            
+            elif ftp_name == 'RSR':
+                suppliers = [
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "rsrinventory-keydlr-new.txt", 1),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "product_sell_descriptions.txt", 2),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "IM-QTY-CSV.csv", 3),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "rsr-product-message.txt", 4),
+                ]
+            elif ftp_name == 'CWR':
+                suppliers = [
+                        (ftp_name, ftp_host, ftp_user, ftp_password, "/out", "catalog.csv", 1),
+                        (ftp_name, ftp_host, ftp_user, ftp_password,  "/out", "inventory.csv", 2)
+                    ]
+            elif ftp_name == 'Lipsey':
+                suppliers = [(ftp_name, ftp_host, ftp_user, ftp_password, "/", "catalog.csv", 1),]
+            
+            elif ftp_name == 'SSI':
+                suppliers = [(ftp_name, ftp_host, ftp_user, ftp_password, "/Products", "RR_Products.csv", 1),]
+                            
+            main(suppliers, userid)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     

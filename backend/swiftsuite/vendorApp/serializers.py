@@ -7,7 +7,7 @@ class VendoEnronmentSerializer(serializers.ModelSerializer):
         model = VendoEnronment
         fields = ['vendor_id', 'vendor_name', 'address_street1', 'address_street2',
                   'city', 'state', 'postal_code', 'country', 'ftp_username', 'ftp_password',
-                  'ftp_url', 'file_urls', 'host', 'has_fragrancex', 'has_lipsey', 'has_zanders', 'has_cwr','has_ssi','has_rsr']
+                  'ftp_url', 'file_urls', 'host','product_filter','product_category','brand', 'percentage_markup','fixed_markup','shipping_cost','shipping_cost_average','stock_minimum','stock_maximum','update_inventory','send_orders','update_tracking']
     
     def create(self, validated_data):
         user = self.context['request'].user
