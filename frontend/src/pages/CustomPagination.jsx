@@ -9,14 +9,14 @@ const CustomPagination = ({ pageCount, onPageChange, currentPage, itemsPerPage, 
     const maxPage = Math.min(currentPage + 5, pageCount);
     for (let i = currentPage; i < maxPage; i++) {
       pageNumbers.push(
-        <li key={i} className={`inline-block ${currentPage === i ? 'rounded-[100%] font-bold bg-white text-[#089451] px-[2px]' : ''}`}>
+        <div key={i} className={`inline-block ${currentPage === i ? 'rounded-[100%] font-bold bg-white text-[#089451] px-[2px]' : ''}`}>
           <button
             className="px-3 py-2 rounded-full focus:outline-none focus:ring focus:border-blue-900 transition-colors duration-300"
             onClick={() => onPageChange({ selected: i })}
           >
             {i + 1}
           </button>
-        </li>
+        </div>
       );
     }
 
@@ -24,7 +24,7 @@ const CustomPagination = ({ pageCount, onPageChange, currentPage, itemsPerPage, 
   };
 
   return (
-    <div className="flex justify-between gap-[400px] text-sm  z-[100000]">
+    <div className="flex md:mx-5 m-2  lg:gap-[550px] md:gap-[300px] gap-[150px] text-sm  z-[100000]">
       <ul className="flex  space-x-2">
         {currentPage > 0 && (
           <li className="inline-block mx-1 text-sm ">
@@ -51,8 +51,6 @@ const CustomPagination = ({ pageCount, onPageChange, currentPage, itemsPerPage, 
           </li>
         )}
       </ul>
-      {/* <div className="w-40 text-sm border text-red-500 p-2">
-      </div> */}
         
       <div className=''>
       Viewing {Math.min((currentPage + 1) * itemsPerPage, totalItems)} of {totalItems}
