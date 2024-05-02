@@ -188,7 +188,7 @@ const FilterComponent = ({
         {/* SSI */}
         {endpoint === "https://service.swiftsuite.app/vendor/catalogue-ssi/46/" && (
           <div className="w-full grid lg:grid-cols-4 md:grid-cols-4 grid-cols-2 lg:gap-5 md:gap-10 my-4 lg:ms-[1%] ">
-            {/* Lipsey specific inputs */}
+            {/* SSI specific inputs */}
             <div className="flex flex-col">
               {/* <label htmlFor="name">manufacturer</label> */}
               <label htmlFor="name">Brand/Manufacturer</label>
@@ -196,7 +196,7 @@ const FilterComponent = ({
                 className="rounded-md p-2 sm:text-xs lg:text-base bg-transparent bg-white h-[35px] w-[80%] outline-none text-black"
                 type="text"
                 placeholder="e.g  calvin klein"
-                name="manufacturer"
+                name="ssimanufacturer"
                 value={formFilters.manufacturer}
                 onChange={handleFormInputChange}
               />
@@ -329,6 +329,7 @@ const FilterComponent = ({
             />
             <label htmlFor="filterByUPC" className="mt-1">UPC</label>
           </div>
+
 
           <button
             className="bg-white rounded border hover:bg-[#089451] hover:text-white hover:border-white text-[#089451] w-[40%] lg:mt-6 h-[35px]"

@@ -517,69 +517,69 @@ const Catalogue = () => {
             {selectedProduct && (
               <>
                 <div>
-                <p>{selectedProduct.metric_size ? `METRIC_SIZE: ${selectedProduct.metric_size}` : ''}</p>
-                <p>{selectedProduct.description ? `Description: ${selectedProduct.description}` : ''}</p>
-                <p>{selectedProduct.user_id ? `USER ID: ${selectedProduct.user_id}` : ''}</p>
-                <p>{selectedProduct.retail ? `RETAIL: ${selectedProduct.retail}` : ''}</p>
-                <p>{selectedProduct.cad_price ? `CAD_PRICE: ${selectedProduct.cad_price}` : ''}</p>
-                <p>{selectedProduct.eur_price ? `EUD_PRICE: ${selectedProduct.eur_price}` : ''}</p>
-                <p>{selectedProduct.gbp_price ? `GBP_PRICE: ${selectedProduct.gbp_price}` : ''}</p>
-                <p>{selectedProduct.item ? `ITEM: ${selectedProduct.item}` : ''}</p>
-                <p>{selectedProduct.qty ? `QUANTITY: ${selectedProduct.qty}` : ''}</p>
-                <p>{selectedProduct.size ? `SIZE: ${selectedProduct.size}` : ''}</p>
-                <p>{selectedProduct.url ? `URL: ${selectedProduct.url}` : ''}</p>
-                <p>{selectedProduct.aud_price ? `PRICE: ${selectedProduct.aud_price}` : ''}</p>
+                  <p>{selectedProduct.metric_size ? `METRIC_SIZE: ${selectedProduct.metric_size}` : ''}</p>
+                  <p>{selectedProduct.description ? `Description: ${selectedProduct.description}` : ''}</p>
+                  <p>{selectedProduct.user_id ? `USER ID: ${selectedProduct.user_id}` : ''}</p>
+                  <p>{selectedProduct.retail ? `RETAIL: ${selectedProduct.retail}` : ''}</p>
+                  <p>{selectedProduct.cad_price ? `CAD_PRICE: ${selectedProduct.cad_price}` : ''}</p>
+                  <p>{selectedProduct.eur_price ? `EUD_PRICE: ${selectedProduct.eur_price}` : ''}</p>
+                  <p>{selectedProduct.gbp_price ? `GBP_PRICE: ${selectedProduct.gbp_price}` : ''}</p>
+                  <p>{selectedProduct.item ? `ITEM: ${selectedProduct.item}` : ''}</p>
+                  <p>{selectedProduct.qty ? `QUANTITY: ${selectedProduct.qty}` : ''}</p>
+                  <p>{selectedProduct.size ? `SIZE: ${selectedProduct.size}` : ''}</p>
+                  <p>{selectedProduct.url ? `URL: ${selectedProduct.url}` : ''}</p>
+                  <p>{selectedProduct.aud_price ? `PRICE: ${selectedProduct.aud_price}` : ''}</p>
                 </div>
                 <div>
-                {/* Lipsey */}
-                <p>{selectedProduct.additionalfeature1 && `Feature1: ${selectedProduct.additionalfeature1}`}</p>
-                <p>{selectedProduct.additionalfeature2 && `Feature2: ${selectedProduct.additionalfeature2}`}</p>
-                <p>{selectedProduct.additionalfeature3 && `Feature3: ${selectedProduct.additionalfeature3}`}</p>
-                <p>{selectedProduct.itemnumber && `Itemnumber: ${selectedProduct.itemnumber}`}</p>
-                <p>{selectedProduct.description1 && `Description1: ${selectedProduct.description1}`}</p>
-                <p>{selectedProduct.description2 && `Description2: ${selectedProduct.description2}`}</p>
-                <p>{selectedProduct.calibergauge && `Calibergauge: ${selectedProduct.calibergauge}`}</p>
-                <p>{selectedProduct.capacity && `Capacity: ${selectedProduct.capacity}`}</p>
-                <p>{selectedProduct.family && `Family: ${selectedProduct.family}`}</p>
-                <p>{selectedProduct.finish && `Finish: ${selectedProduct.finish}`}</p>
-                <p>{selectedProduct.itemgroup && `Itemgroup: ${selectedProduct.itemgroup}`}</p>
-                <p>{selectedProduct.itemheight && `Itemheight: ${selectedProduct.itemheight}`}</p>
-                <p>{selectedProduct.itemlength && `Itemlength: ${selectedProduct.itemlength}`}</p>
-                <p>{selectedProduct.itemwidth && `Itemwidth: ${selectedProduct.itemwidth}`}</p>
-                <p>{selectedProduct.magazine && `Magazine: ${selectedProduct.magazine}`}</p>
-                <p>{selectedProduct.packageheight && `Packageheight: ${selectedProduct.packageheight}`}</p>
-                <p>{selectedProduct.packagelength && `Packagelength: ${selectedProduct.packagelength}`}</p>
-                <p>{selectedProduct.packagewidth && `Packagewidth: ${selectedProduct.packagewidth}`}</p>
-                <p>{selectedProduct.manufacturer && `Manufacturer: ${selectedProduct.manufacturer}`}</p>
-                <p>{selectedProduct.shippingweight && `Shippingweight: ${selectedProduct.shippingweight}`}</p>
-                <p>{selectedProduct.sightstype && `Sightstype: ${selectedProduct.sightstype}`}</p>
-                <p>{selectedProduct.stockframegrips && `Stockframegrips: ${selectedProduct.stockframegrips}`}</p>
+                  {/* Lipsey */}
+                  <p>{selectedProduct.additionalfeature1 && `Feature1: ${selectedProduct.additionalfeature1}`}</p>
+                  <p>{selectedProduct.additionalfeature2 && `Feature2: ${selectedProduct.additionalfeature2}`}</p>
+                  <p>{selectedProduct.additionalfeature3 && `Feature3: ${selectedProduct.additionalfeature3}`}</p>
+                  <p>{selectedProduct.itemnumber && `Itemnumber: ${selectedProduct.itemnumber}`}</p>
+                  <p>{selectedProduct.description1 && `Description1: ${selectedProduct.description1}`}</p>
+                  <p>{selectedProduct.description2 && `Description2: ${selectedProduct.description2}`}</p>
+                  <p>{selectedProduct.calibergauge && `Calibergauge: ${selectedProduct.calibergauge}`}</p>
+                  <p>{selectedProduct.capacity && `Capacity: ${selectedProduct.capacity}`}</p>
+                  <p>{selectedProduct.family && `Family: ${selectedProduct.family}`}</p>
+                  <p>{selectedProduct.finish && `Finish: ${selectedProduct.finish}`}</p>
+                  <p>{selectedProduct.itemgroup && `Itemgroup: ${selectedProduct.itemgroup}`}</p>
+                  <p>{selectedProduct.itemheight && `Itemheight: ${selectedProduct.itemheight}`}</p>
+                  <p>{selectedProduct.itemlength && `Itemlength: ${selectedProduct.itemlength}`}</p>
+                  <p>{selectedProduct.itemwidth && `Itemwidth: ${selectedProduct.itemwidth}`}</p>
+                  <p>{selectedProduct.magazine && `Magazine: ${selectedProduct.magazine}`}</p>
+                  <p>{selectedProduct.packageheight && `Packageheight: ${selectedProduct.packageheight}`}</p>
+                  <p>{selectedProduct.packagelength && `Packagelength: ${selectedProduct.packagelength}`}</p>
+                  <p>{selectedProduct.packagewidth && `Packagewidth: ${selectedProduct.packagewidth}`}</p>
+                  <p>{selectedProduct.manufacturer && `Manufacturer: ${selectedProduct.manufacturer}`}</p>
+                  <p>{selectedProduct.shippingweight && `Shippingweight: ${selectedProduct.shippingweight}`}</p>
+                  <p>{selectedProduct.sightstype && `Sightstype: ${selectedProduct.sightstype}`}</p>
+                  <p>{selectedProduct.stockframegrips && `Stockframegrips: ${selectedProduct.stockframegrips}`}</p>
                 </div>
                 <div>
-                {/* cwr */}
-                <p>{selectedProduct.category_name && 'Name: '+ selectedProduct.category_name }</p>
-                <p>{selectedProduct.manufacturer_name && 'Brand: '+ selectedProduct.manufacturer_name }</p>
-                <p>{selectedProduct.country_of_origin && 'Country of origin: '+ selectedProduct.country_of_origin }</p>
-                <p>{selectedProduct.shipping_weight && 'Shipping weight: '+ selectedProduct.shipping_weight }</p>
-                <p>{selectedProduct.harmonization_code && 'Harmonization code: '+ selectedProduct.harmonization_code }</p>
-                <p>{selectedProduct.category_id && 'Category ID: '+ selectedProduct.category_id }</p>
-                <p>{selectedProduct.exportable && 'Exportable: '+ selectedProduct.exportable }</p>
-                <p>{selectedProduct.fcc_id && 'Fcc ID: '+ selectedProduct.fcc_id }</p>
-                <p>{selectedProduct.box_height && 'Box Height: '+ selectedProduct.box_height }</p>
-                <p>{selectedProduct.manufacturer_part_number && 'Manufacturer part number: '+ selectedProduct.manufacturer_part_number }</p>
-                <p>{selectedProduct.sku && 'SKU: '+ selectedProduct.sku }</p>
-                <p>{selectedProduct.title && 'Title: '+ selectedProduct.title }</p>
+                  {/* cwr */}
+                  <p>{selectedProduct.category_name && 'Name: ' + selectedProduct.category_name}</p>
+                  <p>{selectedProduct.manufacturer_name && 'Brand: ' + selectedProduct.manufacturer_name}</p>
+                  <p>{selectedProduct.country_of_origin && 'Country of origin: ' + selectedProduct.country_of_origin}</p>
+                  <p>{selectedProduct.shipping_weight && 'Shipping weight: ' + selectedProduct.shipping_weight}</p>
+                  <p>{selectedProduct.harmonization_code && 'Harmonization code: ' + selectedProduct.harmonization_code}</p>
+                  <p>{selectedProduct.category_id && 'Category ID: ' + selectedProduct.category_id}</p>
+                  <p>{selectedProduct.exportable && 'Exportable: ' + selectedProduct.exportable}</p>
+                  <p>{selectedProduct.fcc_id && 'Fcc ID: ' + selectedProduct.fcc_id}</p>
+                  <p>{selectedProduct.box_height && 'Box Height: ' + selectedProduct.box_height}</p>
+                  <p>{selectedProduct.manufacturer_part_number && 'Manufacturer part number: ' + selectedProduct.manufacturer_part_number}</p>
+                  <p>{selectedProduct.sku && 'SKU: ' + selectedProduct.sku}</p>
+                  <p>{selectedProduct.title && 'Title: ' + selectedProduct.title}</p>
                 </div>
-                 {/* SSI */}
-                 <div>
-                <p>{selectedProduct.detaileddescription && 'Detaileddescription: '+ selectedProduct.detaileddescription }</p>
-                <p>{selectedProduct.status && 'Status: '+ selectedProduct.status }</p>
-                <p>{selectedProduct.groundshippingrequired && 'Groundshippingrequired: '+ selectedProduct.groundshippingrequired }</p>
-                <p>{selectedProduct.datecreated && 'Datecreated: '+ selectedProduct.datecreated }</p>
-                <p>{selectedProduct.countryoforigin && 'Countryoforigin: '+ selectedProduct.countryoforigin }</p>
-                <p>{selectedProduct.shippingheight && 'Shippingheight: '+ selectedProduct.shippingheight }</p>
-                <p>{selectedProduct.shippinglength && 'Shippinglength: '+ selectedProduct.manufacturer }</p>
-                <p>{selectedProduct.shippingwidth && 'Sippingwidth: '+ selectedProduct.shippingwidth }</p>
+                {/* SSI */}
+                <div>
+                  <p>{selectedProduct.detaileddescription && 'Detaileddescription: ' + selectedProduct.detaileddescription}</p>
+                  <p>{selectedProduct.status && 'Status: ' + selectedProduct.status}</p>
+                  <p>{selectedProduct.groundshippingrequired && 'Groundshippingrequired: ' + selectedProduct.groundshippingrequired}</p>
+                  <p>{selectedProduct.datecreated && 'Datecreated: ' + selectedProduct.datecreated}</p>
+                  <p>{selectedProduct.countryoforigin && 'Countryoforigin: ' + selectedProduct.countryoforigin}</p>
+                  <p>{selectedProduct.shippingheight && 'Shippingheight: ' + selectedProduct.shippingheight}</p>
+                  <p>{selectedProduct.shippinglength && 'Shippinglength: ' + selectedProduct.manufacturer}</p>
+                  <p>{selectedProduct.shippingwidth && 'Sippingwidth: ' + selectedProduct.shippingwidth}</p>
                 </div>
               </>
             )}
@@ -676,13 +676,13 @@ const Catalogue = () => {
                           </div>
                           <div className="p-4 flex flex-col justify-center rounded-xl">
                             {/* FragranceX */}
-                          
+
                             <p>{product.model || product.title ? `TITLE: ${product.model || product.title}` : ""}</p>
                             <p>{product.brand ? `BRAND: ${product.brand}` : ""}</p>
                             <p>{product.gender ? `GENDER: ${product.gender}` : ""}</p>
                             {/* Lipsey */}
-                          
-                            <p>{product.quantity || product.quantity_available_to_ship_combined ? `QUANTITY: ${product.quantity || product.quantity_available_to_ship_combined }` : ""}</p>
+
+                            <p>{product.quantity || product.quantity_available_to_ship_combined ? `QUANTITY: ${product.quantity || product.quantity_available_to_ship_combined}` : ""}</p>
                             <p>{product.upc || product.upc_code || product.upccode ? `UPC: ${product.upc || product.upc_code || product.upccode}` : ""}</p>
                           </div>
                         </div>
@@ -710,8 +710,8 @@ const Catalogue = () => {
                             ) : (
                               ''
                             )}
-                             {/* CWR */}
-                             {product.image_300x300_url ? (
+                            {/* CWR */}
+                            {product.image_300x300_url ? (
                               <img
                                 src={product.image_300x300_url}
                                 alt={product.image_300x300_url}
@@ -720,8 +720,8 @@ const Catalogue = () => {
                             ) : (
                               ''
                             )}
-                               {/* LIPSEY*/}
-                              {product.imagename ? (
+                            {/* LIPSEY*/}
+                            {product.imagename ? (
                               <img
                                 src={`https://www.lipseyscloud.com/images/${product.imagename}`}
                                 alt={product.imagename}
@@ -730,8 +730,8 @@ const Catalogue = () => {
                             ) : (
                               ''
                             )}
-                               {/* SSI */}
-                               {product.imageurl ? (
+                            {/* SSI */}
+                            {product.imageurl ? (
                               <img
                                 src={product.imageurl}
                                 alt={product.imageurl}
@@ -754,8 +754,8 @@ const Catalogue = () => {
                             <p>{product.upc || product.upccode ? `UPC: ${product.upc || product.upccode}` : ""}</p>
                             {/* cwr */}
                             {/* <p>{product.manufacturer_name && 'BRAND: '+ product.manufacturer_name}</p> */}
-                            <p>{product.category_name && 'NAME: '+ product.category_name }</p>
-                            <p>{product.upc_code && 'UPC: '+ product.upc_code }</p>
+                            <p>{product.category_name && 'NAME: ' + product.category_name}</p>
+                            <p>{product.upc_code && 'UPC: ' + product.upc_code}</p>
                           </div>
                         </div>
                       ))}
