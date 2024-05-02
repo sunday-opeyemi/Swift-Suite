@@ -7,7 +7,7 @@
 //   theme: {
 //     extend: {},
 //   },
-//   
+//   plugins: [],
 // }
 
 
