@@ -11,8 +11,5 @@ urlpatterns = [
     path('catalogue-cwr/<int:pk>/',CatalogueCwrView.as_view(), name='catalogue-cwr'),
     path('all-catalogue/<int:pk>/',AllCatalogueView.as_view(), name='all-catalogue'),
 
-    path('admin_pull/<str:vendor>/', admin_pull, name='admin_pull')
-
-
     # path('vendor-detail/<int:pk>/',VendoEnronmentDetailView.as_view(), name='vendor-detail')
 ]

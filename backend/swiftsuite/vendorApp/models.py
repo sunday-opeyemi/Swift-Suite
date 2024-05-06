@@ -18,9 +18,8 @@ class VendoEnronment(models.Model):
     ftp_url = models.CharField(max_length=255)
     file_urls = models.TextField()
     host = models.CharField(max_length=255)
-    product_filter = models.TextField(blank=True, null=True)
-    product_category = models.TextField(blank=True, null=True)
-    brand = models.TextField(blank=True, null=True)
+
+    # Price options
     percentage_markup = models.TextField(blank=True, null=True)
     fixed_markup = models.TextField(blank=True, null=True)
     shipping_cost = models.IntegerField(blank=True, null=True)
@@ -30,12 +29,27 @@ class VendoEnronment(models.Model):
     update_inventory = models.BooleanField(default=False)
     send_orders = models.BooleanField(default=False)
     update_tracking = models.BooleanField(default=False)
+
+    # Product Filters
+    product_filter = models.TextField(blank=True, null=True)
+    product_category = models.TextField(blank=True, null=True)
+    brand = models.TextField(blank=True, null=True)
+    manufacturer = models.TextField(blank=True, null=True)
+
+    # Zander Field
+    serialized = models.BooleanField(default=False)
+
+    # CWR Fields
+    truck_freight = models.BooleanField(default=False) 
+    oversized = models.BooleanField(default=False)
+    third_party_marketplaces = models.BooleanField(default=False)
+    returnable = models.BooleanField(default=False)
     
 
 class Cwr(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    cwr_part_number = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    cwr_part_number = models.TextField(unique=True, blank=True, null=True)
     manufacturer_part_number = models.CharField(max_length=255, blank=True, null=True)
     upc_code = models.CharField(max_length=255, blank=True, null=True)
     quantity_available_to_ship_combined = models.IntegerField(blank=True, null=True)
