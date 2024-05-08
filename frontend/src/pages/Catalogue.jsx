@@ -39,6 +39,7 @@ const Catalogue = () => {
   const [filterQuantityType, setFilterQuantityType] = useState("Greater than");
   const [filterQuantityValue, setFilterQuantityValue] = useState("");
   const [productChange, setProductChange] = useState("All")
+<<<<<<< HEAD
   const [endpoint, setEndpoint] = useState("");
   console.log(productChange);
   console.log(endpoint);
@@ -46,6 +47,12 @@ const Catalogue = () => {
 
 
 
+=======
+  console.log(productChange);
+
+
+
+>>>>>>> b12e3539c7affe09c381b8eed6b2f8e61b13763e
   const itemsPerPage = 99;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -367,6 +374,10 @@ const Catalogue = () => {
     setFilterByUPC(event.target.checked);
   };
 
+  const handleProductChange=(event)=>{
+    setProductChange(event.target.value)
+  }
+
   const toggleViewMode = () => {
     setViewMode((prevMode) => (prevMode === "list" ? "grid" : "list"));
   };
@@ -384,7 +395,11 @@ const Catalogue = () => {
       <section
         className={
           filterOpen
+<<<<<<< HEAD
             ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+=======
+            ? "fixed border md:h-[50%] h-[55%] md:gap-14 w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+>>>>>>> b12e3539c7affe09c381b8eed6b2f8e61b13763e
             : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
@@ -443,6 +458,7 @@ const Catalogue = () => {
               {viewMode === "list" ? <FaTh size={15} /> : <FaList size={15} />}
             </button>
           </div>
+<<<<<<< HEAD
 
           <select
             value={productChange}
@@ -455,6 +471,19 @@ const Catalogue = () => {
               </option>
             ))}
           </select>
+=======
+          <div>
+          <select className="cursor-pointer h-9 rounded-xl px-2 outline-none" onChange={handleProductChange}>
+            <option value="All">All</option>
+            <option value="Zanders">Zanders</option>
+            <option value="FragranceX">FragranceX</option>
+            <option value="Lipsey">Lipsey</option>
+            <option value="SSi">SSI</option>
+            <option value="RSR">RSR</option>
+            <option value="CWR">CWR</option>
+          </select>
+          </div>
+>>>>>>> b12e3539c7affe09c381b8eed6b2f8e61b13763e
         </div>
       </section>
       <div

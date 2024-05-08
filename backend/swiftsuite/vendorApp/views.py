@@ -2,6 +2,7 @@ from django.shortcuts import render
 from ftplib import FTP
 import time, os
 import csv
+import pandas as pd
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,203 +21,160 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.views.decorators.http import require_http_methods
 
 # Create your views here.
-supplier_name = ''
-index = 0
-items = []
-other_items = []
+import os
+import pandas as pd
 
-def download_csv_from_ftp(ftp_host, ftp_user, ftp_password, ftp_path, file_name, local_dir="."):
-    """Download CSV file from FTP server."""
-    global items,other_items
-    
-    # try:
-    with FTP(ftp_host) as ftp:
-        print('Login ftp')
-        ftp.login(user=ftp_user, passwd=ftp_password)
-        ftp.set_pasv(True)
-        ftp.cwd(ftp_path)
-        with open(os.path.join(local_dir, file_name), "wb") as local_file:
-            ftp.retrbinary(f"RETR {file_name}", local_file.write)
+class VendorActivity:
+    def __init__(self):
+        self.data = ''
 
-    print(f"{file_name} downloaded from FTP for {ftp_user}.")
-    with open(os.path.join(local_dir, file_name), "r", encoding='utf-8') as file:
-        csv_data = csv.DictReader(file)
-        print(csv_data, supplier_name)
-        insert_data = []
+    def main(self, suppliers, userid):
+        for supplier in suppliers:
+            self.process_supplier(supplier, userid)
+
+    def process_supplier(self, supplier, userid):
+        """Process each supplier."""
+        supplier_name, *_ = supplier
+        print(f"Processing {supplier_name}...")
+        local_dir = os.path.join("local_dir", supplier_name)
+        os.makedirs(local_dir, exist_ok=True)
+        try:
+            self.download_csv_from_ftp(userid, supplier, local_dir)
+            print(f"{supplier_name} data processed successfully.")
+        except Exception as e:
+            print(f"Error processing {supplier_name}: {str(e)}")
 
 
-        if supplier_name == "FragranceX":
-            # try:
-            print('Trying to upload')
-            for row in csv_data:
-                
-                insert_data.append(Fragrancex( name=row["NAME"], item=row["ITEM"], description=row["DESCRIPTION"], brand=row["BRAND"], title=row["TITLE"], gender=row["GENDER"], size=row["Size"], metric_size=row["Metric_Size"], retail=row["RETAIL"], price=row["PRICE"], eur_price=row["EUR_PRICE"],gbp_price=row["GBP_PRICE"], cad_price=row["CAD_PRICE"], aud_price=row["AUD_PRICE"], image=row["IMAGE"], url=row["URL"], qty=row["QTY"], upc=row["UPC"]))
+    def download_csv_from_ftp(self, userid, supplier, local_dir=".", pull_to_db = True):
+        """Download CSV file from FTP server."""
+        
+        supplier_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name, index = supplier
+        file_path = os.path.join(local_dir, file_name)
+        
+        with FTP(ftp_host) as ftp:
+            ftp.login(user=ftp_user, passwd=ftp_password)
+            ftp.set_pasv(True)
+            ftp.cwd(ftp_path)
+            with open(file_path, "wb") as local_file:
+                ftp.retrbinary(f"RETR {file_name}", local_file.write)
+        print(f"{file_name} downloaded from FTP for {ftp_user}.")
 
-            print(len(insert_data))
-            start = 0 
-            end = 500 
-            while start < len(insert_data):
-                
-                Fragrancex.objects.bulk_create(insert_data[start:end])
-                start += 500
-                end += 500
-                
-                print('\nUpload successful....', end)
+        if pull_to_db:
+            self.pullProduct(userid,supplier_name, local_dir, file_name, index)
 
-                
-        elif supplier_name == "Lipsey":
-            print('Trying to upload')
-            for row in csv_data:
-                insert_data.append(Lipsey(itemnumber=row["ItemNo"], description1=row["Description1"], description2=row["Description2"], 
-                    upc=row["Upc"], manufacturermodelno=row["ManufacturerModelNo"], msrp=row["Msrp"], 
-                    model=row["Model"], calibergauge=row["CaliberGauge"], manufacturer=row["Manufacturer"], 
-                    type=row["Type"], action=row["Action"],barrellength=row["BarrelLength"], 
-                    capacity=row["Capacity"], finish=row["Finish"], overalllength=row["OverallLength"], 
-                    receiver=row["Receiver"], safety=row["Safety"], sights=row["Sights"], stockframegrips=row["StockFrameGrips"], magazine=row["Magazine"], weight=row["Weight"], imagename=row["ImageName"], chamber=row["Chamber"], drilledandtapped=row["DrilledAndTapped"], rateoftwist=row["RateOfTwist"], itemtype=row["ItemType"], additionalfeature1=row["AdditionalFeature1"], additionalfeature2=row["AdditionalFeature2"], additionalfeature3=row["AdditionalFeature3"], shippingweight=row["ShippingWeight"], boundbookmanufacturer=row["BoundBookManufacturer"], boundbookmodel=row["BoundBookModel"], boundbooktype=row["BoundBookType"], nfathreadpattern=row["NfaThreadPattern"], nfaattachmentmethod=row["NfaAttachmentMethod"], nfabaffletype=row["NfaBaffleType"], silencercanbedisassembled=row["SilencerCanBeDisassembled"], silencerconstructionmaterial=row["SilencerConstructionMaterial"], nfadbreduction=row["NfaDbReduction"], silenceroutsidediameter=row["SilencerOutsideDiameter"], nfaform3caliber=row["NfaForm3Caliber"], opticmagnification=row["OpticMagnification"], maintubesize=row["MaintubeSize"], adjustableobjective=row["AdjustableObjective"], objectivesize=row["ObjectiveSize"], opticadjustments=row["OpticAdjustments"], illuminatedreticle=row["IlluminatedReticle"], reticle=row["Reticle"], exclusive=row["Exclusive"], quantity=row["Quantity"], allocated=row["Allocated"], onsale=row["OnSale"], price=row["Price"], currentprice=row["CurrentPrice"], retailmap=row["RetailMap"], fflrequired=row["FflRequired"], sotrequired=row["SotRequired"], exclusivetype=row["ExclusiveType"], scopecoverincluded=row["ScopeCoverIncluded"], special=row["Special"], sightstype=row["SightsType"], case=row["Case"], choke=row["Choke"], dbreduction=row["DbReduction"], family=row["Family"], finishtype=row["FinishType"], frame=row["Frame"], griptype=row["GripType"], handgunslidematerial=row["HandgunSlideMaterial"], countryoforigin=row["CountryOfOrigin"], itemlength=row["ItemLength"], itemwidth=row["ItemWidth"], itemheight=row["ItemHeight"], packagelength=row["PackageLength"], packagewidth=row["PackageWidth"], packageheight=row["PackageHeight"], itemgroup=row["ItemGroup"], ))
+    def pullProduct(self, userid, supplier_name, local_dir, file_name, index):
+        with open(os.path.join(local_dir, file_name), "r", encoding='latin1') as file:
+            csv_data = csv.DictReader(file)
+            print(csv_data, supplier_name)
             
-            print(len(insert_data))
-            start = 0 
-            end = 500 
-            while start < len(insert_data):
-                
-                Lipsey.objects.bulk_create(insert_data[start:end])
-                start += 500
-                end += 500
+            insert_data = []
+            if supplier_name == "FragranceX":
+                items = []
+                for row in csv_data:
+                    items.append(row)
+                    
+                self.data = pd.DataFrame(items)
+                self.data = self.data[self.data['ItemType'] == 'Firearm']
+                self.data = self.data[self.data['Quantity'] > '22']
+                for row in self.data.iterrows():
+                    row = row[1]
+                    insert_data.append(Fragrancex(user_id=userid, name=row["NAME"], item=row["ITEM"], description=row["DESCRIPTION"], brand=row["BRAND"], title=row["TITLE"], gender=row["GENDER"], size=row["Size"], metric_size=row["Metric_Size"], retail=row["RETAIL"], price=row["PRICE"], eur_price=row["EUR_PRICE"],gbp_price=row["GBP_PRICE"], cad_price=row["CAD_PRICE"], aud_price=row["AUD_PRICE"], image=row["IMAGE"], url=row["URL"], qty=row["QTY"], upc=row["UPC"]))
 
-                print('\nUpload successful....', end)
+                Fragrancex.objects.bulk_create(insert_data, batch_size=500, update_conflicts=True, update_fields=["size", "price", "qty"])
+                print('FrangranceX upload successfully')
                 
-            
-        elif supplier_name == "SSI":
-            for row in csv_data:
-                items = str(row).split(":", 1)[1]
-                items = items.replace("]}", "").split("|")
-                insert_data.append(Ssi( sku=items[0], description=items[1], datecreated=items[2], dimensionh=items[3], dimensionl=items[4], dimensionw=items[5], manufacturer=items[6], imageurl=items[7], thumbnailurl=items[8], upccode=items[9], weight=items[10], weightunits=items[11], category=items[12], subcategory=items[13], status=items[14], map=items[15], msrp=items[16], mpn=items[17], minimumorderquantity=items[18], detaileddescription=items[19], shippingweight=items[20], shippinglength=items[21], shippingwidth=items[22], shippingheight=items[23], attribute1=items[24], attribute2=items[25], attribute3=items[26], attribute4=items[27], attribute5=items[28], feature_6=items[29], attribute7=items[30], prop65warning=items[31], prop65reason=items[32], countryoforigin=items[33], groundshippingrequired=items[34]))
+            elif supplier_name == "Lipsey":
+                items = []
+                for row in csv_data:
+                    items.append(row)
+                    
+                self.data = pd.DataFrame(items)
+                # self.data = self.data[self.data['ItemType']=='Firearm']
+                # self.data = self.data[self.data['Quantity']>'22']
+                for row in self.data.iterrows():
+                    row = row[1]
+                    insert_data.append(Lipsey(user_id=userid, itemnumber=row["ItemNo"], description1=row["Description1"], description2=row["Description2"], 
+                        upc=row["Upc"], manufacturermodelno=row["ManufacturerModelNo"], msrp=row["Msrp"], 
+                        model=row["Model"], calibergauge=row["CaliberGauge"], manufacturer=row["Manufacturer"], 
+                        type=row["Type"], action=row["Action"], barrellength=row["BarrelLength"], 
+                        capacity=row["Capacity"], finish=row["Finish"], overalllength =row["OverallLength"], 
+                        receiver=row["Receiver"], safety=row["Safety"], sights=row["Sights"], stockframegrips=row["StockFrameGrips"], magazine=row["Magazine"], weight=row["Weight"], imagename=row["ImageName"], chamber=row["Chamber"], drilledandtapped=row["DrilledAndTapped"], rateoftwist=row["RateOfTwist"], itemtype=row["ItemType"], additionalfeature1=row["AdditionalFeature1"], additionalfeature2=row["AdditionalFeature2"], additionalfeature3=row["AdditionalFeature3"], shippingweight=row["ShippingWeight"], boundbookmanufacturer=row["BoundBookManufacturer"], boundbookmodel=row["BoundBookModel"], boundbooktype=row["BoundBookType"], nfathreadpattern=row["NfaThreadPattern"], nfaattachmentmethod=row["NfaAttachmentMethod"], nfabaffletype=row["NfaBaffleType"], silencercanbedisassembled=row["SilencerCanBeDisassembled"], silencerconstructionmaterial=row["SilencerConstructionMaterial"], nfadbreduction=row["NfaDbReduction"], silenceroutsidediameter=row["SilencerOutsideDiameter"], nfaform3caliber=row["NfaForm3Caliber"], opticmagnification=row["OpticMagnification"], maintubesize=row["MaintubeSize"], adjustableobjective=row["AdjustableObjective"], objectivesize=row["ObjectiveSize"], opticadjustments=row["OpticAdjustments"], illuminatedreticle=row["IlluminatedReticle"], reticle=row["Reticle"], exclusive=row["Exclusive"], quantity=row["Quantity"], allocated=row["Allocated"], onsale=row["OnSale"], price=row["Price"], currentprice=row["CurrentPrice"], retailmap=row["RetailMap"], fflrequired=row["FflRequired"], sotrequired=row["SotRequired"], exclusivetype=row["ExclusiveType"], scopecoverincluded=row["ScopeCoverIncluded"], special=row["Special"], sightstype=row["SightsType"], case=row["Case"], choke=row["Choke"], dbreduction=row["DbReduction"], family=row["Family"], finishtype=row["FinishType"], frame=row["Frame"], griptype=row["GripType"], handgunslidematerial=row["HandgunSlideMaterial"], countryoforigin=row["CountryOfOrigin"], itemlength=row["ItemLength"], itemwidth=row["ItemWidth"], itemheight=row["ItemHeight"], packagelength=row["PackageLength"], packagewidth=row["PackageWidth"], packageheight=row["PackageHeight"], itemgroup=row["ItemGroup"], ))
+                
+                Lipsey.objects.bulk_create(insert_data, batch_size=500, update_conflicts=True, update_fields=["onsale", "price", "currentprice"])
+                print('Lipsey upload successfully')
+                
+            elif supplier_name == "SSI":
+                items = []
+                for row in csv_data:
+                    header = str(row).split(":", 1)[0]
+                    header = header.replace("{'", "").split("|")
+                    item = str(row).split(":", 1)[1]
+                    item = item.replace("]}", "").split("|")
+                    items.append(item)
+                    
+                header[-1] = header[-1].replace("'", "")
+                
+                self.data = pd.DataFrame(items, columns=header)
+                # data = data[data['ItemType']=='Firearm']
+                # data = data[data['Quantity']>'22']
+                
+                for row in self.data.iterrows():
+                    items = row[1].values
+                    insert_data.append(Ssi(user_id=userid, sku=items[0], description=items[1], datecreated=items[2], dimensionh=items[3], dimensionl=items[4], dimensionw=items[5], manufacturer=items[6], imageurl=items[7], thumbnailurl=items[8], upccode=items[9], weight=items[10], weightunits=items[11], category=items[12], subcategory=items[13], status=items[14], map=items[15], msrp=items[16], mpn=items[17], minimumorderquantity=items[18], detaileddescription=items[19], shippingweight=items[20], shippinglength=items[21], shippingwidth=items[22], shippingheight=items[23], attribute1=items[24], attribute2=items[25], attribute3=items[26], attribute4=items[27], attribute5=items[28], attribute6=items[29], attribute7=items[30], prop65warning=items[31], prop65reason=items[32], countryoforigin=items[33], groundshippingrequired=items[34]))
 
-            print(len(insert_data))
-            start = 0 
-            end = 500 
-            while start < len(insert_data):
-                
-                Ssi.objects.bulk_create(insert_data[start:end])
-                start += 500
-                end += 500
-
-                print('\nUpload successful....', end)
-                
-                
-        elif supplier_name == "CWR":
-
-            for row in csv_data:
+                Ssi.objects.bulk_create(insert_data, batch_size=500, update_conflicts=True, update_fields=["description", "status", "weight"])
+                print('SSI upload successfully')
+                    
+            elif supplier_name == "CWR":
+                items = []
+                for row in csv_data:
+                    items.append(row)
+                    
                 if index == 1:
-                    items.append(list(row.values()))
+                    self.data = pd.DataFrame(items)
                 elif index == 2:
-                    other_items.append(list(row.values()))
-
-            print(len(items))
-            print(len(other_items))
-
-
-            return items,other_items
-            
-            
-        elif supplier_name == "RSR":
-            for row in csv_data:
-                pass
-
-
-        elif supplier_name == "Zanders":
-            items = []
-            items2 = []
-            items3 = []
-            for row in csv_data:
-                if index == 1:
-                    items.append(list(row.values()))
-                elif index == 2:
-                    items2.append(list(row.values()))
-                elif index == 3:
-                    items3.append(list(row.values()))
-            for ind, data in enumerate(items):
-                insert_data.append(Cwr( available=data['available'], category=data['category'], desc1=data['desc1'], desc2=data['desc2'], itemnumber=data['itemnumber'], manufacturer=data['manufacturer'], mfgpnumber=data['mfgpnumber'], msrp=data['msrp'], price1=data['price1'], price2=data['price2'], price3=data['price3'], qty1=data['qty1'], qty2=data['qty2'], qty3=data['qty3'], upc=data['upc'], weight=data['weight'], serialized=data['serialized'], mapprice=data['mapprice'], ImageLink=items2[ind]['ImageLink'], ItemNumberDescription=items3[ind]['ItemNumberDescription']))
-            print(len(insert_data))
-            start = 0 
-            end = 500 
-            while start < len(insert_data):
+                    data2 = pd.DataFrame(items)
+                    self.data = self.data.merge(data2, left_on="CWR Part Number", right_on="sku")    
                 
-                Zanders.objects.bulk_create(insert_data[start:end])
-                start += 500
-                end += 500
-
-                print('\nUpload successful....', end)
-                
-            
-    # except Exception as e:
-    #     print(f"Download {file_name} Error: {str(e)}")
-    #     return e
-        
-def cwr_upload(items,other_items):
-    insert_data = []
-    for ind, data in enumerate(items):
-        insert_data.append(Cwr( cwr_part_number=data[0], manufacturer_part_number=data[1], upc_code=data[2], quantity_available_to_ship_combined_field=data[3], quantity_available_to_ship_nj_field=data[4], quantity_available_to_ship_fl_field=data[5], next_shipment_date_combined_field=data[6], next_shipment_date_nj_field=data[7], next_shipment_date_fl_field=data[8], your_cost=data[9], list_price=data[10], m_a_p_price=data[11], m_r_p_price=data[12], uppercase_title=data[13], title=data[14], full_description=data[15], category_id=data[16], category_name=data[17], manufacturer_name=data[18], shipping_weight=data[19], box_height=data[20], box_length=data[21], box_width=data[22], list_of_accessories_by_sku=data[23], list_of_accessories_by_mfg_field=data[24], quick_specs=data[25], image_300x300_url=data[26], image_1000x1000_url=data[27], non_stock=data[28], drop_ships_direct_from_vendor=data[29], hazardous_materials=data[30], truck_freight=data[31], exportable=data[32], first_class_mail=data[33], oversized=data[34], remanufactured=data[35], closeout=data[36], harmonization_code=data[37], country_of_origin=data[38], sale=data[39], original_price_if_on_sale_closeout_field=data[40], sale_start_date=data[41], sale_end_date=data[42], rebate=data[43], rebate_description=data[44], rebate_start_date=data[45], rebate_end_date=data[46], google_merchant_category=data[47], quick_guide_literature_pdf_url=data[48], owners_manual_pdf_url=data[49], brochure_literature_pdf_url=data[50], installation_guide_pdf_url=data[51], video_urls=data[52], prop_65=data[53], prop_65_description=data[54], free_shipping=data[55], free_shipping_end_date=data[56], returnable=data[57], image_additional_1000x1000_urls=data[58], case_qty_nj_field=data[59], case_qty_fl_field=data[60], number_3rd_party_marketplaces=data[61], fcc_id=data[62], sku=other_items[ind][0], mfgn=other_items[ind][1], qty=other_items[ind][2], qtynj=other_items[ind][3], qtyfl=other_items[ind][4], price=other_items[ind][5], map=other_items[ind][6], mrp=other_items[ind][7]))
-
-        
-    print(len(insert_data))
-    start = 0 
-    end = 500 
-    while start < len(insert_data):
-        
-        Cwr.objects.bulk_create(insert_data[start:end])
-        start += 500
-        end += 500
-
-        print('\nUpload successful....', end)
-
-def process_supplier(supplier):
-    """Process each supplier."""
-    global supplier_name, index
-    print('process_supplier()')
-    supplier_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name, index = supplier
-    local_dir = os.path.join("local_dir", supplier_name)
-    supplier_name=supplier_name
-    os.makedirs(local_dir, exist_ok=True)
-    val = download_csv_from_ftp(ftp_host, ftp_user, ftp_password, ftp_path, file_name, local_dir)
-    return val
+                    # self.data = self.data[self.data['ItemType']=='Firearm']
+                    # self.data = self.data[self.data['Quantity']>'22']    
+                    for row in self.data.iterrows():
+                        items = row[1].values   
+                        # print(items)
+                        items = list(items)
+                        insert_data.append(Cwr(user_id=userid, cwr_part_number=items[0], manufacturer_part_number=items[1], upc_code=items[2], quantity_available_to_ship_combined=items[3], quantity_available_to_ship_nj=items[4], quantity_available_to_ship_fl=items[5], next_shipment_date_combined=items[6], next_shipment_date_nj=items[7], next_shipment_date_fl=items[8], your_cost=items[9], list_price=items[10], m_a_p_price=items[11], m_r_p_price=items[12], uppercase_title=items[13], title=items[14], full_description=items[15], category_id=items[16], category_name=items[17], manufacturer_name=items[18], shipping_weight=items[19], box_height=items[20], box_length=items[21], box_width=items[22], list_of_accessories_by_sku=items[23], list_of_accessories_by_mfg=items[24], quick_specs=items[29], hazardous_materials=items[30], truck_freight=items[31], exportable=items[32], first_class_mail=items[33], oversized=items[34], remanufactured=items[35], closeout=items[36], harmonization_code=items[37], country_of_origin=items[38], sale=items[39], original_price_if_on_sale_closeout=items[40], sale_start_date=items[41], sale_end_date=items[42], rebate=items[43], rebate_description=items[44], rebate_start_date=items[45], rebate_end_date=items[46], google_merchant_category=items[47], quick_guide_literature_pdf_url=items[48], owners_manual_pdf_url=items[49], brochure_literature_pdf_url=items[50], installation_guide_pdf_url=items[51], video_urls=items[52], prop_65=items[53], prop_65_description=items[54], free_shipping=items[55], free_shipping_end_date=items[56], returnable=items[57], image_additional_1000x1000_urls=items[58], case_qty_nj=items[59], case_qty_fl=items[60], number_3rd_party_marketplaces=items[61], fcc_id=items[62], sku=items[63], mfgn=items[64], qty=items[65], qtynj=items[66], qtyfl=items[67], price=items[68], map=items[69], mrp=items[70]))
+                    
+                    print(len(insert_data))
+                    Cwr.objects.bulk_create(insert_data, batch_size=500, update_conflicts=True, update_fields=["qty", "qtynj", "qtyfl", "price", "map", "mrp"])
+                    print('\nProduct Upload successful....')
+                        
+            elif supplier_name == "RSR Group":
+                for row in csv_data:
+                    pass
+            elif supplier_name == "Zanders":  
+                items = []
+                itemNumber = []
+                description = []
+                for row in csv_data:
+                    if index == 3:
+                        itemNumber.append(str(row).split("~")[1].split(":")[1].replace("'", "").strip())
+                        description.append(str(row).split("~")[2].replace("}", ""))
+                    else:
+                        items.append(row) 
+                    
+                data = data[data['ItemType']=='Firearm']
+                data = data[data['Quantity']>'22']    
+                for row in data.iterrows():
+                    items = row[1]      
+                    insert_data.append(Zanders(user_id=userid, available=row['available'], category=row['category'], desc1=row['desc1'], desc2=row['desc2'], itemnumber=row['itemnumber'], manufacturer=row['manufacturer'], mfgpnumber=row['mfgpnumber'], msrp=row['msrp'], price1=row['price1'], price2=row['price2'], price3=row['price3'], qty1=row['qty1'], qty2=row['qty2'], qty3=row['qty3'], upc=row['upc'], weight=row['weight'], serialized=row['serialized'], mapprice=row['mapprice'], imagelink=row['ImageLink'], description=["description"]))       
+                    
+ 
+                print(len(insert_data))                  
+                Zanders.objects.bulk_create(insert_data, batch_size=500, update_conflicts=True, update_fields=["price1", "price2", "price3"])
+                print('\nProduct upload successful....')
 
 
-suppliers = [
-    # [("FragranceX", "ftp2.fragrancex.com", "frgx_temilolaoduola@gmail.com", "ftos3tpi", "/", "outgoingfeed_upc.csv", 1)],
-    # [("Lipsey", "ftp.lipseysdistribution.net", "cat800459", "8b4c531467417ad97e5274d5ecfbc0eb", "/", "catalog.csv", 1),]
-    # [("SSI", "www.rapidretail.net", "ssi_dot774rr", "Rapid_774!", "/Products", "RR_Products.csv", 1),]
-    # [("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrinventory-keydlr-new.txt", 1),
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "product_sell_descriptions.txt", 2),
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "IM-QTY-CSV.csv", 3),
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-product-message.txt", 4),]
-    # [(ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "itemimagelinks.csv", 1),
-    # (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "zandersinv.csv", 2),
-    # (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "detaildesctext.csv", 3),]
-    # [("CWR", "edi.cwrdistribution.com", "421460", "password_here", "/out", "catalog.csv", 1),
-    # ("CWR", "edi.cwrdistribution.com", "421460", "password_here", "/out", "inventory.csv", 2)]
-]
-
-update_file = [
-    # ("Lipsey", "ftp.lipseysdistribution.net", "cat800459", "8b4c531467417ad97e5274d5ecfbc0eb", "/", "pricingquantity.csv", 2)],
-    # ("SSI", "www.rapidretail.net", "ssi_dot774rr", "Rapid_774!", "/Pricing-Availability", "RR_Pricing_Availability.csv", 2)],
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-ship-restrictions.txt"),
-    # ("RSR Group", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrdeletedinv.txt"),
-    # (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "liveinv.csv"),
-    # (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "iteminfo2.csv"),
-]
-
-
-def main( suppliers):
-    print('main()')
-    for sub_supplier in suppliers:
-       val = process_supplier(sub_supplier)
-    if val: 
-        if len(val) == 3:
-            items ,other_items = val
-            cwr_upload(items ,other_items)
-        return val
-
+                                      
 
 VENDORS = {
     "fragrancex":[
@@ -252,22 +210,6 @@ VENDORS = {
 }
 
 
-@api_view(['GET', 'POST'])
-@permission_classes([IsAuthenticated])
-@user_passes_test(lambda u: u.is_staff)
-def admin_pull(request, vendor):
-    vendor = vendor.lower()
-    if vendor in [x for x in  VENDORS.keys()]:
-        try:
-            suppliers = VENDORS[vendor]
-            val = main(suppliers)
-            return JsonResponse({'Status': 'Done'}, status=status.HTTP_200_OK)
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            return JsonResponse({'Error': e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    else:
-        return JsonResponse({'Error': 'An error occurred'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 class VendorEnrolmentTestView(APIView):
     permission_classes = [IsAuthenticated]
@@ -290,15 +232,6 @@ class VendorEnrolmentTestView(APIView):
 class VendoEnronmentView(APIView):
     permission_classes = [IsAuthenticated]
 
-    VENDOR_FLAGS = {
-    'fragrancex': 'has_fragrancex',
-    'zanders': 'has_zanders',
-    'rsr': 'has_rsr',
-    'cwr': 'has_cwr',
-    'lipsey': 'has_lipsey',
-    'ssi': 'has_ssi',
-    }
-
     def get(self, request):
         vendo_enronments = VendoEnronment.objects.filter(user_id = request.user.id)
         serializer = VendoEnronmentSerializer(vendo_enronments, many=True)
@@ -307,13 +240,57 @@ class VendoEnronmentView(APIView):
     def post(self, request):
         serializer = VendoEnronmentSerializer(data=request.data, context = {'request':request})
         if serializer.is_valid():
-            validated_data = serializer.validated_data
-            vendor_name = validated_data.get('vendor_name', '').lower()
-            # Update flags based on vendor name
-            for vendor, flag in self.VENDOR_FLAGS.items():
-                if vendor_name == vendor:
-                    validated_data[flag] = True
+            vendor = serializer.validated_data
+
+            userid = request.user.id
+            ftp_name = vendor['vendor_name']
+            ftp_host = vendor['host']
+            ftp_user = vendor['ftp_username']
+            ftp_password = vendor['ftp_password']
+            ftp_path = vendor['ftp_url']
+            file_name = vendor['file_urls']
+            # percentage_markup = vendor['percentage_markup']
+            # fixed_markup = vendor['fixed_markup']
+            # shipping_cost = vendor['shipping_cost']
+            # stock_minimum = vendor['stock_minimum']
+            # stock_maximum = vendor['stock_maximum']
+            # update_inventory = vendor['update_inventory']
+            # send_orders = vendor['send_orders']
+            # update_tracking = vendor['update_tracking']
+
+            # supplier = (ftp_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name)
+            if ftp_name == 'FragranceX':
+                suppliers = [(ftp_name, ftp_host, ftp_user, ftp_password, "/", "outgoingfeed_upc.csv", 1)]
+            
+            elif ftp_name == 'Zanders' :
+                suppliers = [
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "itemimagelinks.csv", 1),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "zandersinv.csv", 2),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "detaildesctext.csv", 3),
+                    ]
+            
+            elif ftp_name == 'RSR':
+                suppliers = [
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "rsrinventory-keydlr-new.txt", 1),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "product_sell_descriptions.txt", 2),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "IM-QTY-CSV.csv", 3),
+                    (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "rsr-product-message.txt", 4),
+                ]
+            elif ftp_name == 'CWR':
+                suppliers = [
+                        (ftp_name, ftp_host, ftp_user, ftp_password, "/out", "catalog.csv", 1),
+                        (ftp_name, ftp_host, ftp_user, ftp_password,  "/out", "inventory.csv", 2)
+                    ]
+            elif ftp_name == 'Lipsey':
+                suppliers = [(ftp_name, ftp_host, ftp_user, ftp_password, "/", "catalog.csv", 1),]
+            
+            elif ftp_name == 'SSI':
+                suppliers = [(ftp_name, ftp_host, ftp_user, ftp_password, "/Products", "RR_Products.csv", 1),]
+
+            pull = VendorActivity()                
+            pull.main(suppliers, userid)
             serializer.save()
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
