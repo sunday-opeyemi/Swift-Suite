@@ -34,6 +34,13 @@ export const Vendordata = [
         price: "$50.00/month",
         name: "Lipseys",
       },
+      {
+        id: 6,
+        image:"/image/vendorfive.png",
+        summaries:'Send orders and receive tracking with SSI',
+        price: "$50.00/month",
+        name: "ssi",
+      },
       
   ];
   
