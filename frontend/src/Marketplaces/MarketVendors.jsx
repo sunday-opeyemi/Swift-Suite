@@ -20,7 +20,7 @@ const MarketVendors = () => {
             <div className='grid lg:grid-cols-3 md:grid-cols-2 h-[500px] my-5 grid-cols-1 mt-3 gap-4'>
                 {Vendordata.map((item, i) => (
                     <div key={i} className=' bg-white shadow-lg py-10 text-center text-sm font-semibold'>
-                        <div className='my-2'><img src={item.image} width={150} className='mx-auto' alt="" /></div>
+                        <div className='my-2'><img src={item.image} width={150} height={100} className='mx-auto' alt="" /></div>
                         <div className='text-center px-1 text-[15px] my-2'>{item.summaries}</div>
                         <div className='my-2'>{item.price}</div>
                         <button onClick={()=> vendor(item.name)} className='bg-[#089451] text-white font-bold px-5  hover:bg-white border rounded hover:border-[#089451] hover:text-[#089451] py-1'>Add Vendor</button>

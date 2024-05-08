@@ -34,8 +34,9 @@ const SignIn = () => {
       // console.log(values);
       axios.post(endpoint, values)
       .then((result)=>{
-        // console.log(result.data.access_token);
-        localStorage.setItem('token', JSON.stringify(result.data.access_token))
+   // console.log(result.data.full_name);
+   localStorage.setItem('token', JSON.stringify(result.data.access_token))
+   localStorage.setItem('fullName', JSON.stringify(result.data.full_name))
         toast.success("Sign in Successful!");
         setMyLoader(false)
         navigate('/layout/home')

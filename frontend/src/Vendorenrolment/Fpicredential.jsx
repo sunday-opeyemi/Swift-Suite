@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 const Fpicredential = () => {
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
   let token = JSON.parse(localStorage.getItem('token'))
   const store = useSelector(state => state.vendor.vendorData)
 
@@ -79,9 +79,16 @@ const onSubmit = (data) => {
           
         })
         .catch((err)=>{
-          console.log(err);
-          toast("Connection not Successful!")
           setMyLoader(false)
+          console.log(err);
+          if (err.response.data.detail) {
+            console.log("Token has expired");
+            toast.error("Token has expired");
+            localStorage.removeItem("token");
+            navigate("/signin");
+          } else{
+            toast("Connection not Successful!")
+          }
         })
 
 

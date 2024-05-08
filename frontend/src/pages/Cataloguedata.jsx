@@ -1,32 +1,37 @@
 export const catalogue = [
   {
     id: 1,
-    endpoint: '',
-    name: 'RSR',
+    endpoint:"https://service.swiftsuite.app/vendor/all-catalogue/46/",
+    name: 'All',
   },
   {
     id: 2,
-    endpoint: '',
-    name: 'Zanders',
+    endpoint:"https://service.swiftsuite.app/vendor/catalogue-fragrancex/46/",
+    name: 'RSR',
   },
   {
     id: 3,
-    endpoint: '',
-    name: 'CWR',
+    endpoint:"https://service.swiftsuite.app/vendor/catalogue-zanders/46/",
+    name: 'Zanders',
   },
   {
     id: 4,
-    endpoint: '',
-    name: 'SSI',
+    endpoint: "https://service.swiftsuite.app/vendor/catalogue-cwr/46/",
+    name: 'CWR',
   },
   {
     id: 5,
-    endpoint: '',
-    name: 'Lipsey',
+    endpoint:"https://service.swiftsuite.app/vendor/catalogue-ssi/46/",
+    name: 'SSI',
   },
   {
     id: 6,
-    endpoint: '',
+    endpoint: "https://service.swiftsuite.app/vendor/catalogue-lipsey/46/",
+    name: 'Lipsey',
+  },
+  {
+    id: 7,
+    endpoint:"https://service.swiftsuite.app/vendor/catalogue-fragrancex/46/",
     name: 'FragranceX',
   },
 ];
