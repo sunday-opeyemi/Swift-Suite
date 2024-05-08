@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import Profileimage from './Profileimage';
 
 const DropdownUser = () => {
+  let fullName = JSON.parse(localStorage.getItem('fullName'))
+  // console.log(fullName);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef(null);
@@ -46,7 +48,7 @@ const DropdownUser = () => {
 
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-          Jane john
+          {fullName}
           </span>
           <span className="block text-xs">Vendor</span>
         </span>

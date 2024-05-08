@@ -36,11 +36,10 @@ export const Vendordata = [
       },
       {
         id: 6,
-        image:"/image/vendorfive.png",
+        image:"/image/ssilogo.png",
         summaries:'Send orders and receive tracking with SSI',
         price: "$50.00/month",
         name: "ssi",
-      },
-      
+      },     
   ];
   
