@@ -40,8 +40,8 @@ const Catalogue = () => {
   const [filterQuantityValue, setFilterQuantityValue] = useState("");
   const [productChange, setProductChange] = useState("All")
   const [endpoint, setEndpoint] = useState("");
-  console.log(productChange);
-  console.log(endpoint);
+  // console.log(productChange);
+  // console.log(endpoint);
 
 
 
