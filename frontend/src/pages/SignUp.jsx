@@ -36,8 +36,12 @@ const SignUp = () => {
           setConfirmVisible(!confirmVisible);
       }
   };  
+  let lower = new RegExp(`(?=.*[a-z])`);
+  let upper = new RegExp(`(?=.*[A-Z])`);
+  let number = new RegExp(`(?=.*[0-9])`);
+  let length = new RegExp(`(?=.{8,})`);
 
-  const passwordRegex = /^(?=.[A-Za-z])(?=.\d)[A-Za-z\d@$!%*?&]{8,}$/
+
   let formik = useFormik({
     initialValues: {
       first_name: "",
@@ -70,7 +74,9 @@ const SignUp = () => {
       first_name: yup.string().required( <span className='flex'><span>Field is required</span></span>),
       last_name: yup.string().required( <span className='flex'><span>Field is required</span></span> ),
       email: yup.string().email('Invalid email format').required( <span className='flex'><span>Field is required</span></span> ),
-      password: yup.string().required(<span className="flex">{' '}<span>Field is required</span></span>).min(8, 'Password must be at least 8 characters').matches(passwordRegex, 'must include letters and numbers'),
+
+      password: yup.string().matches(lower, "Must include lowercase letter").matches(upper, "Must include uppercase letter").matches(number, "Must include a number").matches(length, "Must not be less than 8 characters")
+                .required("This field is required"),
       password2: yup.string().required(<span className="flex">{' '}<span>Confirm your Password</span></span> ).oneOf([yup.ref('password'), null], 'Passwords do not match'),
     })
   });

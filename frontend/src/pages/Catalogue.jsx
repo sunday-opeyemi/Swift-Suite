@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsSearch } from "react-icons/bs";
 import axios from "axios";
 import CustomPagination from "./CustomPagination";
@@ -16,8 +16,8 @@ import {
   useDisclosure,
   ModalFooter,
 } from "@nextui-org/react";
-import { AppContext } from "../context/Dashboard";
 import FilterComponent from "../components/FilterComponent";
+import { catalogue } from "./Cataloguedata";
 
 const Catalogue = () => {
   const navigate = useNavigate();
@@ -39,27 +39,35 @@ const Catalogue = () => {
   const [filterQuantityType, setFilterQuantityType] = useState("Greater than");
   const [filterQuantityValue, setFilterQuantityValue] = useState("");
   const [productChange, setProductChange] = useState("All")
-  console.log(productChange);
+  const [endpoint, setEndpoint] = useState("");
+  // console.log(productChange);
+  // console.log(endpoint);
+
 
 
 
   const itemsPerPage = 99;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { sideBarOpen, setSideBarOpen, isTablet } = useContext(AppContext);
 
   const [formFilters, setFormFilters] = useState({
     name: "",
     brand: "",
-    gender: "",
+    model: "",
+    type: "",
+    manufacturer: "",
+    manufacturer_name: "",
+    category_name: "",
+    msrp: "",
+    sku: "",
+    category: "",
   });
 
-  let endpoint =
-    "https://service.swiftsuite.app/vendor/catalogue-fragrancex/46/";
+
 
   useEffect(() => {
     fetchData();
-  }, [token]);
+  }, [token, endpoint]);
 
   useEffect(() => {
     filterCatalogueProduct();
@@ -78,7 +86,6 @@ const Catalogue = () => {
       console.log(response.data);
       setCatalogueProduct(response.data);
       setLoader(false);
-      setSelectedPriceRange("all");
     } catch (error) {
       setLoader(false);
       console.log(error);
@@ -91,13 +98,14 @@ const Catalogue = () => {
     }
   };
 
-  useEffect(() => {
-    if (isTablet) {
-      setSideBarOpen(false);
-    } else {
-      setSideBarOpen(true);
+  const handleProductChange = (event) => {
+    const selectedProduct = catalogue.find(item => item.name === event.target.value);
+    // console.log(selectedProduct);
+    if (selectedProduct) {
+      setProductChange(event.target.value);
+      setEndpoint(selectedProduct.endpoint); // Update the endpoint state
     }
-  }, [isTablet]);
+  };
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
@@ -150,96 +158,172 @@ const Catalogue = () => {
     // note my filteredItems is my catalogueProduct
     let filteredItems = [...catalogueProduct];
 
-    // Apply form filters
+    // the item.name first check if the name exist in the filter and if not it return 0.
     if (formFilters.name.trim() !== "") {
       filteredItems = filteredItems.filter((item) =>
-        item.name.toLowerCase().includes(formFilters.name.toLowerCase())
+        item.name && item.name.toLowerCase().includes(formFilters.name.toLowerCase())
       );
     }
 
     if (formFilters.brand !== "") {
       filteredItems = filteredItems.filter(
-        (item) => item.brand.toLowerCase() === formFilters.brand.toLowerCase()
+        (item) => item.brand && item.brand.toLowerCase() === formFilters.brand.toLowerCase()
       );
     }
 
-    if (formFilters.gender !== "") {
+    // Lipsey
+    if (formFilters.manufacturer !== "") {
       filteredItems = filteredItems.filter(
-        (item) => item.gender.toLowerCase() === formFilters.gender.toLowerCase()
+        (item) => item.manufacturer && item.manufacturer.toLowerCase() === formFilters.manufacturer.toLowerCase()
+      );
+    }
+    if (formFilters.model !== "") {
+      filteredItems = filteredItems.filter(
+        (item) => item.model && item.model.toLowerCase() === formFilters.model.toLowerCase()
+      );
+    }
+    if (formFilters.type !== "") {
+      filteredItems = filteredItems.filter(
+        (item) => item.type && item.type.toLowerCase() === formFilters.type.toLowerCase()
       );
     }
 
+    // if (formFilters.msrp !== "") {
+    //   const filterMsrp = parseFloat(formFilters.msrp);
+    //   console.log(filterMsrp);
+    //   filteredItems = filteredItems.filter(
+    //     (item) => typeof item.msrp === item.msrp && item.msrp === filterMsrp
+    //   );
+    // }
+
+
+    if (formFilters.msrp !== "") {
+      const filterMsrp = parseFloat(formFilters.msrp);
+      // console.log("Filter MSRP:", filterMsrp);
+      filteredItems = filteredItems.filter(
+        // item.msrp means if item.msrp == to string then convert it to number parseFloat(item.msrp), that is d work of parsefloat and if it is == what d user type i.e filterMsrp
+        (item) => typeof item.msrp === 'string' && parseFloat(item.msrp) === filterMsrp
+      );
+      // console.log("Filtered Items after MSRP filter:", filteredItems);
+    }
+
+    // CWR
+    if (formFilters.manufacturer_name !== "") {
+      filteredItems = filteredItems.filter(
+        (item) => item.manufacturer_name && item.manufacturer_name.toLowerCase() === formFilters.manufacturer_name.toLowerCase()
+      );
+    }
+
+    if (formFilters.category_name !== "") {
+      filteredItems = filteredItems.filter(
+        (item) => item.category_name && item.category_name.toLowerCase() === formFilters.category_name.toLowerCase()
+      );
+    }
+
+    if (formFilters.sku !== "") {
+      const filterSku = parseFloat(formFilters.sku);
+      // console.log("Filter SKU:", filterSku);
+      filteredItems = filteredItems.filter(
+        (item) => typeof item.sku === 'string' && parseFloat(item.sku) === filterSku
+      );
+      // console.log("Filtered Items after Sku filter:", filteredItems);
+    }
+
+
+    // SSI
+    if (formFilters.category !== "") {
+      filteredItems = filteredItems.filter(
+        (item) => item.category && item.category.toLowerCase() === formFilters.category.toLowerCase()
+      );
+    }
+
+    // Neutral
     if (filterByUPC) {
       // If filter by UPC is enabled, filter items where UPC exists
-      filteredItems = filteredItems.filter((item) => item.upc !== "");
+      // filteredItems = filteredItems.filter((item) => item.upc !== "");
+      filteredItems = filteredItems.filter((item) => item.upc || item.upc_code || item.upccode);
+      console.log(filteredItems);
     }
-// PRICE FILTER
+    // PRICE FILTER
     if (filterType && filterValue !== "") {
       if (filterType === "Greater than") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.aud_price) > parseFloat(filterValue)
+          (item) => parseFloat(item.price) > parseFloat(filterValue)
         );
       } else if (filterType === "Greater than or equal") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.aud_price) >= parseFloat(filterValue)
+          (item) => parseFloat(item.price) >= parseFloat(filterValue)
         );
       } else if (filterType === "Is") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.aud_price) === parseFloat(filterValue)
+          (item) => parseFloat(item.price) === parseFloat(filterValue)
         );
       } else if (filterType === "Less than") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.aud_price) < parseFloat(filterValue)
+          (item) => parseFloat(item.price) < parseFloat(filterValue)
         );
       } else if (filterType === "Less than or equal") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.aud_price) <= parseFloat(filterValue)
+          (item) => parseFloat(item.price) <= parseFloat(filterValue)
         );
       } else if (filterType === "Is not") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.aud_price) != parseFloat(filterValue)
+          (item) => parseFloat(item.price) != parseFloat(filterValue)
         );
       }
     }
 
-// QUANTITY FILTER
+    // QUANTITY FILTER
     if (filterQuantityType && filterQuantityValue !== "") {
       if (filterQuantityType === "Greater than") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.qty) > parseFloat(filterQuantityValue)
+          (item) => parseFloat(item.qty || item.quantity || item.quantity_available_to_ship_combined) > parseFloat(filterQuantityValue)
         );
       }
       else if (filterQuantityType === "Greater than or equal") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.qty) >= parseFloat(filterQuantityValue)
+          (item) => parseFloat(item.qty || item.quantity || item.quantity_available_to_ship_combined) >= parseFloat(filterQuantityValue)
         );
       } else if (filterQuantityType === "Is") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.qty) === parseFloat(filterQuantityValue)
+          (item) => parseFloat(item.qty || item.quantity || item.quantity_available_to_ship_combined) === parseFloat(filterQuantityValue)
         );
       } else if (filterQuantityType === "Less than") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.qty) < parseFloat(filterQuantityValue)
+          (item) => parseFloat(item.qty || item.quantity || item.quantity_available_to_ship_combined) < parseFloat(filterQuantityValue)
         )
       }
       else if (filterQuantityType === "Less than or equal") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.qty) <= parseFloat(filterQuantityValue)
+          (item) => parseFloat(item.qty || item.quantity || item.quantity_available_to_ship_combined) <= parseFloat(filterQuantityValue)
         )
       } else if (filterQuantityType === "Is not") {
         filteredItems = filteredItems.filter(
-          (item) => parseFloat(item.qty) != parseFloat(filterQuantityValue)
+          (item) => parseFloat(item.qty || item.quantity || item.quantity_available_to_ship_combined) != parseFloat(filterQuantityValue)
         )
       }
 
     }
-    // Apply other filters, This is responsible for filter input.
-    filteredItems = filteredItems.filter(
-      (item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.brand.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    // Apply other filters
+    filteredItems = filteredItems.filter(item => {
+      return (
+        (!searchQuery || // If searchQuery is empty, don't apply keyword filter
+          (item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (item.title && item.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (item.brand && item.brand.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (item.manufacturer && item.manufacturer.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (item.manufacturer_name && item.manufacturer_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (item.category_name && item.category_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+          (item.type && item.type.toLowerCase().includes(searchQuery.toLowerCase()))
+        )
+        // Add additional conditions here if needed
+      );
+    });
+
+
+
+
+
 
     // Update the current items
     setCurrentItems(filteredItems);
@@ -279,12 +363,9 @@ const Catalogue = () => {
 
 
   const handleFilterByUPCChange = (event) => {
+    console.log(event);
     setFilterByUPC(event.target.checked);
   };
-
-  const handleProductChange=(event)=>{
-    setProductChange(event.target.value)
-  }
 
   const toggleViewMode = () => {
     setViewMode((prevMode) => (prevMode === "list" ? "grid" : "list"));
@@ -298,13 +379,12 @@ const Catalogue = () => {
   const vendorIndex = (i) => {
     console.log(i);
   };
-
   return (
     <div className="bg-green-50 h-screen ">
       <section
         className={
           filterOpen
-            ? "fixed border md:h-[50%] h-[55%] md:gap-14 w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+            ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
             : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
@@ -345,7 +425,6 @@ const Catalogue = () => {
             <button
               onClick={() => {
                 toggleViewMode();
-                setSideBarOpen(!sideBarOpen);
               }}
               className="text-[#089451]"
             >
@@ -354,27 +433,28 @@ const Catalogue = () => {
           </div>
           {/* Toggle on medium and small screen */}
           <div className="lg:hidden md:block block gap-2 bg-white rounded-xl h-[36px] p-2">
-          <button
+            <button
               onClick={() => {
                 toggleViewMode();
-                
+
               }}
               className="text-[#089451]"
             >
               {viewMode === "list" ? <FaTh size={15} /> : <FaList size={15} />}
             </button>
           </div>
-          <div>
-          <select className="cursor-pointer h-9 rounded-xl px-2 outline-none" onChange={handleProductChange}>
-            <option value="All">All</option>
-            <option value="Zanders">Zanders</option>
-            <option value="FragranceX">FragranceX</option>
-            <option value="Lipsey">Lipsey</option>
-            <option value="SSi">SSI</option>
-            <option value="RSR">RSR</option>
-            <option value="CWR">CWR</option>
+
+          <select
+            value={productChange}
+            onChange={handleProductChange}
+            className="cursor-pointer h-9 rounded-xl px-2 outline-none"
+          >
+            {catalogue.map((item, index) => (
+              <option key={index} value={item.name}>
+                {item.name}
+              </option>
+            ))}
           </select>
-          </div>
         </div>
       </section>
       <div
@@ -393,6 +473,7 @@ const Catalogue = () => {
 
         {/* Forms */}
         <FilterComponent
+          endpoint={endpoint}
           filterOpen={filterOpen}
           setfilterOpen={setfilterOpen}
           open={open}
@@ -430,23 +511,76 @@ const Catalogue = () => {
       >
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
-            Title: {selectedProduct && selectedProduct.name}
+            {selectedProduct && selectedProduct.name ? `Title: ${selectedProduct && selectedProduct.name}` : ''}
           </ModalHeader>
           <ModalBody>
             {selectedProduct && (
               <>
-                <p>METRIC_SIZE: {selectedProduct.metric_size}</p>
-                <p>Description: {selectedProduct.description}</p>
-                <p>USER ID: {selectedProduct.user_id}</p>
-                <p>RETAIL: {selectedProduct.retail}</p>
-                <p>CAD_PRICE: {selectedProduct.cad_price}</p>
-                <p>EUD_PRICE: {selectedProduct.eur_price}</p>
-                <p>GBP_PRICE: {selectedProduct.gbp_price}</p>
-                <p>ITEM: {selectedProduct.item}</p>
-                <p>QTY: {selectedProduct.qty}</p>
-                <p>SIZE: {selectedProduct.size}</p>
-                <p>URL: {selectedProduct.url}</p>
-                <p>PRICE: {selectedProduct.price}</p>
+                <div>
+                  <p>{selectedProduct.metric_size ? `METRIC_SIZE: ${selectedProduct.metric_size}` : ''}</p>
+                  <p>{selectedProduct.description ? `Description: ${selectedProduct.description}` : ''}</p>
+                  <p>{selectedProduct.user_id ? `USER ID: ${selectedProduct.user_id}` : ''}</p>
+                  <p>{selectedProduct.retail ? `RETAIL: ${selectedProduct.retail}` : ''}</p>
+                  <p>{selectedProduct.cad_price ? `CAD_PRICE: ${selectedProduct.cad_price}` : ''}</p>
+                  <p>{selectedProduct.eur_price ? `EUD_PRICE: ${selectedProduct.eur_price}` : ''}</p>
+                  <p>{selectedProduct.gbp_price ? `GBP_PRICE: ${selectedProduct.gbp_price}` : ''}</p>
+                  <p>{selectedProduct.item ? `ITEM: ${selectedProduct.item}` : ''}</p>
+                  <p>{selectedProduct.qty ? `QUANTITY: ${selectedProduct.qty}` : ''}</p>
+                  <p>{selectedProduct.size ? `SIZE: ${selectedProduct.size}` : ''}</p>
+                  <p>{selectedProduct.url ? `URL: ${selectedProduct.url}` : ''}</p>
+                  <p>{selectedProduct.aud_price ? `PRICE: ${selectedProduct.aud_price}` : ''}</p>
+                </div>
+                <div>
+                  {/* Lipsey */}
+                  <p>{selectedProduct.additionalfeature1 && `Feature1: ${selectedProduct.additionalfeature1}`}</p>
+                  <p>{selectedProduct.additionalfeature2 && `Feature2: ${selectedProduct.additionalfeature2}`}</p>
+                  <p>{selectedProduct.additionalfeature3 && `Feature3: ${selectedProduct.additionalfeature3}`}</p>
+                  <p>{selectedProduct.itemnumber && `Itemnumber: ${selectedProduct.itemnumber}`}</p>
+                  <p>{selectedProduct.description1 && `Description1: ${selectedProduct.description1}`}</p>
+                  <p>{selectedProduct.description2 && `Description2: ${selectedProduct.description2}`}</p>
+                  <p>{selectedProduct.calibergauge && `Calibergauge: ${selectedProduct.calibergauge}`}</p>
+                  <p>{selectedProduct.capacity && `Capacity: ${selectedProduct.capacity}`}</p>
+                  <p>{selectedProduct.family && `Family: ${selectedProduct.family}`}</p>
+                  <p>{selectedProduct.finish && `Finish: ${selectedProduct.finish}`}</p>
+                  <p>{selectedProduct.itemgroup && `Itemgroup: ${selectedProduct.itemgroup}`}</p>
+                  <p>{selectedProduct.itemheight && `Itemheight: ${selectedProduct.itemheight}`}</p>
+                  <p>{selectedProduct.itemlength && `Itemlength: ${selectedProduct.itemlength}`}</p>
+                  <p>{selectedProduct.itemwidth && `Itemwidth: ${selectedProduct.itemwidth}`}</p>
+                  <p>{selectedProduct.magazine && `Magazine: ${selectedProduct.magazine}`}</p>
+                  <p>{selectedProduct.packageheight && `Packageheight: ${selectedProduct.packageheight}`}</p>
+                  <p>{selectedProduct.packagelength && `Packagelength: ${selectedProduct.packagelength}`}</p>
+                  <p>{selectedProduct.packagewidth && `Packagewidth: ${selectedProduct.packagewidth}`}</p>
+                  <p>{selectedProduct.manufacturer && `Manufacturer: ${selectedProduct.manufacturer}`}</p>
+                  <p>{selectedProduct.shippingweight && `Shippingweight: ${selectedProduct.shippingweight}`}</p>
+                  <p>{selectedProduct.sightstype && `Sightstype: ${selectedProduct.sightstype}`}</p>
+                  <p>{selectedProduct.stockframegrips && `Stockframegrips: ${selectedProduct.stockframegrips}`}</p>
+                </div>
+                <div>
+                  {/* cwr */}
+                  <p>{selectedProduct.category_name && 'Name: ' + selectedProduct.category_name}</p>
+                  <p>{selectedProduct.manufacturer_name && 'Brand: ' + selectedProduct.manufacturer_name}</p>
+                  <p>{selectedProduct.country_of_origin && 'Country of origin: ' + selectedProduct.country_of_origin}</p>
+                  <p>{selectedProduct.shipping_weight && 'Shipping weight: ' + selectedProduct.shipping_weight}</p>
+                  <p>{selectedProduct.harmonization_code && 'Harmonization code: ' + selectedProduct.harmonization_code}</p>
+                  <p>{selectedProduct.category_id && 'Category ID: ' + selectedProduct.category_id}</p>
+                  <p>{selectedProduct.exportable && 'Exportable: ' + selectedProduct.exportable}</p>
+                  <p>{selectedProduct.fcc_id && 'Fcc ID: ' + selectedProduct.fcc_id}</p>
+                  <p>{selectedProduct.box_height && 'Box Height: ' + selectedProduct.box_height}</p>
+                  <p>{selectedProduct.manufacturer_part_number && 'Manufacturer part number: ' + selectedProduct.manufacturer_part_number}</p>
+                  <p>{selectedProduct.sku && 'SKU: ' + selectedProduct.sku}</p>
+                  <p>{selectedProduct.title && 'Title: ' + selectedProduct.title}</p>
+                </div>
+                {/* SSI */}
+                <div>
+                  <p>{selectedProduct.detaileddescription && 'Detaileddescription: ' + selectedProduct.detaileddescription}</p>
+                  <p>{selectedProduct.status && 'Status: ' + selectedProduct.status}</p>
+                  <p>{selectedProduct.groundshippingrequired && 'Groundshippingrequired: ' + selectedProduct.groundshippingrequired}</p>
+                  <p>{selectedProduct.datecreated && 'Datecreated: ' + selectedProduct.datecreated}</p>
+                  <p>{selectedProduct.countryoforigin && 'Countryoforigin: ' + selectedProduct.countryoforigin}</p>
+                  <p>{selectedProduct.shippingheight && 'Shippingheight: ' + selectedProduct.shippingheight}</p>
+                  <p>{selectedProduct.shippinglength && 'Shippinglength: ' + selectedProduct.manufacturer}</p>
+                  <p>{selectedProduct.shippingwidth && 'Sippingwidth: ' + selectedProduct.shippingwidth}</p>
+                </div>
               </>
             )}
           </ModalBody>
@@ -482,30 +616,74 @@ const Catalogue = () => {
                       {paginatedItems.map((product, index) => (
                         <div
                           onClick={() => handleProductClick(product)}
-                          className={`${
-                            filterOpen
-                              ? "grid grid-cols-3 mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                              : "grid grid-cols-3 mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                          }`}
+                          className={`${filterOpen
+                            ? "grid grid-cols-3 mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                            : "grid grid-cols-3 mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                            }`}
                           key={index}
                         >
                           <div className="">
-                            <img
-                              src={product.image}
-                              alt={product.image}
-                              className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
-                            />
+                            {/* FRAGRANCEX */}
+                            {product.image ? (
+                              <img
+                                src={product.image}
+                                alt={product.image}
+                                className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
+                              />
+                            ) : (
+                              ''
+                            )}
+                            {/* LIPSEY*/}
+                            {product.imagename ? (
+                              <img
+                                src={`https://www.lipseyscloud.com/images/${product.imagename}`}
+                                alt={product.imagename}
+                                className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
+                              />
+                            ) : (
+                              ''
+                            )}
+                            {/* CWR */}
+                            {product.image_300x300_url ? (
+                              <img
+                                src={product.image_300x300_url}
+                                alt={product.image_300x300_url}
+                                className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
+                              />
+                            ) : (
+                              ''
+                            )}
+                            {/* SSI */}
+                            {product.imageurl ? (
+                              <img
+                                src={product.imageurl}
+                                alt={product.imageurl}
+                                className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
+                              />
+                            ) : (
+                              ''
+                            )}
                           </div>
-                          <div className="p-4 bg-green-50 my-5 rounded-xl">
-                            <p>TITLE: {product.title}</p>
-                            <p>NAME: {product.name}</p>
+                          {/* FragranceX */}
+                          <div className="p-4 bg-green-50 my-5 flex flex-col justify-center m-0 rounded-xl">
+                            {/* <p>{product.title ? `TITLE: ${product.title}` : ""}</p> */}
+                            <p>{product.name ? `NAME: ${product.name}` : ""}</p>
+
+                            {/* Lipsey */}
+                            <p>{product.type || product.category_name || product.category ? `NAME: ${product.type || product.category_name || product.category} ` : ""}</p>
+                            <p>{product.manufacturer || product.manufacturer_name ? `BRAND: ${product.manufacturer || product.manufacturer_name}` : ""}</p>
+                            <p>{product.price ? `PRICE: ${product.price}` : ""}</p>
                           </div>
-                          <div className="p-4">
-                            <p>UPC: {product.upc}</p>
-                            <p>BRAND: {product.brand}</p>
-                            <p>PRICE: {product.aud_price}</p>
-                            <p>GENDER: {product.gender}</p>
-                            <p className="text-green-300 hover:text-black"></p>
+                          <div className="p-4 flex flex-col justify-center rounded-xl">
+                            {/* FragranceX */}
+
+                            <p>{product.model || product.title ? `TITLE: ${product.model || product.title}` : ""}</p>
+                            <p>{product.brand ? `BRAND: ${product.brand}` : ""}</p>
+                            <p>{product.gender ? `GENDER: ${product.gender}` : ""}</p>
+                            {/* Lipsey */}
+
+                            <p>{product.quantity || product.quantity_available_to_ship_combined ? `QUANTITY: ${product.quantity || product.quantity_available_to_ship_combined}` : ""}</p>
+                            <p>{product.upc || product.upc_code || product.upccode ? `UPC: ${product.upc || product.upc_code || product.upccode}` : ""}</p>
                           </div>
                         </div>
                       ))}
@@ -516,26 +694,68 @@ const Catalogue = () => {
                       {paginatedItems.map((product, index) => (
                         <div
                           onClick={() => handleProductClick(product)}
-                          className={`${
-                            filterOpen
-                              ? "mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                              : "mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                          }`}
+                          className={`${filterOpen
+                            ? "mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                            : "mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                            }`}
                           key={index}
                         >
                           <div className="px-4">
-                            <img
-                              src={product.image}
-                              alt={product.image}
-                              className="w-20 justify-center items-center rounded-md mx-auto object-cover"
-                            />
-                            <p>TITLE: {product.title}</p>
-                            <p>NAME: {product.name}</p>
-                            <p>UPC: {product.upc}</p>
-                            <p>BRAND: {product.brand}</p>
-                            <p>PRICE: {product.aud_price}</p>
-                            <p>GENDER: {product.gender}</p>
-                            <p className="text-green-300 hover:text-black"></p>
+                            {product.image ? (
+                              <img
+                                src={product.image}
+                                alt={product.image}
+                                className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
+                              />
+                            ) : (
+                              ''
+                            )}
+                            {/* CWR */}
+                            {product.image_300x300_url ? (
+                              <img
+                                src={product.image_300x300_url}
+                                alt={product.image_300x300_url}
+                                className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
+                              />
+                            ) : (
+                              ''
+                            )}
+                            {/* LIPSEY*/}
+                            {product.imagename ? (
+                              <img
+                                src={`https://www.lipseyscloud.com/images/${product.imagename}`}
+                                alt={product.imagename}
+                                className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
+                              />
+                            ) : (
+                              ''
+                            )}
+                            {/* SSI */}
+                            {product.imageurl ? (
+                              <img
+                                src={product.imageurl}
+                                alt={product.imageurl}
+                                className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
+                              />
+                            ) : (
+                              ''
+                            )}
+                            {/* FragranceX */}
+                            {/* <p>{product.title ? `TITLE: ${product.title}` : ""}</p> */}
+                            <p>{product.name || product.category ? `NAME: ${product.name || product.category}` : ""}</p>
+                            <p>{product.brand ? `BRAND: ${product.brand}` : ""}</p>
+                            <p>{product.gender ? `GENDER: ${product.gender}` : ""}</p>
+
+                            {/* Lipsey */}
+                            <p>{product.model || product.title ? `TITLE: ${product.model || product.title}` : ""}</p>
+                            <p>{product.manufacturer || product.manufacturer_name ? `BRAND: ${product.manufacturer || product.manufacturer_name}` : ""}</p>
+                            <p>{product.price ? `PRICE: ${product.price}` : ""}</p>
+                            <p>{product.quantity ? `QUANTITY: ${product.quantity}` : ""}</p>
+                            <p>{product.upc || product.upccode ? `UPC: ${product.upc || product.upccode}` : ""}</p>
+                            {/* cwr */}
+                            {/* <p>{product.manufacturer_name && 'BRAND: '+ product.manufacturer_name}</p> */}
+                            <p>{product.category_name && 'NAME: ' + product.category_name}</p>
+                            <p>{product.upc_code && 'UPC: ' + product.upc_code}</p>
                           </div>
                         </div>
                       ))}
