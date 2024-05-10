@@ -379,7 +379,6 @@ const Catalogue = () => {
   const vendorIndex = (i) => {
     console.log(i);
   };
-
   return (
     <div className="bg-green-50 h-screen ">
       <section

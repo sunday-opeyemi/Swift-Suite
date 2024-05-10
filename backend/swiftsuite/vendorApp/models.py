@@ -18,17 +18,38 @@ class VendoEnronment(models.Model):
     ftp_url = models.CharField(max_length=255)
     file_urls = models.TextField()
     host = models.CharField(max_length=255)
-    has_fragrancex = models.BooleanField(default=False)
-    has_lipsey = models.BooleanField(default=False)
-    has_zanders = models.BooleanField(default=False)
-    has_cwr = models.BooleanField(default=False)
-    has_ssi = models.BooleanField(default=False)
-    has_rsr = models.BooleanField(default=False)
 
+    # Price options
+    percentage_markup = models.TextField(blank=True, null=True)
+    fixed_markup = models.TextField(blank=True, null=True)
+    shipping_cost = models.IntegerField(blank=True, null=True)
+    shipping_cost_average = models.BooleanField(default=False)
+    stock_minimum = models.IntegerField(blank=True, null=True)
+    stock_maximum = models.IntegerField(blank=True, null=True)
+    update_inventory = models.BooleanField(default=False)
+    send_orders = models.BooleanField(default=False)
+    update_tracking = models.BooleanField(default=False)
+
+    # Product Filters
+    product_filter = models.TextField(blank=True, null=True)
+    product_category = models.TextField(blank=True, null=True)
+    brand = models.TextField(blank=True, null=True)
+    manufacturer = models.TextField(blank=True, null=True)
+
+    # Zander Field
+    serialized = models.BooleanField(default=False)
+
+    # CWR Fields
+    truck_freight = models.BooleanField(default=False) 
+    oversized = models.BooleanField(default=False)
+    third_party_marketplaces = models.BooleanField(default=False)
+    returnable = models.BooleanField(default=False)
+    
 
 class Cwr(models.Model):
     id = models.BigAutoField(primary_key=True)
-    cwr_part_number = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cwr_part_number = models.TextField(unique=True, blank=True, null=True)
     manufacturer_part_number = models.CharField(max_length=255, blank=True, null=True)
     upc_code = models.CharField(max_length=255, blank=True, null=True)
     quantity_available_to_ship_combined = models.IntegerField(blank=True, null=True)
@@ -102,6 +123,7 @@ class Cwr(models.Model):
 
 class Fragrancex(models.Model):
     id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.CharField(db_column='ITEM', max_length=255, blank=True, null=True)  # Field name made lowercase.
     name = models.CharField(db_column='NAME', max_length=255, blank=True, null=True)  # Field name made lowercase.
     description = models.TextField(db_column='DESCRIPTION', blank=True, null=True)  # Field name made lowercase.
@@ -123,6 +145,7 @@ class Fragrancex(models.Model):
 
 class Generalproducttable(models.Model):
     id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     sku = models.CharField(db_column='SKU', max_length=255, blank=True, null=True)  # Field name made lowercase.
     quantity = models.IntegerField(db_column='Quantity', blank=True, null=True)  # Field name made lowercase.
     upc = models.CharField(db_column='UPC', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -173,6 +196,7 @@ class Generalproducttable(models.Model):
 
 class Lipsey(models.Model):
     id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     itemnumber = models.TextField(db_column='ItemNumber', blank=True, null=True)  # Field name made lowercase.
     description1 = models.TextField(db_column='Description1', blank=True, null=True)  # Field name made lowercase.
     description2 = models.TextField(db_column='Description2', blank=True, null=True)  # Field name made lowercase.
@@ -253,6 +277,7 @@ class Lipsey(models.Model):
 
 class Rsr(models.Model):
     id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     rsr_stock_number = models.CharField(db_column='RSR_Stock_Number', max_length=255, blank=True, null=True)  # Field name made lowercase.
     upc = models.CharField(db_column='UPC', max_length=255, blank=True, null=True)  # Field name made lowercase.
     dept_number = models.CharField(db_column='Dept_Number', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -336,6 +361,7 @@ class Rsr(models.Model):
 
 class Ssi(models.Model):
     id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     sku = models.CharField(db_column='SKU', max_length=255, blank=True, null=True)  # Field name made lowercase.
     description = models.CharField(db_column='Description', max_length=255, blank=True, null=True)  # Field name made lowercase.
     datecreated = models.CharField(db_column='DateCreated', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -377,6 +403,7 @@ class Ssi(models.Model):
 
 class Zanders(models.Model):
     id = models.BigAutoField(primary_key=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     available = models.CharField(max_length=10, blank=True, null=True)
     category = models.CharField(max_length=255, blank=True, null=True)
     desc1 = models.TextField(blank=True, null=True)
@@ -396,4 +423,4 @@ class Zanders(models.Model):
     serialized = models.CharField(max_length=10, blank=True, null=True)
     mapprice = models.CharField(max_length=10, blank=True, null=True)
     imagelink = models.CharField(max_length=255, blank=True, null=True)
-    description = models.CharField(max_length=255, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
