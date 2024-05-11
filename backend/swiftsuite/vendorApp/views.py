@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from ftplib import FTP
-import time, os
+import time, os, re
 import csv
 import pandas as pd
 from rest_framework.views import APIView
@@ -39,19 +39,22 @@ class VendorActivity:
         except Exception as e:
             print(f"Error processing {supplier_name}: {str(e)}")
 
-    def download_csv_from_ftp(self, userid, supplier, general_selection, _filters, get_filters, local_dir="."):
+
+
+    def download_csv_from_ftp(self, userid, supplier, general_selection, _filters, get_filters, local_dir=".", port=21):
         """Download CSV file from FTP server."""
         
-        supplier_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name, index = supplier
+        supplier_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name, index, port = supplier
         file_path = os.path.join(local_dir, file_name)
         
-        with FTP(ftp_host) as ftp:
-            ftp.login(user=ftp_user, passwd=ftp_password)
-            ftp.set_pasv(True)
-            ftp.cwd(ftp_path)
-            with open(file_path, "wb") as local_file:
-                ftp.retrbinary(f"RETR {file_name}", local_file.write)
-        print(f"{file_name} downloaded from FTP for {ftp_user}.")
+        ftp = FTP()
+        ftp.connect(ftp_host, port)
+        ftp.login(user=ftp_user, passwd=ftp_password)
+        ftp.set_pasv(True)
+        ftp.cwd(ftp_path)
+        with open(os.path.join(local_dir, file_name), "wb") as local_file:
+            ftp.retrbinary(f"RETR {file_name}", local_file.write)
+
 
         value = self.process_csv(userid,supplier_name, local_dir, file_name, index, general_selection, _filters, get_filters)
         return value
@@ -312,33 +315,33 @@ class VendorActivity:
 
 VENDORS = {
     "fragrancex":[
-        ('Fragrancex', "ftp2.fragrancex.com", "frgx_temilolaoduola@gmail.com", "ftos3tpi", "/", "outgoingfeed_upc.csv", 1),
+        ('Fragrancex', "ftp2.fragrancex.com", "frgx_temilolaoduola@gmail.com", "ftos3tpi", "/", "outgoingfeed_upc.csv", 1, 2222),
     ],
 
     "zanders":[
-        ("Zanders", "http://ftp2.gzanders.com/", "DotfakGroup", "Katy801", "/Inventory", "itemimagelinks.csv", 1),
-        ("Zanders", "http://ftp2.gzanders.com/", "DotfakGroup", "Katy801", "/Inventory", "zandersinv.csv", 2),
-        ("Zanders", "http://ftp2.gzanders.com/", "DotfakGroup", "Katy801", "/Inventory", "detaildesctext.csv", 3),
+        ("Zanders", "http://ftp2.gzanders.com/", "DotfakGroup", "Katy801", "/Inventory", "itemimagelinks.csv", 1, 21),
+        ("Zanders", "http://ftp2.gzanders.com/", "DotfakGroup", "Katy801", "/Inventory", "zandersinv.csv", 2, 21),
+        ("Zanders", "http://ftp2.gzanders.com/", "DotfakGroup", "Katy801", "/Inventory", "detaildesctext.csv", 3, 21),
     ],
 
     "lipsey":[
-        ("Lipsey","ftp.lipseysdistribution.net", "cat800459", "8b4c531467417ad97e5274d5ecfbc0eb", "/", "catalog.csv", 1),
+        ("Lipsey","ftp.lipseysdistribution.net", "cat800459", "8b4c531467417ad97e5274d5ecfbc0eb", "/", "catalog.csv", 1, 21),
     ],
 
     "ssi":[
-        ("SSI","www.rapidretail.net", "ssi_dot774rr", "Rapid_774!", "/Products", "RR_Products.csv", 1),
+        ("SSI","www.rapidretail.net", "ssi_dot774rr", "Rapid_774!", "/Products", "RR_Products.csv", 1, 21),
     ],
 
     "cwr":[
-        ("CWR", "edi.cwrdistribution.com", "421460", "QUwB6I1m", "/out", "catalog.csv", 1),
-        ("CWR", "edi.cwrdistribution.com", "421460", "QUwB6I1m",  "/out", "inventory.csv", 2)
+        ("CWR", "edi.cwrdistribution.com", "421460", "QUwB6I1m", "/out", "catalog.csv", 1, 21),
+        ("CWR", "edi.cwrdistribution.com", "421460", "QUwB6I1m",  "/out", "inventory.csv", 2, 21)
     ],
 
     "rsr":[
-        ("RSR", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrinventory-keydlr-new.txt", 1),
-        ("RSR", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "product_sell_descriptions.txt", 2),
-        ("RSR", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "IM-QTY-CSV.csv", 3),
-        ("RSR", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-product-message.txt", 4),
+        ("RSR", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsrinventory-keydlr-new.txt", 1, 21),
+        ("RSR", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "product_sell_descriptions.txt", 2, 21),
+        ("RSR", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "IM-QTY-CSV.csv", 3, 21),
+        ("RSR", "ftp.rsrgroup.com", "49554", "aFsBCwSF", "/keydealer", "rsr-product-message.txt", 4, 21),
     ]
 
 }
