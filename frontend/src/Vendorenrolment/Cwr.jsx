@@ -21,21 +21,6 @@ const navigate = useNavigate()
 
 
 
-
-  const [checkBoxesProduct, setCheckBoxesProduct] = useState([
-    { id: 1, label: 'RSR', checked: false },
-    { id: 2, label: 'Shoes', checked: false },
-    { id: 3, label: 'Heels', checked: false },
-    { id: 4, label: 'Jackets', checked: false },
-    { id: 5, label: 'Stationeries', checked: false },
-    { id: 6, label: 'Shoes', checked: false },
-    { id: 7, label: 'Shoes', checked: false },
-    { id: 8, label: 'Glasses', checked: false },
-  ]);
-
-
-
-
   const [checkBoxesCategory, setCheckBoxesCategory] = useState([
     { id: 1, label: 'RSR', checked: false },
     { id: 2, label: 'Shoes', checked: false },
@@ -48,17 +33,6 @@ const navigate = useNavigate()
   ]);
 
 
-  const [checkBoxesBrand, setCheckBoxesBrand] = useState([
-    { id: 1, label: 'RSR', checked: false },
-    { id: 2, label: 'Shoes', checked: false },
-    { id: 3, label: 'Heels', checked: false },
-    { id: 4, label: 'Jackets', checked: false },
-    { id: 5, label: 'Stationeries', checked: false },
-    { id: 6, label: 'Shoes', checked: false },
-    { id: 7, label: 'Shoes', checked: false },
-    { id: 8, label: 'Glasses', checked: false },
-  ]);
-
 
 
   const [isChecked, setIsChecked] = useState(false);
@@ -69,10 +43,10 @@ const navigate = useNavigate()
 
   const [host, setHost] = useState(false)
   const [hostCategory, setHostCategory] = useState(false)
-  const [brand, setBrand] = useState(false)
-  const [productChecked, setProductChecked] = useState([])
+  // const [brand, setBrand] = useState(false)
+  // const [productChecked, setProductChecked] = useState([])
   const [categoryChecked, setCategoryChecked] = useState([])
-  const [brandChecked, setBrandChecked] = useState([])
+  // const [brandChecked, setBrandChecked] = useState([])
 
 
   const Schema = yup.object().shape({
@@ -101,54 +75,6 @@ const navigate = useNavigate()
       setValue("stockmaximum", store.stockmaximum)
     }
   }, [])
-
-
-
-
-
-
-
-
-  const handleCheckBoxProduct = (ids) => {
-    if (!Array.isArray(ids)) {
-      ids = [ids]; // Convert to array if single ID is provided
-    }
-    const updatedCheckboxes = checkBoxesProduct.map(checkbox => {
-      if (ids.includes(checkbox.id)) {
-        return { ...checkbox, checked: !checkbox.checked };
-      }
-      return checkbox;
-    });
-    setCheckBoxesProduct(updatedCheckboxes);
-
-    const product = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    // console.log(product);
-    setProductChecked(product)
-  };
-
-
-  const selectallProducts = (e) => {
-    e.preventDefault();
-    const updatedCheckboxes = checkBoxesProduct.map(checkbox => ({ ...checkbox, checked: true }));
-    // Here we get all the info in our checkBoxesProduct
-    // console.log(updatedCheckboxes);
-    // we update our checkBoxesBrand here by setting the new value inside it at setCheckBoxesBrand
-    setCheckBoxesProduct(updatedCheckboxes);
-    // we filter it here and save it in theSelectedProducts
-    const theSelectedProducts = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    // console.log(theSelectedProducts);
-    setProductChecked(theSelectedProducts);
-  };
-
-
-
-  const deselectallProducts = (e) => {
-    e.preventDefault()
-    const Deselect = checkBoxesProduct.map(checkbox => ({ ...checkbox, checked: false }));
-    // console.log(Deselect);
-    setCheckBoxesProduct(Deselect)
-  };
-
 
 
 
@@ -191,43 +117,6 @@ const navigate = useNavigate()
 
 
 
-  const handleCheckBoxBrand = (ids) => {
-    if (!Array.isArray(ids)) {
-      ids = [ids]; // Convert to array if single ID is provided
-    }
-
-    const updatedCheckboxes = checkBoxesBrand.map(checkbox => {
-      if (ids.includes(checkbox.id)) {
-        return { ...checkbox, checked: !checkbox.checked };
-      }
-      return checkbox;
-    });
-
-    setCheckBoxesBrand(updatedCheckboxes);
-    const brand = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    console.log(brand);
-    setBrandChecked(brand)
-  };
-
-
-  const selectallBrand = (e) => {
-    e.preventDefault();
-    const updatedCheckboxes = checkBoxesBrand.map(checkbox => ({ ...checkbox, checked: true }));
-    setCheckBoxesBrand(updatedCheckboxes);
-    const theSelectedBrand = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    setBrandChecked(theSelectedBrand);
-  };
-
-
-
-  const deselectallBrand = (e) => {
-    e.preventDefault()
-    const deselect = checkBoxesBrand.map(checkbox => ({ ...checkbox, checked: false }));
-    setCheckBoxesBrand(deselect)
-  };
-
-
-
 
   const toggleUp = () => {
     setHost(false);
@@ -262,7 +151,7 @@ const navigate = useNavigate()
 
   const onSubmit = (data) => {
     // const formData = { ...store, ...data, selectedProducts, selectedCategories, selectedBrand, productChecked, categoryChecked, brandChecked };
-    const formData = { ...store, ...data, productChecked, categoryChecked, brandChecked };
+    const formData = { ...store, ...data, categoryChecked };
     // console.log(formData);
     dispatch(handleNextStep(formData));
   };
@@ -299,29 +188,29 @@ const navigate = useNavigate()
               <div className='flex lg:ms-0 md:ms-0 ms-1 gap-[30%] md:gap-[21%] border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
                 <label className='mt-2 text-sm font-semibold h-8 md:w-[140px]' htmlFor="">Categories:</label>
                 <div className='border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[230px] w-[160px] md:w-[200px]'>
-                  <span className='text-gray-500 p-1'>Select Products</span>
+                  <span className='text-gray-500 p-1'>Select Categories</span>
                   <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-32 hover:text-green-700">
                     <span onClick={toggleUp} className={host ? '' : 'hidden'}>
                       <IoIosArrowUp size={18}  />
                     </span>
                     <span onClick={toggleDown} className={host ? 'hidden' : ''}>
-                      <IoChevronDown size={18}  className={(hostCategory || brand) ? 'hidden' : 'block'}/>
+                      <IoChevronDown size={18}  className={(host) ? 'hidden' : 'block'}/>
                     </span>
                   </p>
                   <div className={`p-2 mt-[-4%] ${host ? 'block' : 'hidden'}`}>
                     <div className='bg-white shadow-lg z-100 lg:w-[250px] md:w-[250px] w-[200px] lg:ms-[-10px] md:ms-[-20%] ms-[-20%] p-3 mt-2'>
                       <div className='flex gap-6'>
-                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={selectallProducts}>Select All</button>
-                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={deselectallProducts}>Deselect All</button>
+                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={selectallCategory}>Select All</button>
+                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={deselectallCategory}>Deselect All</button>
                       </div>
                       <div className='p-2'>
-                        {checkBoxesProduct.map(checkbox => (
+                        {checkBoxesCategory.map(checkbox => (
                           <div className='flex justify-between' key={checkbox.id}>
                             {checkbox.label}
                             <input
                               type="checkbox"
                               checked={checkbox.checked}
-                              onChange={() => handleCheckBoxProduct(checkbox.id)}
+                              onChange={() => handleCheckBoxCategory(checkbox.id)}
                             />
                           </div>
                         ))}
@@ -337,7 +226,7 @@ const navigate = useNavigate()
               <div>
                 <div className='flex  mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Percentage Markup:</h3>
-                  <input {...register("percentagemarkup")} type="text" className={brand || hostCategory ? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
+                  <input {...register("percentagemarkup")} type="text" className={host ? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.percentagemarkup?.message}</small>
               </div>
@@ -345,7 +234,7 @@ const navigate = useNavigate()
               <div>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Fixed Markup:</h3>
-                  <input {...register("fixedmarkup")} type="text" className={brand || hostCategory ? 'hidden' : `border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded `} />
+                  <input {...register("fixedmarkup")} type="text" className={(host) ? 'hidden' : `border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded `} />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.fixedmarkup?.message}</small>
               </div>
@@ -353,7 +242,7 @@ const navigate = useNavigate()
               <div className='border-b'>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] md:w-[52%] w-[55%] lg:w-[50%]'>Shipping Cost:</h3>
-                  <input {...register("shippingcost")} type="text" className={brand ? 'hidden' : `border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded`} />
+                  <input {...register("shippingcost")} type="text" className='border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.shippingcost?.message}</small>
               </div>
