@@ -19,7 +19,6 @@ const Cwr = () => {
 
 const navigate = useNavigate()
 
-
   const [checkBoxesCategory, setCheckBoxesCategory] = useState([
     { id: 1, label: 'RSR', checked: false },
     { id: 2, label: 'Shoes', checked: false },
@@ -119,27 +118,6 @@ const navigate = useNavigate()
   const toggleDown = () => {
     setHost(true);
   };
-
-  const toggleUpCategory = () => {
-    setHostCategory(false);
-  };
-
-  const toggleDownCategory = () => {
-    setHostCategory(true);
-  };
-
-
-  const toggleUpBrand = () => {
-    setBrand(false);
-  };
-
-  const toggleDownBrand = () => {
-    setBrand(true);
-  };
-
-
-
-
 
   let dispatch = useDispatch();
 

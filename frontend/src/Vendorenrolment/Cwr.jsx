@@ -19,8 +19,6 @@ const Cwr = () => {
 
 const navigate = useNavigate()
 
-
-
   const [checkBoxesCategory, setCheckBoxesCategory] = useState([
     { id: 1, label: 'RSR', checked: false },
     { id: 2, label: 'Shoes', checked: false },
@@ -33,8 +31,6 @@ const navigate = useNavigate()
   ]);
 
 
-
-
   const [isChecked, setIsChecked] = useState(false);
   const [inventory, setInventory] = useState(false);
   const [order, setOrder] = useState(false);
@@ -43,10 +39,8 @@ const navigate = useNavigate()
 
   const [host, setHost] = useState(false)
   const [hostCategory, setHostCategory] = useState(false)
-  // const [brand, setBrand] = useState(false)
-  // const [productChecked, setProductChecked] = useState([])
   const [categoryChecked, setCategoryChecked] = useState([])
-  // const [brandChecked, setBrandChecked] = useState([])
+ 
 
 
   const Schema = yup.object().shape({
@@ -125,26 +119,6 @@ const navigate = useNavigate()
   const toggleDown = () => {
     setHost(true);
   };
-
-  const toggleUpCategory = () => {
-    setHostCategory(false);
-  };
-
-  const toggleDownCategory = () => {
-    setHostCategory(true);
-  };
-
-
-  const toggleUpBrand = () => {
-    setBrand(false);
-  };
-
-  const toggleDownBrand = () => {
-    setBrand(true);
-  };
-
-
-
 
 
   let dispatch = useDispatch();
@@ -226,7 +200,7 @@ const navigate = useNavigate()
               <div>
                 <div className='flex  mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Percentage Markup:</h3>
-                  <input {...register("percentagemarkup")} type="text" className={host ? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
+                  <input {...register("percentagemarkup")} type="text" className={(host) ? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.percentagemarkup?.message}</small>
               </div>
