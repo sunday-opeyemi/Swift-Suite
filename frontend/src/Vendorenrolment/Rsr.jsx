@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const Fragrancex = () => {
+const Rsr = () => {
   const store = useSelector(state => state.vendor.vendorData)
 
   const vendorName = JSON.parse(localStorage.getItem('vendorName'));
@@ -471,4 +471,4 @@ const navigate = useNavigate()
   );
 };
 
-export default Fragrancex
+export default Rsr

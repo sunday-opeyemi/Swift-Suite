@@ -8,6 +8,9 @@ import Product from '../pages/Product';
 import Enrolment from '../Vendorenrolment/Enrolment';
 import Catalogue from '../pages/Catalogue';
 import Inventory from '../pages/Inventory';
+import Lipsey from '../Vendorenrolment/Lipsey';
+import Fragrancex from '../Vendorenrolment/Fragrancex';
+import Thank from '../Vendorenrolment/Thank';
 
 const Rootlayout = ({ children }) => {
   const navigate = useNavigate();
@@ -49,6 +52,10 @@ const Rootlayout = ({ children }) => {
         <Route path="/catalogue" element={<Catalogue />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/enrolment" element={<Enrolment />} />
+        <Route path='/lipsey'   element={<Lipsey/>}/>
+      <Route path='/fragrancex'   element={<Fragrancex/>}/>
+      <Route path='/thank'   element={<Thank/>}/>
+
       </Routes>
     </>
   );
