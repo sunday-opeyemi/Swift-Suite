@@ -40,7 +40,6 @@ class VendorActivity:
             print(f"Error processing {supplier_name}: {str(e)}")
 
 
-
     def download_csv_from_ftp(self, userid, supplier, general_selection, _filters, get_filters, local_dir=".", port=21):
         """Download CSV file from FTP server."""
         
@@ -185,6 +184,7 @@ class VendorActivity:
                     items.append(row)
                     
                 self.data = pd.DataFrame(items)
+                self.data = self.data[self.data['brand'] in _filters['brand']]
                 
                 for row in self.data.iterrows():
                     row = row[1]
@@ -203,9 +203,9 @@ class VendorActivity:
                 items.append(row)
                 
             self.data = pd.DataFrame(items)
-            
-            # self.data = self.data[self.data['ItemType']=='Firearm']
-            # self.data = self.data[self.data['Quantity']>'22']
+            self.data =self.data[self.data['ItemType'] in _filters['product_filter']]
+            self.data = self.data[self.data['Manufacturer'] in _filters['manufacturer']]  
+
             for row in self.data.iterrows():
                 row = row[1]
                 self.insert_data.append(Lipsey(user_id=userid, itemnumber=row["ItemNo"], description1=row["Description1"], description2=row["Description2"], 
@@ -234,9 +234,8 @@ class VendorActivity:
             header[-1] = header[-1].replace("'", "")
             
             self.data = pd.DataFrame(items, columns=header)
-            # data = data[data['ItemType']=='Firearm']
-            # data = data[data['Quantity']>'22']
-            
+            self.data = self.data[self.data['Category'] in _filters['product_category']]
+
             for row in self.data.iterrows():
                 items = row[1].values
                 self.insert_data.append(Ssi(user_id=userid, sku=items[0], description=items[1], datecreated=items[2], dimensionh=items[3], dimensionl=items[4], dimensionw=items[5], manufacturer=items[6], imageurl=items[7], thumbnailurl=items[8], upccode=items[9], weight=items[10], weightunits=items[11], category=items[12], subcategory=items[13], status=items[14], map=items[15], msrp=items[16], mpn=items[17], minimumorderquantity=items[18], detaileddescription=items[19], shippingweight=items[20], shippinglength=items[21], shippingwidth=items[22], shippingheight=items[23], attribute1=items[24], attribute2=items[25], attribute3=items[26], attribute4=items[27], attribute5=items[28], attribute6=items[29], attribute7=items[30], prop65warning=items[31], prop65reason=items[32], countryoforigin=items[33], groundshippingrequired=items[34]))
@@ -257,11 +256,19 @@ class VendorActivity:
         if index == 1:
             self.data = pd.DataFrame(items)
         elif index == 2:
-            data2 = pd.DataFrame(items)
-            self.data = self.data.merge(data2, left_on="CWR Part Number", right_on="sku")    
-        
-            # self.data = self.data[self.data['ItemType']=='Firearm']
-            # self.data = self.data[self.data['Quantity']>'22']    
+            self.data2 = pd.DataFrame(items)
+            self.data = self.data.merge(self.data2, left_on="CWR Part Number", right_on="sku") 
+            if _filters['truck_freight']:
+                self.data = self.data[self.data['truck_freight'] == True]
+            if _filters['oversized']:
+                self.data = self.data[self.data['oversized'] == True]
+            if _filters['third_party_marketplaces']:
+                self.data = self.data[self.data['third_party_marketplaces'] == True]
+            if _filters['returnable']:
+                self.data = self.data[self.data['returnable'] == True]
+       
+            self.data = self.data[self.data['Category Name'] in _filters['product_category']] 
+ 
             for row in self.data.iterrows():
                 items = row[1].values   
                 items = list(items)
@@ -295,9 +302,9 @@ class VendorActivity:
                     items.append(row) 
 
             self.data = pd.DataFrame(items)
-                
-            # data = data[data['ItemType']=='Firearm']
-            # data = data[data['Quantity']>'22']    
+            if _filters['serialized']:
+                self.data = self.data[self.data['serialized']=='YES']
+  
             for row in self.data.iterrows():
                 items = row[1]      
                 self.insert_data.append(Zanders(user_id=userid, available=row['available'], category=row['category'], desc1=row['desc1'], desc2=row['desc2'], itemnumber=row['itemnumber'], manufacturer=row['manufacturer'], mfgpnumber=row['mfgpnumber'], msrp=row['msrp'], price1=row['price1'], price2=row['price2'], price3=row['price3'], qty1=row['qty1'], qty2=row['qty2'], qty3=row['qty3'], upc=row['upc'], weight=row['weight'], serialized=row['serialized'], mapprice=row['mapprice'], imagelink=row['ImageLink'], description=["description"]))       
@@ -349,29 +356,29 @@ VENDORS = {
 
 def get_suppliers_for_vendor(ftp_name, ftp_host, ftp_user, ftp_password):
     if ftp_name == 'FragranceX':
-        return [(ftp_name, ftp_host, ftp_user, ftp_password, "/", "outgoingfeed_upc.csv", 1)]
+        return [(ftp_name, ftp_host, ftp_user, ftp_password, "/", "outgoingfeed_upc.csv", 1,2222)]
     elif ftp_name == 'Zanders':
         return [
-            (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "itemimagelinks.csv", 1),
-            (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "zandersinv.csv", 2),
-            (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "detaildesctext.csv", 3),
+            (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "itemimagelinks.csv", 1, 21),
+            (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "zandersinv.csv", 2, 21),
+            (ftp_name, ftp_host, ftp_user, ftp_password, "/Inventory", "detaildesctext.csv", 3, 21),
         ]
     elif ftp_name == 'RSR':
         return [
-            (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "rsrinventory-keydlr-new.txt", 1),
-            (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "product_sell_descriptions.txt", 2),
-            (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "IM-QTY-CSV.csv", 3),
-            (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "rsr-product-message.txt", 4),
+            (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "rsrinventory-keydlr-new.txt", 1, 21),
+            (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "product_sell_descriptions.txt", 2, 21),
+            (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "IM-QTY-CSV.csv", 3, 21),
+            (ftp_name, ftp_host, ftp_user, ftp_password, "/keydealer", "rsr-product-message.txt", 4, 21),
         ]
     elif ftp_name == 'CWR':
         return [
-            (ftp_name, ftp_host, ftp_user, ftp_password, "/out", "catalog.csv", 1),
-            (ftp_name, ftp_host, ftp_user, ftp_password, "/out", "inventory.csv", 2)
+            (ftp_name, ftp_host, ftp_user, ftp_password, "/out", "catalog.csv", 1, 21),
+            (ftp_name, ftp_host, ftp_user, ftp_password, "/out", "inventory.csv", 2, 21)
         ]
     elif ftp_name == 'Lipsey':
-        return [(ftp_name, ftp_host, ftp_user, ftp_password, "/", "catalog.csv", 1)]
+        return [(ftp_name, ftp_host, ftp_user, ftp_password, "/", "catalog.csv", 1, 21)]
     elif ftp_name == 'SSI':
-        return [(ftp_name, ftp_host, ftp_user, ftp_password, "/Products", "RR_Products.csv", 1)]
+        return [(ftp_name, ftp_host, ftp_user, ftp_password, "/Products", "RR_Products.csv", 1, 21)]
 
 class VendorEnrolmentTestView(APIView):
     permission_classes = [IsAuthenticated]
@@ -460,6 +467,16 @@ class VendoEnronmentView(APIView):
                 pull = VendorActivity()                
                 success = pull.main(suppliers, userid, general_selection, extra_data)
                 if success == True:
+                    if 'product_filter' in extra_data:
+                        extra_data['product_filter'] = str(extra_data['product_filter'])
+                    if 'product_category' in extra_data:
+                        extra_data['product_category'] = str(extra_data['product_category'])
+                    if 'brand' in extra_data:
+                        extra_data['brand'] = str(extra_data['brand'])
+                    if 'manufacturer' in extra_data:
+                        extra_data['manufacturer'] = str(extra_data['manufacturer'])
+
+                    print(extra_data)
 
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
