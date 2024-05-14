@@ -76,7 +76,6 @@ const navigate = useNavigate()
 
 
 
-
   const Schema = yup.object().shape({
     percentagemarkup: yup.string().required(),
     fixedmarkup: yup.string().required(),
@@ -266,6 +265,7 @@ const navigate = useNavigate()
   const handlePrevious=()=>{
     dispatch(handlePreviousStep())
   }
+
   return (
     <>
       <section className='bg-green-50 mb-10'>

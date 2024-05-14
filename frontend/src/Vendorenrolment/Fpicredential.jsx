@@ -56,7 +56,7 @@ const onSubmit = (data) => {
   setMyLoader(true)
   // console.log(data);
     let form = { ...store, ...data }
-    // console.log(form);
+    console.log(form);
      axios.post(
     endpoint,
        {

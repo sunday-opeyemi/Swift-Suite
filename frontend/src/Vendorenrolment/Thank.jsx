@@ -13,6 +13,7 @@ const Thank = () => {
 
     const dispatch = useDispatch()
     const handlePrevious = () => {
+        // alert()
         dispatch(handlePreviousStep())
     }
 

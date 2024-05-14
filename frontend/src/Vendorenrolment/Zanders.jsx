@@ -61,6 +61,7 @@ const Zanders = () => {
 
 
 
+
   const handleCheckBoxManufacturer = (ids) => {
     if (!Array.isArray(ids)) {
       ids = [ids]; // Convert to array if single ID is provided
@@ -125,6 +126,7 @@ const Zanders = () => {
   const handlePrevious=()=>{
     dispatch(handlePreviousStep())
   }
+
   return (
     <>
       <section className='bg-green-50 mb-10'>

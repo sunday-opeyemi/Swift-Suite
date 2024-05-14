@@ -34,19 +34,7 @@ const Lipsey = () => {
 
 
 
-  const [checkBoxesCategory, setCheckBoxesCategory] = useState([
-    { id: 1, label: 'RSR', checked: false },
-    { id: 2, label: 'Shoes', checked: false },
-    { id: 3, label: 'Heels', checked: false },
-    { id: 4, label: 'Jackets', checked: false },
-    { id: 5, label: 'Stationeries', checked: false },
-    { id: 6, label: 'Shoes', checked: false },
-    { id: 7, label: 'Shoes', checked: false },
-    { id: 8, label: 'Glasses', checked: false },
-  ]);
-
-
-  const [checkBoxesBrand, setCheckBoxesBrand] = useState([
+  const [checkBoxesManufacturer, setCheckBoxesManufacturer] = useState([
     { id: 1, label: 'RSR', checked: false },
     { id: 2, label: 'Shoes', checked: false },
     { id: 3, label: 'Heels', checked: false },
@@ -66,11 +54,11 @@ const Lipsey = () => {
 
 
   const [host, setHost] = useState(false)
-  const [hostCategory, setHostCategory] = useState(false)
-  const [brand, setBrand] = useState(false)
+  const [hostManufacturer, setHostManufacturer] = useState(false)
   const [productChecked, setProductChecked] = useState([])
-  const [categoryChecked, setCategoryChecked] = useState([])
-  const [brandChecked, setBrandChecked] = useState([])
+
+  const [manufacturerChecked, setManufacturerChecked] = useState([])
+
 
 
 
@@ -137,80 +125,41 @@ const Lipsey = () => {
 
 
 
-  const handleCheckBoxCategory = (ids) => {
+  const handleCheckBoxManufacturer = (ids) => {
     if (!Array.isArray(ids)) {
       ids = [ids]; // Convert to array if single ID is provided
     }
 
-    const updatedCheckboxes = checkBoxesCategory.map(checkbox => {
+    const updatedCheckboxes = checkBoxesManufacturer.map(checkbox => {
       if (ids.includes(checkbox.id)) {
         return { ...checkbox, checked: !checkbox.checked };
       }
       return checkbox;
     });
 
-    setCheckBoxesCategory(updatedCheckboxes);
-    const category = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    console.log(category);
-    setCategoryChecked(category)
+    setCheckBoxesManufacturer(updatedCheckboxes);
+    const manufacturer = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
+    console.log(manufacturer);
+    setManufacturerChecked(manufacturer)
   };
 
 
-  const selectallCategory = (e) => {
+  const selectallManufacturer = (e) => {
     e.preventDefault();
-    const updatedCheckboxes = checkBoxesCategory.map(checkbox => ({ ...checkbox, checked: true }));
-    setCheckBoxesCategory(updatedCheckboxes);
-    const theSelectedCategories = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    setCategoryChecked(theSelectedCategories);
+    const updatedCheckboxes = checkBoxesManufacturer.map(checkbox => ({ ...checkbox, checked: true }));
+    setCheckBoxesManufacturer(updatedCheckboxes);
+    const theSelectedManufacturer = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
+    setManufacturerChecked(theSelectedManufacturer);
   };
 
 
 
-  const deselectallCategory = (e) => {
+  const deselectallManufacturer = (e) => {
     e.preventDefault()
-    const deselect = checkBoxesCategory.map(checkbox => ({ ...checkbox, checked: false }));
+    const deselect = checkBoxesManufacturer.map(checkbox => ({ ...checkbox, checked: false }));
     console.log(deselect);
-    setCheckBoxesCategory(deselect)
+    setCheckBoxesManufacturer(deselect)
   };
-
-
-
-  const handleCheckBoxBrand = (ids) => {
-    if (!Array.isArray(ids)) {
-      ids = [ids]; // Convert to array if single ID is provided
-    }
-
-    const updatedCheckboxes = checkBoxesBrand.map(checkbox => {
-      if (ids.includes(checkbox.id)) {
-        return { ...checkbox, checked: !checkbox.checked };
-      }
-      return checkbox;
-    });
-
-    setCheckBoxesBrand(updatedCheckboxes);
-    const brand = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    console.log(brand);
-    setBrandChecked(brand)
-  };
-
-
-  const selectallBrand = (e) => {
-    e.preventDefault();
-    const updatedCheckboxes = checkBoxesBrand.map(checkbox => ({ ...checkbox, checked: true }));
-    setCheckBoxesBrand(updatedCheckboxes);
-    const theSelectedBrand = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    setBrandChecked(theSelectedBrand);
-  };
-
-
-
-  const deselectallBrand = (e) => {
-    e.preventDefault()
-    const deselect = checkBoxesBrand.map(checkbox => ({ ...checkbox, checked: false }));
-    setCheckBoxesBrand(deselect)
-  };
-
-
 
 
   const toggleUp = () => {
@@ -221,22 +170,14 @@ const Lipsey = () => {
     setHost(true);
   };
 
-  const toggleUpCategory = () => {
-    setHostCategory(false);
+  const toggleUpManufacturer = () => {
+    setHostManufacturer(false);
   };
 
-  const toggleDownCategory = () => {
-    setHostCategory(true);
+  const toggleDownManufacturer = () => {
+    setHostManufacturer(true);
   };
 
-
-  const toggleUpBrand = () => {
-    setBrand(false);
-  };
-
-  const toggleDownBrand = () => {
-    setBrand(true);
-  };
 
 
 
@@ -245,8 +186,7 @@ const Lipsey = () => {
   let dispatch = useDispatch();
 
   const onSubmit = (data) => {
-    // const formData = { ...store, ...data, selectedProducts, selectedCategories, selectedBrand, productChecked, categoryChecked, brandChecked };
-    const formData = { ...store, ...data, productChecked, categoryChecked, brandChecked };
+    const formData = { ...store, ...data, productChecked, manufacturerChecked };
     console.log(formData);
     // console.log(formData);
     dispatch(handleNextStep(formData));
@@ -266,16 +206,16 @@ const Lipsey = () => {
           <div className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:h-[20%] lg:ms-0 ms-3 py-10 lg:mt-8 mt-0'>
             <div>
               <h1 className='ms-5 lg:text-xl text-sm font-bold'>Product Type</h1>
-              <div className='flex lg:ms-0 md:ms-0 ms-1 lg:gap-[32%] gap-[25%] md:gap-[32%] border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
+              <div className='flex lg:ms-0 md:ms-0 ms-1 lg:gap-[31%] gap-[20%] md:gap-[33%] border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
                 <label className='mt-2 text-sm font-semibold h-8' htmlFor="">Select Products:</label>
-                <div className='border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[230px] w-[160px] md:w-[200px]'>
+                <div className='border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[240px] w-[180px] md:w-[210px]'>
                   <span className='text-gray-500 p-1'>Select Products</span>
-                  <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-32 hover:text-green-700">
+                  <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-[85%] hover:text-green-700">
                     <span onClick={toggleUp} className={host ? '' : 'hidden'}>
                       <IoIosArrowUp size={18}  />
                     </span>
                     <span onClick={toggleDown} className={host ? 'hidden' : ''}>
-                      <IoChevronDown size={18}  className={(hostCategory || brand) ? 'hidden' : 'block'}/>
+                      <IoChevronDown size={18}  className={(hostManufacturer) ? 'hidden' : 'block'}/>
                     </span>
                   </p>
                   <div className={`p-2 mt-[-4%] ${host ? 'block' : 'hidden'}`}>
@@ -298,78 +238,39 @@ const Lipsey = () => {
                       </div>
                     </div>
                   </div>
-
                 </div>
               </div>
 
 
 
 
-              <h1 className='ms-5 lg:text-xl font-bold mt-5'>Categories</h1>
-              <div className='flex lg:gap-[30%] md:gap-[30%] lg:ms-0 md:ms-0 ms-1 gap-[23%] border-gray-300 border-b lg:p-5 p-4'>
-                <label className=' text-sm font-semibold h-8' htmlFor="">Select Categories:</label>
-                <div className={host ? '-z-1' : `border border-gray-500 rounded text-sm lg:pe-20 h-8 py-1 lg:w-[230px] w-[160px] md:w-[200px]`}>
-                  <span className={host ? 'hidden' : `text-gray-500 p-1`}>Select Categories</span>
+              <h1 className='ms-5 lg:text-xl font-bold mt-5'>Manufacturer</h1>
+              <div className='flex lg:gap-[26%] md:gap-[29%] lg:ms-0 md:ms-0 ms-1 gap-[13%] border-gray-300 border-b lg:p-5 p-4'>
+                <label className='text-sm font-semibold h-8' htmlFor="">Select Manufacturer:</label>
+                <div className={host ? '-z-1' : `border border-gray-500 rounded text-sm lg:pe-20 h-8 py-1 lg:w-[240px] w-[180px] md:w-[210px]`}>
+                  <span className={host ? 'hidden' : `text-gray-500 p-1`}>Select Manufacturer</span>
                   <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-[85%] hover:text-green-700">
-                    <span onClick={toggleUpCategory} className={hostCategory ? '' : 'hidden'}>
+                    <span onClick={toggleUpManufacturer} className={hostManufacturer ? '' : 'hidden'}>
                       <IoIosArrowUp className={host ? 'hidden' : ''} size={18} />
                     </span>
-                    <span onClick={toggleDownCategory} className={hostCategory ? 'hidden' : ''}>
-                      <IoChevronDown className={(host || brand)? 'hidden' : ''} size={18} />
+                    <span onClick={toggleDownManufacturer} className={hostManufacturer ? 'hidden' : ''}>
+                      <IoChevronDown className={(host) ? 'hidden' : ''} size={18} />
                     </span>
                   </p>
-                  <div className={`p-2 mt-[-4%] ${hostCategory ? 'block' : 'hidden'}`}>
+                  <div className={`p-2 mt-[-4%] ${hostManufacturer ? 'block' : 'hidden'}`}>
                     <div className='bg-white shadow-lg z-100 lg:w-[250px] md:w-[250px] w-[200px] lg:ms-[-10px] md:ms-[-20%] ms-[-20%] p-3 mt-2'>
                       <div className='flex gap-6'>
-                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={selectallCategory}>Select All</button>
-                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={deselectallCategory}>Deselect All</button>
+                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={selectallManufacturer}>Select All</button>
+                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={deselectallManufacturer}>Deselect All</button>
                       </div>
                       <div className='p-2'>
-                        {checkBoxesCategory.map(checkbox => (
+                        {checkBoxesManufacturer.map(checkbox => (
                           <div className='flex justify-between' key={checkbox.id}>
                             {checkbox.label}
                             <input
                               type="checkbox"
                               checked={checkbox.checked}
-                              onChange={() => handleCheckBoxCategory(checkbox.id)}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-
-              <h1 className='ms-5 mt-5 lg:text-xl font-bold'>Brand</h1>
-              <div className='flex lg:gap-[36%] lg:ms-0 md:ms-0 ms-1 gap-[30%] md:gap-[36%] border-gray-300 border-b lg:p-5 p-4'>
-                <label className='mt-2 text-sm font-semibold h-8' htmlFor="">Select Brand:</label>
-                <div className={(host || hostCategory) ? '-z-1' : `border border-gray-500 rounded text-sm lg:pe-20 h-8 lg:w-[230px] py-1  w-[160px] md:w-[200px]`}>
-                  <span className={(host || hostCategory) ? 'hidden' : `text-gray-500 p-1`}>Select Brand</span>
-                  <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-32 hover:text-green-700">
-                    <span onClick={toggleUpBrand} className={brand ? '' : 'hidden'}>
-                      <IoIosArrowUp className={(host || hostCategory) ? 'hidden' : ''} size={18} />
-                    </span>
-                    <span onClick={toggleDownBrand} className={brand ? 'hidden' : ''}>
-                      <IoChevronDown className={(host || hostCategory) ? 'hidden' : ''} size={18} />
-                    </span>
-                  </p>
-                  <div className={`p-2 mt-[-4%] ${brand ? 'block' : 'hidden'}`}>
-                    <div className='bg-white shadow-lg z-100 lg:w-[250px] md:w-[250px] w-[200px] lg:ms-[-10px] md:ms-[-20%] ms-[-20%] p-3 mt-2'>
-                      <div className='flex gap-6'>
-                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={selectallBrand}>Select All</button>
-                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={deselectallBrand}>Deselect All</button>
-                      </div>
-                      <div className='p-2'>
-                        {checkBoxesBrand.map(checkbox => (
-                          <div className='flex justify-between' key={checkbox.id}>
-                            {checkbox.label}
-                            <input
-                              type="checkbox"
-                              checked={checkbox.checked}
-                              onChange={() => handleCheckBoxBrand(checkbox.id)}
+                              onChange={() => handleCheckBoxManufacturer(checkbox.id)}
                             />
                           </div>
                         ))}
@@ -378,7 +279,6 @@ const Lipsey = () => {
                   </div>
                 </div>
               </div>
-
 
 
 
@@ -386,7 +286,7 @@ const Lipsey = () => {
               <div>
                 <div className='flex  mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Percentage Markup:</h3>
-                  <input {...register("percentagemarkup")} type="text" className={brand || hostCategory ? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
+                  <input {...register("percentagemarkup")} type="text" className={(host || hostManufacturer )? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.percentagemarkup?.message}</small>
               </div>
@@ -394,7 +294,7 @@ const Lipsey = () => {
               <div>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Fixed Markup:</h3>
-                  <input {...register("fixedmarkup")} type="text" className={brand || hostCategory ? 'hidden' : `border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded `} />
+                  <input {...register("fixedmarkup")} type="text" className={hostManufacturer ? 'hidden' : `border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded `} />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.fixedmarkup?.message}</small>
               </div>
@@ -402,14 +302,14 @@ const Lipsey = () => {
               <div>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] md:w-[52%] w-[55%] lg:w-[50%]'>Shipping Cost:</h3>
-                  <input {...register("shippingcost")} type="text" className={brand ? 'hidden' : `border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded`} />
+                  <input {...register("shippingcost")} type="text" className='border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.shippingcost?.message}</small>
               </div>
 
               <div className='flex gap-5 lg:gap-5 border-b md:gap-[70px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold'>Use Shipping Cost Average:</h3>
-                <input {...register("costaverage")} type="checkbox" onChange={() => setIsChecked(!isChecked)} checked={isChecked} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+                <input {...register("costaverage")} type="checkbox" onChange={() => setIsChecked(!isChecked)} checked={isChecked} className='lg:mt-0 mt-2 ms-0 lg:ms-0 md:ms-5 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
 
               <h1 className='ms-5 lg:text-xl font-bold mt-10'>Inventory</h1>
