@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { AppContext } from '../context/Dashboard';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Sidebar from '../Side/Sidebar';
@@ -8,28 +8,12 @@ import Product from '../pages/Product';
 import Enrolment from '../Vendorenrolment/Enrolment';
 import Catalogue from '../pages/Catalogue';
 import Inventory from '../pages/Inventory';
+import Market from '../Marketenrolment/Market';
+
 
 const Rootlayout = ({ children }) => {
   const navigate = useNavigate();
   const { sideBarOpen } = useContext(AppContext);
-
-  useEffect(() => {
-    const token = JSON.parse(localStorage.getItem('token'));
-
-    if (!token) {
-      navigate('/signin');
-    } else {
-      const currentTime = Date.now();
-      const expiryTime = token.exp * 1000; // Convert to milliseconds
-      const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
-
-      if (currentTime >= expiryTime || expiryTime - currentTime < thirtyMinutesInMilliseconds) {
-        // Token expired or will expire within 30 minutes
-        localStorage.removeItem('token'); // Remove the expired token from localStorage
-        navigate('/signin'); // Redirect to sign-in page
-      }
-    }
-  }, [navigate]);
 
   return (
     <>
@@ -49,6 +33,7 @@ const Rootlayout = ({ children }) => {
         <Route path="/catalogue" element={<Catalogue />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/enrolment" element={<Enrolment />} />
+        <Route path="/market" element={<Market />} />
       </Routes>
     </>
   );

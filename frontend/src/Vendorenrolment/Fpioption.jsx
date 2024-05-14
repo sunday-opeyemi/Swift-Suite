@@ -28,7 +28,7 @@ const Fpioption = () => {
     dealerzip: yup.string().required(),
   })
 
-  const { register, handleSubmit, setValue, formState: { errors }, } = useForm({
+  const { register, handleSubmit, formState: { errors }, } = useForm({
     resolver: yupResolver(Schema)
   })
 
@@ -44,11 +44,6 @@ const Fpioption = () => {
     dispatch(handlePreviousStep())
   }
 
-  useEffect(() => {
-    setValue("accountnumber", store.accountnumber)
-    setValue("dealername", store.dealername)
-    setValue("dealerzip", store.dealerzip)
-  }, [])
 
 
   return (

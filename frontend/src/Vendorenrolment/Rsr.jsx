@@ -6,16 +6,18 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { handleNextStep, handlePreviousStep } from '../redux/vendor';
+import { useNavigate } from 'react-router-dom';
 
 
 
 
-const Lipsey = () => {
+const Rsr = () => {
   const store = useSelector(state => state.vendor.vendorData)
 
   const vendorName = JSON.parse(localStorage.getItem('vendorName'));
 //   console.log(vendorName);
 
+const navigate = useNavigate()
 
 
 
@@ -74,6 +76,8 @@ const Lipsey = () => {
 
 
 
+
+
   const Schema = yup.object().shape({
     percentagemarkup: yup.string().required(),
     fixedmarkup: yup.string().required(),
@@ -87,7 +91,7 @@ const Lipsey = () => {
 
   })
 
-  const { register, handleSubmit, formState: { errors }, } = useForm({
+  const { register, handleSubmit,  formState: { errors }, } = useForm({
     resolver: yupResolver(Schema)
   })
 
@@ -247,7 +251,6 @@ const Lipsey = () => {
   const onSubmit = (data) => {
     // const formData = { ...store, ...data, selectedProducts, selectedCategories, selectedBrand, productChecked, categoryChecked, brandChecked };
     const formData = { ...store, ...data, productChecked, categoryChecked, brandChecked };
-    console.log(formData);
     // console.log(formData);
     dispatch(handleNextStep(formData));
   };
@@ -439,18 +442,18 @@ const Lipsey = () => {
               <div className='flex gap-[26%] lg:gap-[80px] md:gap-[150px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold'>Update Tracking:</h3>
                 <input type="checkbox" {...register("tracking")} onChange={() => setTracking(!tracking)} checked={tracking} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+                </div>
+                <div className='flex gap-20 justify-center my-5'>
+              <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>
+                <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>Submit</button>
               </div>
-              <div className='flex gap-20 justify-center my-5'>
-            <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>
-              <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>Submit</button>
+              </div>
             </div>
-            </div>
-          </div>
-        </form>
-      </section>
-    </>
-
-  );
-};
-
-export default Lipsey
+          </form>
+        </section>
+      </>
+  
+    );
+  };
+  
+  export default Rsr

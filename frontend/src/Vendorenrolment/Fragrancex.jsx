@@ -75,12 +75,6 @@ const navigate = useNavigate()
   const [brandChecked, setBrandChecked] = useState([])
 
 
-  const [selectedProducts, setSelectedProducts] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState([]);
-
-
-
 
 
   const Schema = yup.object().shape({
@@ -96,19 +90,11 @@ const navigate = useNavigate()
 
   })
 
-  const { register, handleSubmit, setValue, formState: { errors }, } = useForm({
+  const { register, handleSubmit, formState: { errors }, } = useForm({
     resolver: yupResolver(Schema)
   })
 
-  useEffect(() => {
-    if (store) {
-      setValue("percentagemarkup", store.percentagemarkup)
-      setValue("fixedmarkup", store.fixedmarkup)
-      setValue("shippingcost", store.shippingcost)
-      setValue("stockminimum", store.stockminimum)
-      setValue("stockmaximum", store.stockmaximum)
-    }
-  }, [])
+  
 
 
 
