@@ -55,19 +55,9 @@ const Zanders = () => {
 
   })
 
-  const { register, handleSubmit, setValue, formState: { errors }, } = useForm({
+  const { register, handleSubmit,  formState: { errors }, } = useForm({
     resolver: yupResolver(Schema)
   })
-
-  useEffect(() => {
-    if (store) {
-      setValue("percentagemarkup", store.percentagemarkup)
-      setValue("fixedmarkup", store.fixedmarkup)
-      setValue("shippingcost", store.shippingcost)
-      setValue("stockminimum", store.stockminimum)
-      setValue("stockmaximum", store.stockmaximum)
-    }
-  }, [])
 
 
 
