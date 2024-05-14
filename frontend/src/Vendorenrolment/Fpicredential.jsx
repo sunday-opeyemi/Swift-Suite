@@ -35,7 +35,7 @@ const Fpicredential = () => {
     ftppassword: yup.string().required(),
   })
 
-  const { register, handleSubmit, setValue, formState: { errors }, } = useForm({
+  const { register, handleSubmit, formState: { errors }, } = useForm({
     resolver: yupResolver(Schema)
   })
 
@@ -97,13 +97,6 @@ const onSubmit = (data) => {
         }
 
 }
-  
-  useEffect(() => {
-    setValue("host", store.host),
-    setValue("ftpusername", store.ftpusername)
-    setValue("ftppassword", store.ftppassword)
-  }, [])
-  
  
 
 

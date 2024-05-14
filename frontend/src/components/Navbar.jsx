@@ -33,9 +33,10 @@ const Navbar = ({ openToggle }) => {
 
   const location = useLocation();
 
-  const hiddenRoutes = ['/layout/home', '/layout/catalogue', '/layout/product', '/layout/allapp','/layout/enrolment', '/layout/inventory'];
+  const hiddenRoutes = ['/layout/home', '/layout/catalogue', '/layout/product', '/layout/allapp','/layout/enrolment', '/layout/inventory', '/layout/market'];
 
   const isHidden = hiddenRoutes.some(route => location.pathname.startsWith(route));
+  console.log(isHidden);
 
   return isHidden ? null : (
     <nav className='m-0 lg:ps-10 shadow w-full sticky top-0 bg-white z-[1000]'>
