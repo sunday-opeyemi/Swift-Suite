@@ -54,19 +54,51 @@ const navigate = useNavigate()
 
   })
 
-  const { register, handleSubmit, setValue, formState: { errors }, } = useForm({
+  const { register, handleSubmit, formState: { errors }, } = useForm({
     resolver: yupResolver(Schema)
   })
 
-  useEffect(() => {
-    if (store) {
-      setValue("percentagemarkup", store.percentagemarkup)
-      setValue("fixedmarkup", store.fixedmarkup)
-      setValue("shippingcost", store.shippingcost)
-      setValue("stockminimum", store.stockminimum)
-      setValue("stockmaximum", store.stockmaximum)
+
+  const handleCheckBoxProduct = (ids) => {
+    if (!Array.isArray(ids)) {
+      ids = [ids]; // Convert to array if single ID is provided
     }
-  }, [])
+    const updatedCheckboxes = checkBoxesProduct.map(checkbox => {
+      if (ids.includes(checkbox.id)) {
+        return { ...checkbox, checked: !checkbox.checked };
+      }
+      return checkbox;
+    });
+    setCheckBoxesProduct(updatedCheckboxes);
+
+    const product = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
+    // console.log(product);
+    setProductChecked(product)
+  };
+
+
+  const selectallProducts = (e) => {
+    e.preventDefault();
+    const updatedCheckboxes = checkBoxesProduct.map(checkbox => ({ ...checkbox, checked: true }));
+    // Here we get all the info in our checkBoxesProduct
+    // console.log(updatedCheckboxes);
+    // we update our checkBoxesBrand here by setting the new value inside it at setCheckBoxesBrand
+    setCheckBoxesProduct(updatedCheckboxes);
+    // we filter it here and save it in theSelectedProducts
+    const theSelectedProducts = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
+    // console.log(theSelectedProducts);
+    setProductChecked(theSelectedProducts);
+  };
+
+
+
+  const deselectallProducts = (e) => {
+    e.preventDefault()
+    const Deselect = checkBoxesProduct.map(checkbox => ({ ...checkbox, checked: false }));
+    // console.log(Deselect);
+    setCheckBoxesProduct(Deselect)
+  };
+
 
 
 

@@ -91,24 +91,9 @@ const navigate = useNavigate()
 
   })
 
-  const { register, handleSubmit, setValue, formState: { errors }, } = useForm({
+  const { register, handleSubmit,  formState: { errors }, } = useForm({
     resolver: yupResolver(Schema)
   })
-
-  useEffect(() => {
-    if (store) {
-      setValue("percentagemarkup", store.percentagemarkup)
-      setValue("fixedmarkup", store.fixedmarkup)
-      setValue("shippingcost", store.shippingcost)
-      setValue("stockminimum", store.stockminimum)
-      setValue("stockmaximum", store.stockmaximum)
-    }
-  }, [])
-
-
-
-
-
 
 
 
@@ -457,18 +442,19 @@ const navigate = useNavigate()
               <div className='flex gap-[26%] lg:gap-[80px] md:gap-[150px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold'>Update Tracking:</h3>
                 <input type="checkbox" {...register("tracking")} onChange={() => setTracking(!tracking)} checked={tracking} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+                </div>
+                <div className='flex gap-20 justify-center my-5'>
+              <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>
+                <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>Submit</button>
               </div>
-              <div className='flex gap-20 justify-center my-5'>
-            <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>
-              <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>Submit</button>
+              </div>
             </div>
-            </div>
-          </div>
-        </form>
-      </section>
-    </>
+          </form>
+        </section>
+      </>
+  
+    );
+  };
+  
+  export default Rsr
 
-  );
-};
-
-export default Rsr
