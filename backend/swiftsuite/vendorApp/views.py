@@ -184,7 +184,7 @@ class VendorActivity:
                     items.append(row)
                     
                 self.data = pd.DataFrame(items)
-                self.data = self.data[self.data['brand'] in _filters['brand']]
+                self.data = self.data[self.data['brand'].isin(_filters['brand'])]
                 
                 for row in self.data.iterrows():
                     row = row[1]
@@ -203,8 +203,9 @@ class VendorActivity:
                 items.append(row)
                 
             self.data = pd.DataFrame(items)
-            self.data =self.data[self.data['ItemType'] in _filters['product_filter']]
-            self.data = self.data[self.data['Manufacturer'] in _filters['manufacturer']]  
+            self.data = self.data[self.data['ItemType'].isin(_filters['product_filter'])]
+            self.data = self.data[self.data['Manufacturer'].isin(_filters['manufacturer'])]
+  
 
             for row in self.data.iterrows():
                 row = row[1]
@@ -234,7 +235,7 @@ class VendorActivity:
             header[-1] = header[-1].replace("'", "")
             
             self.data = pd.DataFrame(items, columns=header)
-            self.data = self.data[self.data['Category'] in _filters['product_category']]
+            self.data = self.data[self.data['Category'].isin(_filters['product_category'])]
 
             for row in self.data.iterrows():
                 items = row[1].values
@@ -267,7 +268,7 @@ class VendorActivity:
             if _filters['returnable']:
                 self.data = self.data[self.data['returnable'] == True]
        
-            self.data = self.data[self.data['Category Name'] in _filters['product_category']] 
+            self.data = self.data[self.data['Category Name'].isin(_filters['product_category'])] 
  
             for row in self.data.iterrows():
                 items = row[1].values   
@@ -460,21 +461,21 @@ class VendoEnronmentView(APIView):
                     extra_data = {
                         'serialized': vendor_data['serialized'],
                     }
-                
+                print(extra_data)
 
                 suppliers = get_suppliers_for_vendor(ftp_name, ftp_host, ftp_user, ftp_password)
 
                 pull = VendorActivity()                
                 success = pull.main(suppliers, userid, general_selection, extra_data)
                 if success == True:
-                    if 'product_filter' in extra_data:
-                        extra_data['product_filter'] = str(extra_data['product_filter'])
-                    if 'product_category' in extra_data:
-                        extra_data['product_category'] = str(extra_data['product_category'])
-                    if 'brand' in extra_data:
-                        extra_data['brand'] = str(extra_data['brand'])
-                    if 'manufacturer' in extra_data:
-                        extra_data['manufacturer'] = str(extra_data['manufacturer'])
+                    # if 'product_filter' in extra_data:
+                    #     extra_data['product_filter'] = str(extra_data['product_filter'])
+                    # if 'product_category' in extra_data:
+                    #     extra_data['product_category'] = str(extra_data['product_category'])
+                    # if 'brand' in extra_data:
+                    #     extra_data['brand'] = str(extra_data['brand'])
+                    # if 'manufacturer' in extra_data:
+                    #     extra_data['manufacturer'] = str(extra_data['manufacturer'])
 
                     print(extra_data)
 

@@ -13,7 +13,10 @@ class VendorEnrolmentTestSerializer(serializers.ModelSerializer):
         ]
 
 class VendoEnronmentSerializer(serializers.ModelSerializer):
-
+    product_filter = serializers.ListField(child=serializers.CharField(), required = False)
+    manufacturer = serializers.ListField(child=serializers.CharField(), required = False)
+    product_category = serializers.ListField(child=serializers.CharField(), required = False)
+    brand = serializers.ListField(child=serializers.CharField(), required = False)
     class Meta:
         model = VendoEnronment
         fields = ['vendor_id', 'vendor_name', 'address_street1', 'address_street2',
