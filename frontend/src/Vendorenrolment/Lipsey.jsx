@@ -56,6 +56,7 @@ const Lipsey = () => {
   const [host, setHost] = useState(false)
   const [hostManufacturer, setHostManufacturer] = useState(false)
   const [productChecked, setProductChecked] = useState([])
+
   const [manufacturerChecked, setManufacturerChecked] = useState([])
 
 
