@@ -172,14 +172,12 @@ const Vendorenrolment = () => {
 
   const handleCountryChange = (event) => {
     setSelectedCountry(event.target.value);
-    console.log(selectedCountry);
     setSelectedState(""); // Reset state when country changes
     setStateSelectDisabled(false); // Enable state select when country is chosen
   };
 
   const handleStateChange = (event) => {
     setSelectedState(event.target.value);
-    console.log(selectedState);
   };
 
   return (
@@ -201,16 +199,17 @@ const Vendorenrolment = () => {
               Vendor Name:
             </label>
             <input
-              {...register("vendorName")}
+              {...register("vendorName"   , {required : true})}
               type="text"
               disabled
               value={`${vendorName}`}
-              className={`border p-3 border-black focus:outline-none py-2 lg:w-[52%] md:w-[46%] w-[58%] ms-12 lg:ms-6 md:ms-20 rounded lg:mt-3 mt-0 ${errors.vendorName?.message && "error"
-                }`}
+              className={`border p-3 border-black focus:outline-none py-2 lg:w-[52%] md:w-[46%] w-[58%] ms-12 lg:ms-6 md:ms-20 rounded lg:mt-3 mt-0 ${
+                errors.vendorName && <span>This field is required</span>
+              }`}
             />
           </div>
           <small className="text-red-600 ms-[42%]">
-            {errors.vendorName?.message}
+            {errors.vendorName && <span>This field is required</span>}
           </small>
         </div>
         <h1 className="lg:text-xl text-sm font-bold font-sans border-gray-500 border-b lg:0 p-5 px-5">
@@ -223,14 +222,15 @@ const Vendorenrolment = () => {
                 Street 1:
               </label>
               <input
-                {...register("street1")}
+                {...register("street1"   , {required : true})}
                 type="text"
-                className={`border border-black focus:outline-none p-3 py-4 lg:w-[50%] md:w-[45%] rounded ${errors.street1?.message && "error"
-                  }`}
+                className={`border border-black focus:outline-none p-3 py-4 lg:w-[50%] md:w-[45%] rounded ${
+                  errors.street1 && <span>This field is required</span>
+                }`}
               />
             </div>
             <small className="text-red-600 ms-[42%]">
-              {errors.street1?.message}
+              {errors.street1 && <span>This field is required</span>}
             </small>
           </div>
           <div className="">
@@ -239,14 +239,15 @@ const Vendorenrolment = () => {
                 Street 2:
               </label>
               <input
-                {...register("street2")}
+                {...register("street2"   , {required : true})}
                 type="text"
-                className={`border border-black focus:outline-none p-3 py-4 lg:w-[50%] md:w-[45%] rounded ${errors.street2?.message && "error"
-                  }`}
+                className={`border border-black focus:outline-none p-3 py-4 lg:w-[50%] md:w-[45%] rounded ${
+                  errors.street2 && <span>This field is required</span>
+                }`}
               />
             </div>
             <small className="text-red-600 ms-[42%]">
-              {errors.street2?.message}
+              {errors.street2 && <span>This field is required</span>}
             </small>
           </div>
           <div className="">
@@ -255,14 +256,15 @@ const Vendorenrolment = () => {
                 City:
               </label>
               <input
-                {...register("city")}
+                {...register("city"   , {required : true})}
                 type="text"
-                className={`border border-black focus:outline-none py-2 p-3  rounded ${errors.street2?.message && "error"
-                  }`}
+                className={`border border-black focus:outline-none py-2 p-3  rounded ${
+                  errors.street2?.message && "error"
+                }`}
               />
             </div>
             <small className="text-red-600 ms-[42%]">
-              {errors.city?.message}
+              {errors.city && <span>This field is required</span>}
             </small>
           </div>
 
@@ -272,59 +274,61 @@ const Vendorenrolment = () => {
                 Postal Code (Zip):
               </label>
               <input
-                {...register("postalCode")}
+                {...register("postalCode"   , {required : true})}
                 type="text"
-                className={`border border-black focus:outline-none py-2 p-3 rounded ${errors.postalCode?.message && "error"
-                  }`}
+                className={`border border-black focus:outline-none py-2 p-3 rounded ${
+                  errors.postalCode && <span>This field is required</span>
+                }`}
               />
             </div>
             <small className="text-red-600 ms-[42%]">
-              {errors.postalCode?.message}
+              {errors.postalCode && <span>This field is required</span>}
             </small>
           </div>
           {/* <div className="container mx-auto"> */}
-          <div className="flex flex-col">
-            <div className="flex md:gap-[24%] lg:gap-[23%] gap-[28%]">
-              <label className="font-bold mt-3" htmlFor="">
-                Country:
-              </label>
-              <select
-                className="px-4 py-3 mb-4 lg:w-[190px] md:w-[190px] w-[250px] bg-white border border-black rounded-md shadow-sm focus:outline-none focus:ring focus:ring-black"
-                value={selectedCountry}
-                onChange={handleCountryChange}
-              >
-                <option value="">Select Country</option>
-                {countries.map((country) => (
-                  <option key={country.name} value={country.name}>
-                    {country.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="flex md:gap-[28%] gap-[33%] lg:gap-[27%]">
-              <label className="font-bold  mt-3" htmlFor="">
-                State:
-              </label>
-              <select
-                className={`px-4 py-3 mb-4 md:w-[190px] lg:md:w-[190px] w-[190px] bg-white border border-black rounded-md shadow-sm focus:outline-none focus:ring focus:ring-black ${stateSelectDisabled && "opacity-50 pointer-events-none"
+            <div className="flex flex-col">
+              <div className="flex md:gap-8 lg:gap-10 gap-2">
+                <label className="font-bold mt-3 w-[140px]" htmlFor="">
+                  Country:
+                </label>
+                <select
+                  className="px-4 py-3 mb-4 lg:w-[50%] md:w-[45%] w-[250px] bg-white border border-black rounded-md shadow-sm focus:outline-none focus:ring focus:ring-black"
+                  value={selectedCountry}
+                  onChange={handleCountryChange}
+                >
+                  <option value="">Select Country</option>
+                  {countries.map((country) => (
+                    <option key={country.name} value={country.name}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex md:gap-8 lg:gap-10 gap-2">
+                <label className="font-bold  mt-3 w-[140px]" htmlFor="">
+                  State:
+                </label>
+                <select
+                  className={`px-4 py-3 mb-4 lg:w-[50%] md:w-[45%] w-[250px] bg-white border border-black rounded-md shadow-sm focus:outline-none focus:ring focus:ring-black ${
+                    stateSelectDisabled && "opacity-50 pointer-events-none"
                   }`}
-                value={selectedState}
-                onChange={handleStateChange}
-                disabled={stateSelectDisabled}
-              >
-                <option value="">Select State</option>
-                {selectedCountry &&
-                  countries
-                    .find((country) => country.name === selectedCountry)
-                    .states.map((state) => (
-                      <option key={state} value={state}>
-                        {state}
-                      </option>
-                    ))}
-              </select>
+                  value={selectedState}
+                  onChange={handleStateChange}
+                  disabled={stateSelectDisabled}
+                >
+                  <option value="">Select State</option>
+                  {selectedCountry &&
+                    countries
+                      .find((country) => country.name === selectedCountry)
+                      .states.map((state) => (
+                        <option key={state} value={state}>
+                          {state}
+                        </option>
+                      ))}
+                </select>
+              </div>
             </div>
           </div>
-        </div>
         {/* </div> */}
         <button
           type="submit"

@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 
-const Cwr = () => {
+const Ssi = () => {
   const store = useSelector(state => state.vendor.vendorData)
 
   const vendorName = JSON.parse(localStorage.getItem('vendorName'));
@@ -123,6 +123,7 @@ const navigate = useNavigate()
   return (
     <>
       <section className='bg-green-50 mb-10'>
+        cvxcbcxvnbccvnbvnb
         <form onSubmit={handleSubmit(onSubmit)}>
 
           <div className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:h-[20%] lg:ms-0 ms-3 py-10 lg:mt-8 mt-0'>
@@ -170,23 +171,23 @@ const navigate = useNavigate()
               <div>
                 <div className='flex  mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Percentage Markup:</h3>
-                  <input {...register("percentagemarkup")} type="text" className={host ? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
+                  <input {...register("percentagemarkup", {required : true})} type="text" className={host ? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.percentagemarkup?.message}</small>
+                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.percentagemarkup && <span>This field is required</span>}</small>
               </div>
 
               <div>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Fixed Markup:</h3>
-                  <input {...register("fixedmarkup")} type="text" className={host ? 'hidden' : `border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded `} />
+                  <input {...register("fixedmarkup", {required : true})} type="text" className={host ? 'hidden' : `border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded `} />
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.fixedmarkup?.message}</small>
+                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.fixedmarkup && <span>This field is required</span>}</small>
               </div>
 
               <div>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] md:w-[52%] w-[55%] lg:w-[50%]'>Shipping Cost:</h3>
-                  <input {...register("shippingcost")} type="text" className='border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
+                  <input {...register("shippingcost", {required : true})} type="text" className='border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.shippingcost?.message}</small>
               </div>
@@ -199,17 +200,17 @@ const navigate = useNavigate()
               <div>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Stock Minimum:</h3>
-                  <input {...register("stockminimum")} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("stockminimum", {required : true})} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stockminimum?.message}</small>
+                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stockminimum && <span>This field is required</span>}</small>
               </div>
 
               <div>
                 <div className='flex  mt-5 px-5 pb-5 border-b'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Stock Maximum:</h3>
-                  <input {...register("stockmaximum")} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("stockmaximum", {required : true})} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stockmaximum?.message}</small>
+                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stockmaximum && <span>This field is required</span>}</small>
               </div>
 
 
@@ -239,4 +240,4 @@ const navigate = useNavigate()
   );
 };
 
-export default Cwr
+export default Ssi

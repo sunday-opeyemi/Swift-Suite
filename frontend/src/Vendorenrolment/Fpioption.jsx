@@ -45,6 +45,7 @@ const Fpioption = () => {
   }
 
 
+
   return (
     <>
       <section className='bg-green-50 h-screen'>
@@ -55,23 +56,23 @@ const Fpioption = () => {
             <div>
               <div className='flex justify-between my-2'>
                 <h3 className='font-semibold'>Account Number:</h3>
-                <input {...register("accountnumber")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.accountnumber?.message && 'error'}`} />
+                <input {...register("accountnumber" , {required : true})} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.accountnumber?.message && 'error'}`} />
               </div>
-              <small className='text-red-600 ms-[42%] lg:ms-[53%]'>{errors.accountnumber?.message}</small>
+              <small className='text-red-600 ms-[42%] lg:ms-[53%]'>{errors.accountnumber  && <span>This field is required</span>}</small>
             </div>
             <div>
               <div className='flex justify-between my-2'>
                 <h3 className='font-semibold'>Dealer Name:</h3>
-                <input {...register("dealername")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.dealername?.message && 'error'}`} />
+                <input {...register("dealername" , {required : true})} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.dealername?.message && 'error'}`} />
               </div>
-              <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.dealername?.message}</small>
+              <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.dealername  && <span>This field is required</span>}</small>
             </div>
             <div>
               <div className='flex justify-between my-2'>
                 <h3 className='font-semibold'>Dealer Zip:</h3>
-                <input {...register("dealerzip")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.dealerzip?.message && 'error'}`} />
+                <input {...register("dealerzip" , {required : true})} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.dealerzip?.message && 'error'}`} />
               </div>
-              <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.dealerzip?.message}</small>
+              <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.dealerzip  && <span>This field is required</span>}</small>
             </div>
             <div className='flex gap-20 justify-center my-14'>
               <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>

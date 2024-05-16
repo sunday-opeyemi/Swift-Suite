@@ -35,7 +35,7 @@ const Fpicredential = () => {
     ftppassword: yup.string().required(),
   })
 
-  const { register, handleSubmit, formState: { errors }, } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors }, } = useForm({
     resolver: yupResolver(Schema)
   })
 
@@ -97,6 +97,13 @@ const onSubmit = (data) => {
         }
 
 }
+  
+  useEffect(() => {
+    setValue("host", store.host),
+    setValue("ftpusername", store.ftpusername)
+    setValue("ftppassword", store.ftppassword)
+  }, [])
+  
  
 
 
@@ -114,24 +121,24 @@ const onSubmit = (data) => {
           <div>
           <div className='flex justify-between mt-5'>
             <h3 className='font-semibold'>Host:</h3>
-            <input {...register("host")} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] p-3 w-[60%] lg:w-[50%] ${errors.host?.message && 'error'}`} />
+            <input {...register("host" , {required : true}) } type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] p-3 w-[60%] lg:w-[50%] ${errors.host?.message && 'error'}`} />
           </div>
-          <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.host?.message}</small>
+          <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.host  && <span>This field is required</span>}</small>
         </div>
             <div>
               <div className='flex justify-between mt-5'>
                 <h3 className='font-semibold'>FTP Username:</h3>
-                <input {...register("ftpusername")} type="text" className={`border h-[35px] w-[60%] lg:w-[50%] border-black focus:outline-none p-3 py-1 rounded ${errors.ftpusername?.message && 'error'}`} />
+                <input {...register("ftpusername" , {required : true})} type="text" className={`border h-[35px] w-[60%] lg:w-[50%] border-black focus:outline-none p-3 py-1 rounded ${errors.ftpusername?.message && 'error'}`} />
               </div>
-              <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftpusername?.message}</small>
+              <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftpusername  && <span>This field is required</span>}</small>
             </div>
             <div>
               <div className='flex justify-between mt-5 relative'>
                 <h3 className='font-semibold'>FTP Password:</h3>
-                <input {...register("ftppassword")} type={confirmVisible ? 'text' : 'password'} className={`border border-black focus:outline-none py-1 rounded p-3 h-[35px] w-[60%] lg:w-[50%] ${errors.ftppassword?.message && 'error'}`} />
+                <input {...register("ftppassword" , {required : true})} type={confirmVisible ? 'text' : 'password'} className={`border border-black focus:outline-none py-1 rounded p-3 h-[35px] w-[60%] lg:w-[50%] ${errors.ftppassword?.message && 'error'}`} />
                 <span onClick={() => togglePasswordVisibility('ftppassword')} className='absolute right-[3%] top-[26%]'>{!confirmVisible ?  <IoEyeSharp /> :<BsEyeSlashFill /> }</span>
               </div>
-              <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftppassword?.message}</small>
+              <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftppassword  && <span>This field is required</span>}</small>
             </div>
             <div className='flex flex-col my-10 gap-8 w-2/3 mx-auto'>
               <div className='grid lg:grid-cols-2 md:grid-cols-2 grid-cols-2 gap-12 lg:gap-10'>
