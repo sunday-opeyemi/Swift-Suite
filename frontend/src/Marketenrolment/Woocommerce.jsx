@@ -81,22 +81,22 @@ const Woocommerce = () => {
               <div>
                 <div className='flex lg:gap-28 md:gap-12 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[25px]   w-[55%] md:w-[52%] lg:w-[30%]'>Store name:</h3>
-                  <input {...register("storename")} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
+                  <input {...register("storename", { required: true })} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
-                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[185px]'>{errors.storename?.message}</small>
+                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[185px]'>{errors.storename && <span>This field is required</span>}</small>
               </div>
 
               <div className='flex lg:gap-28 md:gap-12 my-2 px-5'>
                 <h3 className='mt-2 text-sm font-semibold h-[25px]  w-[55%] md:w-[52%]  lg:w-[30%]'>Store Logo:</h3>
-                <input {...register("storelogo")} type="file" className='h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
+                <input {...register("storelogo" , { required: true })} type="file" className='h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
 
                   <div>
                     <div className='flex lg:gap-28 md:gap-12  mt-10 px-5'>
                       <h3 className='pt-1 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Consumer URL:</h3>
-                      <input {...register("marketplacename")} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
+                      <input {...register("marketplacename" , { required: true })} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
                     </div>
-                    <small className='text-red-600 md:ms-[59%] lg:ms-[50%] ms-[150px]'>{errors.marketplacename?.message}</small>
+                    <small className='text-red-600 md:ms-[59%] lg:ms-[50%] ms-[150px]'>{errors.marketplacename && <span>This field is required</span>}</small>
                   </div>
 
               <div className='border-b pb-2'>
@@ -104,24 +104,24 @@ const Woocommerce = () => {
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Key Consumer:</h3>
                   <input {...register("keyconsumer")} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none pt-1 rounded' />
                 </div>
-                <small className='text-red-600 md:ms-[60%] lg:ms-[55%]  ms-[180px]'>{errors.keyconsumer?.message}</small>
+                <small className='text-red-600 md:ms-[60%] lg:ms-[55%]  ms-[180px]'>{errors.keyconsumer && <span>This field is required</span>}</small>
               </div>
 
               <h1 className='ms-5 lg:text-xl font-bold mt-5'>Marketplace Fees</h1>
               <div>
                 <div className='flex lg:gap-28 md:gap-12  mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[25px] w-[55%] md:w-[52%] lg:w-[30%]'>Fixed %:</h3>
-                  <input {...register("fixed")} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
+                  <input {...register("fixed" , { required: true })} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
-                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[200px]'>{errors.fixed?.message}</small>
+                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[200px]'>{errors.fixed && <span>This field is required</span>}</small>
               </div>
 
               <div>
                 <div className='flex lg:gap-28 md:gap-12 mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[25px] w-[55%] md:w-[52%] lg:w-[30%]'>Fixed $:</h3>
-                  <input {...register("marketfix")} type="text" className='border h-[35px] w-[50%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
+                  <input {...register("marketfix" , { required: true })} type="text" className='border h-[35px] w-[50%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
-                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[190px]'>{errors.marketfix?.message}</small>
+                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[190px]'>{errors.marketfix && <span>This field is required</span>}</small>
               </div>
               <div className='flex  lg:gap-28 md:gap-12 mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold w-[55%] md:w-[52%] lg:w-[30%]'>Enable Price Update:</h3>
@@ -134,32 +134,32 @@ const Woocommerce = () => {
               <div>
                 <div className='flex lg:gap-28 md:gap-12 mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[25px] w-[55%] md:w-[52%] lg:w-[30%]'>Business Price Margin Type:</h3>
-                  <input {...register("businessprice")} type="text" className='border h-[35px]  w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("businessprice" , { required: true })} type="text" className='border h-[35px]  w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 md:ms-[60%] lg:ms-[55%]  ms-[180px]'>{errors.businessprice?.message}</small>
+                <small className='text-red-600 md:ms-[60%] lg:ms-[55%]  ms-[180px]'>{errors.businessprice && <span>This field is required</span>}</small>
               </div>
 
               <div>
                 <div className='flex lg:gap-28 md:gap-12 mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>ROI strategy:</h3>
-                  <input {...register("roistrategy")} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("roistrategy" , { required: true })} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[180px]'>{errors.roistrategy?.message}</small>
+                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[180px]'>{errors.roistrategy && <span>This field is required</span>}</small>
               </div>
               <div>
                 <div className='flex lg:gap-28 md:gap-12 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Min Profit Margin:</h3>
-                  <input {...register("minprofit")} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("minprofit" , { required: true })} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[180px]'>{errors.minprofit?.message}</small>
+                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[180px]'>{errors.minprofit && <span>This field is required</span>}</small>
               </div>
 
               <div>
                 <div className='flex lg:gap-28 md:gap-12 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Margin:</h3>
-                  <input {...register("margin")} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("margin", { required: true })} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[190px]'>{errors.margin?.message}</small>
+                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[190px]'>{errors.margin && <span>This field is required</span>}</small>
               </div>
 
               <div className='flex px-5 lg:gap-28 md:gap-12'>
@@ -170,14 +170,14 @@ const Woocommerce = () => {
               </div>
               <div className='flex px-5 lg:gap-28 md:gap-12 my-5'>
                 <p className='text-sm lg:w-[30%] md:w-[52%] w-[55%] font-semibold'>Auto Populate MSRP</p>
-                <input {...register("msrp")} type="checkbox" onChange={() => setMsrp(!msrp)} checked={msrp} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] border-gray-500 focus:outline-none py-1 rounded' />
+                <input {...register("msrp" )} type="checkbox" onChange={() => setMsrp(!msrp)} checked={msrp} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
               <div>
                 <div className='flex lg:gap-28 md:gap-12 px-5 mt-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Maximum Quantity:</h3>
-                  <input {...register("maximumquantity")} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none px-3 py-1 rounded' />
+                  <input {...register("maximumquantity" , { required: true })} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none px-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 md:ms-[59%] lg:ms-[52%]  ms-[150px]'>{errors.maximumquantity?.message}</small>
+                <small className='text-red-600 md:ms-[59%] lg:ms-[52%]  ms-[150px]'>{errors.maximumquantity && <span>This field is required</span>}</small>
               </div>
               <div className='flex gap-20 justify-center my-5'>
                 <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>Submit</button>
