@@ -18,7 +18,7 @@ import pandas as pd
 
 class VendorActivity:
     def __init__(self):
-        self.data = ''
+        self.data = pd.DataFrame()
         self.insert_data = []
 
     def main(self, suppliers, userid, general_selection:dict = {}, _filters:dict = {}, get_filters = False):
@@ -106,7 +106,6 @@ class VendorActivity:
                     success = self.process_zanders(userid, csv_data, index, general_selection, _filters)
                     return success
         
-
     def filters_fragranceX(self, userid, csv_data):
         items = []
         for row in csv_data:
@@ -131,12 +130,14 @@ class VendorActivity:
         for row in csv_data:
             header = str(row).split(":", 1)[0]
             header = header.replace("{'", "").split("|")
-            item = str(row).split(":", 1)[1]
+            item = re.sub("[\"\'}\' ']", "", str(row))
+            item = item.split(":", 1)[1]
             item = item.replace("]}", "").split("|")
+            item[-1] = item[-1].replace("]", "")
             items.append(item)
-            
+
         header[-1] = header[-1].replace("'", "")
-        
+         
         self.data = pd.DataFrame(items, columns=header)
         category = self.data['Category'].unique()
         filter_values = {'category':category}
@@ -177,13 +178,8 @@ class VendorActivity:
         return filter_values
 
 
-    def process_fragranceX(self, userid, csv_data, general_selection, _filters):
+    def process_fragranceX(self, userid, _filters):
             try:
-                items = []
-                for row in csv_data:
-                    items.append(row)
-                    
-                self.data = pd.DataFrame(items)
                 self.data = self.data[self.data['brand'].isin(_filters['brand'])]
                 
                 for row in self.data.iterrows():
@@ -196,16 +192,10 @@ class VendorActivity:
             except Exception as e:
                 return e
     
-    def process_lipsey(self, userid, csv_data, general_selection, _filters):
+    def process_lipsey(self, userid, _filters):
         try:        
-            items = []
-            for row in csv_data:
-                items.append(row)
-                
-            self.data = pd.DataFrame(items)
             self.data = self.data[self.data['ItemType'].isin(_filters['product_filter'])]
             self.data = self.data[self.data['Manufacturer'].isin(_filters['manufacturer'])]
-  
 
             for row in self.data.iterrows():
                 row = row[1]
@@ -222,21 +212,9 @@ class VendorActivity:
         except Exception as e:
             return e
 
-    def process_ssi(self, userid, csv_data, general_selection, _filters):
+    def process_ssi(self, userid, _filters):
         try:
-            items = []
-            for row in csv_data:
-                header = str(row).split(":", 1)[0]
-                header = header.replace("{'", "").split("|")
-                item = str(row).split(":", 1)[1]
-                item = item.replace("]}", "").split("|")
-                items.append(item)
-                
-            header[-1] = header[-1].replace("'", "")
-            
-            self.data = pd.DataFrame(items, columns=header)
             self.data = self.data[self.data['Category'].isin(_filters['product_category'])]
-
             for row in self.data.iterrows():
                 items = row[1].values
                 self.insert_data.append(Ssi(user_id=userid, sku=items[0], description=items[1], datecreated=items[2], dimensionh=items[3], dimensionl=items[4], dimensionw=items[5], manufacturer=items[6], imageurl=items[7], thumbnailurl=items[8], upccode=items[9], weight=items[10], weightunits=items[11], category=items[12], subcategory=items[13], status=items[14], map=items[15], msrp=items[16], mpn=items[17], minimumorderquantity=items[18], detaileddescription=items[19], shippingweight=items[20], shippinglength=items[21], shippingwidth=items[22], shippingheight=items[23], attribute1=items[24], attribute2=items[25], attribute3=items[26], attribute4=items[27], attribute5=items[28], attribute6=items[29], attribute7=items[30], prop65warning=items[31], prop65reason=items[32], countryoforigin=items[33], groundshippingrequired=items[34]))
@@ -247,29 +225,24 @@ class VendorActivity:
         except Exception as e:
             return e
         
-    def process_cwr(self, userid, csv_data, index, general_selection, _filters):
-        # try: 
+    def process_cwr(self, userid, _filters):
+        try: 
+            print('About to push to database\n')
+        
+            print(self.data)
 
-        items = []
-        for row in csv_data:
-            items.append(row)
-            
-        if index == 1:
-            self.data = pd.DataFrame(items)
-        elif index == 2:
-            self.data2 = pd.DataFrame(items)
-            self.data = self.data.merge(self.data2, left_on="CWR Part Number", right_on="sku") 
             if _filters['truck_freight']:
                 self.data = self.data[self.data['truck_freight'] == True]
+
             if _filters['oversized']:
                 self.data = self.data[self.data['oversized'] == True]
             if _filters['third_party_marketplaces']:
                 self.data = self.data[self.data['third_party_marketplaces'] == True]
             if _filters['returnable']:
                 self.data = self.data[self.data['returnable'] == True]
-       
+        
             self.data = self.data[self.data['Category Name'].isin(_filters['product_category'])] 
- 
+
             for row in self.data.iterrows():
                 items = row[1].values   
                 items = list(items)
@@ -280,35 +253,20 @@ class VendorActivity:
 
             print('\nProduct Upload successful....')
             return True
-        # except Exception as e:
-        #     return e
-
-    def process_rsr(self, userid, csv_data, general_selection, _filters):
-        try:
-            for row in csv_data:
-                pass
         except Exception as e:
             return e
-        
-    def process_zanders(self, userid, csv_data, index, general_selection, _filters): 
-        try:
-            items = []
-            itemNumber = []
-            description = []
-            for row in csv_data:
-                if index == 3:
-                    itemNumber.append(str(row).split("~")[1].split(":")[1].replace("'", "").strip())
-                    description.append(str(row).split("~")[2].replace("}", ""))
-                else:
-                    items.append(row) 
 
-            self.data = pd.DataFrame(items)
+    def process_rsr(self, userid,  _filters):
+        pass
+        
+    def process_zanders(self, userid,  _filters): 
+        try:
             if _filters['serialized']:
                 self.data = self.data[self.data['serialized']=='YES']
   
             for row in self.data.iterrows():
                 items = row[1]      
-                self.insert_data.append(Zanders(user_id=userid, available=row['available'], category=row['category'], desc1=row['desc1'], desc2=row['desc2'], itemnumber=row['itemnumber'], manufacturer=row['manufacturer'], mfgpnumber=row['mfgpnumber'], msrp=row['msrp'], price1=row['price1'], price2=row['price2'], price3=row['price3'], qty1=row['qty1'], qty2=row['qty2'], qty3=row['qty3'], upc=row['upc'], weight=row['weight'], serialized=row['serialized'], mapprice=row['mapprice'], imagelink=row['ImageLink'], description=["description"]))       
+                self.insert_data.append(Zanders(user_id=userid, available=items['available'], category=items['category'], desc1=items['desc1'], desc2=items['desc2'], itemnumber=items['itemnumber'], manufacturer=row['manufacturer'], mfgpnumber=row['mfgpnumber'], msrp=row['msrp'], price1=items['price1'], price2=items['price2'], price3=items['price3'], qty1=items['qty1'], qty2=items['qty2'], qty3=items['qty3'], upc=row['upc'], weight=items['weight'], serialized=items['serialized'], mapprice=items['mapprice'], imagelink=items['ImageLink'], description=items["description"]))       
                 
 
             print(len(self.insert_data))                  
@@ -317,9 +275,7 @@ class VendorActivity:
             return True
         except Exception as e:
             return e
-
-
-                                      
+                       
 
 VENDORS = {
     "fragrancex":[
@@ -381,6 +337,7 @@ def get_suppliers_for_vendor(ftp_name, ftp_host, ftp_user, ftp_password):
     elif ftp_name == 'SSI':
         return [(ftp_name, ftp_host, ftp_user, ftp_password, "/Products", "RR_Products.csv", 1, 21)]
 
+pull = VendorActivity()
 class VendorEnrolmentTestView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):
@@ -395,7 +352,7 @@ class VendorEnrolmentTestView(APIView):
 
         suppliers = get_suppliers_for_vendor(ftp_name, ftp_host, ftp_user, ftp_password)
 
-        pull = VendorActivity()                
+                       
         filter_values = pull.main(suppliers, userid, get_filters=True)
 
         if filter_values:
@@ -435,6 +392,7 @@ class VendoEnronmentView(APIView):
 
                 if ftp_name == 'FragranceX':
                     extra_data = {'brand': vendor_data['brand']}
+                    success = pull.process_fragranceX(userid,extra_data)
 
                 elif ftp_name == 'CWR':
                     extra_data = {
@@ -445,39 +403,31 @@ class VendoEnronmentView(APIView):
                         'product_category': vendor_data['product_category']
                     }
 
+                    success = pull.process_cwr(userid,extra_data)
+
                 elif ftp_name == 'Lipsey':
                     extra_data = {
                         'product_filter': vendor_data['product_filter'], 
                         'manufacturer': vendor_data['manufacturer']
                     }
+                    
+                    success = pull.process_lipsey(userid,extra_data)
 
                 elif ftp_name == 'SSI':
                     extra_data = {
                         'product_category': vendor_data['product_category'], 
                         'shipping_cost_average': vendor_data['shipping_cost_average']
                     }
-                
+
+                    success = pull.process_ssi(userid,extra_data)
                 elif ftp_name == 'Zanders':
                     extra_data = {
                         'serialized': vendor_data['serialized'],
                     }
-                print(extra_data)
 
-                suppliers = get_suppliers_for_vendor(ftp_name, ftp_host, ftp_user, ftp_password)
+                    success = pull.process_zanders(userid,extra_data)
 
-                pull = VendorActivity()                
-                success = pull.main(suppliers, userid, general_selection, extra_data)
                 if success == True:
-                    # if 'product_filter' in extra_data:
-                    #     extra_data['product_filter'] = str(extra_data['product_filter'])
-                    # if 'product_category' in extra_data:
-                    #     extra_data['product_category'] = str(extra_data['product_category'])
-                    # if 'brand' in extra_data:
-                    #     extra_data['brand'] = str(extra_data['brand'])
-                    # if 'manufacturer' in extra_data:
-                    #     extra_data['manufacturer'] = str(extra_data['manufacturer'])
-
-                    print(extra_data)
 
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -488,7 +438,6 @@ class VendoEnronmentView(APIView):
             return Response({"error": str(e)},status=status.HTTP_400_BAD_REQUEST)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
-
 
 class CatalogueBaseView(APIView):
     permission_classes = [IsAuthenticated]
