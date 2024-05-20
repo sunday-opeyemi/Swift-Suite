@@ -40,6 +40,8 @@ const Catalogue = () => {
   const [filterQuantityValue, setFilterQuantityValue] = useState("");
   const [productChange, setProductChange] = useState("All")
   const [endpoint, setEndpoint] = useState("");
+  const [filter, setFilter] = useState(false)
+   const [error, setError] = useState(null);
   // console.log(productChange);
   // console.log(endpoint);
 
@@ -86,24 +88,33 @@ const Catalogue = () => {
       console.log(response.data);
       setCatalogueProduct(response.data);
       setLoader(false);
+      setFilter(true);
+      setError(null)
     } catch (error) {
       setLoader(false);
-      console.log(error);
+      console.log(error.response.data.message);
       if (error.response.data.detail) {
         console.log("Token has expired");
         toast.error("Token has expired");
         localStorage.removeItem("token");
         navigate("/signin");
+      } else if(error.response && error.response.data && error.response.data.message) {
+        // Set the error message state
+        setError(error.response.data.message);
       }
+      //  else {
+      //   setError("An error occurred while fetching data");
+      // }
     }
   };
 
   const handleProductChange = (event) => {
     const selectedProduct = catalogue.find(item => item.name === event.target.value);
-    // console.log(selectedProduct);
+    console.log(selectedProduct.endpoint);
     if (selectedProduct) {
       setProductChange(event.target.value);
       setEndpoint(selectedProduct.endpoint); // Update the endpoint state
+      setError(null)
     }
   };
 
@@ -120,6 +131,7 @@ const Catalogue = () => {
     // Step 2: Function to handle product click
     setSelectedProduct(product);
     onOpen(); // Step 3: Open the modal
+    setError(null)
   };
 
   const handleFormInputChange = (e) => {
@@ -380,12 +392,12 @@ const Catalogue = () => {
     console.log(i);
   };
   return (
-    <div className="bg-green-50 h-screen ">
+    <div className={error || loader ? 'bg-green-50 h-screen' : 'bg-green-50'}>
       <section
         className={
           filterOpen
-            ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
-            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%] lg:me-[2] md:me-[5%]"
+            ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
         <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center">
@@ -393,11 +405,11 @@ const Catalogue = () => {
             <button
               className="flex gap-1"
               onClick={() => {
-                if (loader == false) {
+                if (filter == true) {
                   filterControl();
                 }
               }}
-              disabled={loader == true}
+              disabled={filter == false}
             >
               <span className="mt-1">Filter</span>
               <span className="mt-[9px] text-[#089451]">
@@ -595,18 +607,21 @@ const Catalogue = () => {
         </ModalContent>
       </Modal>
 
-      <div className="lg:ms-[22%] py-40 bg-green-50 p-10">
-        <div className="flex gap-6 mb-34">
-          <div className="rounded-lg overflow-hidden">
-            {loader && (
+      <div className="lg:ms-[26%] py-40 bg-green-50 p-10">
+      {loader && (
               <div className="flex justify-center items-center">
                 <img
                   src={gif}
                   alt="Loading..."
-                  className="lg:ms-[400px] border p-3 shadow-xl rounded-xl w-[50px] mt-10"
+                  className="lg:ms-[-100px] border p-3 shadow-xl rounded-xl w-[50px] mt-10"
                 />
               </div>
             )}
+      {error ? (
+        <div className="lg:ms-[36%] text-red-500 text-xl mb-4">{error}</div>
+      ) : (
+        <div className="flex gap-6 mb-34">
+          <div className="rounded-lg overflow-hidden">
             {!loader &&
               (paginatedItems.length > 0 && currentItems.length > 0 ? (
                 <>
@@ -665,6 +680,7 @@ const Catalogue = () => {
                             )}
                           </div>
                           {/* FragranceX */}
+                          
                           <div className="p-4 bg-green-50 my-5 flex flex-col justify-center m-0 rounded-xl">
                             {/* <p>{product.title ? `TITLE: ${product.title}` : ""}</p> */}
                             <p>{product.name ? `NAME: ${product.name}` : ""}</p>
@@ -769,6 +785,7 @@ const Catalogue = () => {
               ))}
           </div>
         </div>
+      )}
       </div>
       <ToastContainer />
     </div>
