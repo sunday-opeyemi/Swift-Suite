@@ -6,7 +6,7 @@ export const catalogue = [
   },
   {
     id: 2,
-    endpoint:"https://service.swiftsuite.app/vendor/catalogue-fragrancex/46/",
+    endpoint:"https://service.swiftsuite.app/vendor/catalogue-rsr/46/",
     name: 'RSR',
   },
   {

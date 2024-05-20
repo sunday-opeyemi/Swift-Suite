@@ -32,7 +32,7 @@ export const Vendordata = [
         image:"/image/vendorfive.png",
         summaries:'Send orders and receive tracking with LIPSEYS',
         price: "$50.00/month",
-        name: "Lipseys",
+        name: "Lipsey",
       },
       {
         id: 6,

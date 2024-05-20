@@ -37,6 +37,7 @@ const SignIn = () => {
    // console.log(result.data.full_name);
    localStorage.setItem('token', JSON.stringify(result.data.access_token))
    localStorage.setItem('fullName', JSON.stringify(result.data.full_name))
+   localStorage.setItem('userId', JSON.stringify(result.data.id))
         toast.success("Sign in Successful!");
         setMyLoader(false)
         navigate('/layout/home')

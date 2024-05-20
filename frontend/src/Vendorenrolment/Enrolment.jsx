@@ -68,7 +68,7 @@ const Enrolment = () => {
           {currentIndex === 0 && <Vendorenrolment />}
           {currentIndex === 1 && <Fpicredential />}
           {currentIndex === 2 && <Fpioption />}
-          {currentIndex === 3 && (vendorName === 'Lipseys' ? <Lipsey /> : vendorName === 'FragranceX' ? <Fragrancex /> : vendorName === 'Zanders' ? <Zanders/> : vendorName === 'cwr' ? <Cwr/> : vendorName === 'ssi' ? <Ssi/> : <Rsr />)}
+          {currentIndex === 3 && (vendorName === 'Lipsey' ? <Lipsey /> : vendorName === 'FragranceX' ? <Fragrancex /> : vendorName === 'Zanders' ? <Zanders/> : vendorName === 'cwr' ? <Cwr/> : vendorName === 'ssi' ? <Ssi/> : <Rsr />)}
           {currentIndex === 4 && <Thank />}
         </div>
       <div className='lg:w-[30%] md:w-[63%] w-[84%] md:ms-[21%] lg:ms-0 ms-7 border-2 lg:order-last bg-white -order-last mt-8 h-[30%] shadow'>
