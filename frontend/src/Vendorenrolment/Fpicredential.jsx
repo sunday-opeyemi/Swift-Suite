@@ -76,8 +76,8 @@ const Fpicredential = () => {
       }
     )
       .then((response) => {
-        console.log(response);
-        localStorage.setItem('connection',JSON.stringify(response.data))
+        console.log(response.data);
+        localStorage.setItem('connection', JSON.stringify(response.data))
         setMyLoader(false)
         toast.success("Connection Successful!");
         setDispatchCheck(true)
