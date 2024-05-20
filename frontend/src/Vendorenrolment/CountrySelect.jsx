@@ -203,16 +203,18 @@ const CountrySelect = ({ onChange, value, ...rest }) => {
     value: country.value,
     label: country.label
   }));
+  console.log(options);
 
 
   return (
     <div>
     <Select 
-        className='lg:w-[275px] md:w-[320px] w-[190px] border border-black lg:ms-[24%] rounded mt-3 focus:outline-none focus:ring-2 focus:border-transparent bg-black'
+        className='lg:w-[275px] md:w-[320px] w-[190px] border border-black lg:ms-[24%] rounded mt-3 focus:border-transparent bg-black focus:outline-none'
         options={options}
         onChange={onChange}
         value={options.find(option => option.value === value)}
         {...rest}
+        placeholder='Please select Country'
       />
     </div>
   );

@@ -11,7 +11,6 @@ import Inventory from '../pages/Inventory';
 import Market from '../Marketenrolment/Market';
 
 
-
 const Rootlayout = ({ children }) => {
   const navigate = useNavigate();
   const { sideBarOpen } = useContext(AppContext);
@@ -35,7 +34,6 @@ const Rootlayout = ({ children }) => {
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/enrolment" element={<Enrolment />} />
         <Route path="/market" element={<Market />} />
-
       </Routes>
     </>
   );
