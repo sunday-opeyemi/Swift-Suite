@@ -121,7 +121,22 @@ class VendorActivity:
         self.data = pd.DataFrame(items)
         productType =self.data['ItemType'].unique()
         manufacturer = self.data['Manufacturer'].unique()
-        filter_values = {'productType':productType, 'manufacturer':manufacturer}
+         
+        manufacturer_dictList = []
+        productType_dictList = []
+        x= 1
+        for value in productType:
+            _dict = {"id":x, "label":value, "checked":False}
+            productType_dictList.append(_dict)
+            x+=1
+
+        y = 1
+        for value in manufacturer:
+            _dict = {"id":y, "label":value, "checked":False}
+            manufacturer_dictList.append(_dict)
+            y+=1
+
+        filter_values = {'productType':productType_dictList, 'manufacturer':manufacturer_dictList}
 
         return filter_values
 
@@ -137,10 +152,17 @@ class VendorActivity:
             items.append(item)
 
         header[-1] = header[-1].replace("'", "")
-         
+
         self.data = pd.DataFrame(items, columns=header)
         category = self.data['Category'].unique()
-        filter_values = {'category':category}
+
+        category_dictList = []
+        x = 1
+        for value in category:
+            _dict = {"id":x, "label":value, "checked":False}
+            category_dictList.append(_dict)
+            x+=1
+        filter_values = {'category':category_dictList}
         return filter_values
     
     def filters_cwr(self, userid, csv_data, index):
@@ -155,7 +177,13 @@ class VendorActivity:
             self.data = self.data.merge(data2, left_on="CWR Part Number", right_on="sku")  
         
         category = self.data['Category Name'].unique()
-        filter_values = {'category':category}
+        category_dictList = []
+        x = 1
+        for value in category:
+            _dict = {"id":x, "label":value, "checked":False}
+            category_dictList.append(_dict)
+            x+=1
+        filter_values = {'category':category_dictList}
         return filter_values
 
     def filters_rsr(self, userid, csv_data):
@@ -174,7 +202,13 @@ class VendorActivity:
 
         self.data = pd.DataFrame(items)
         manufacturer = self.data['manufacturer'].unique()
-        filter_values = {'manufacturer':manufacturer}  
+        manufacturer_dictList = []
+        x = 1
+        for value in manufacturer:
+            _dict = {"id":x, "label":value, "checked":False}
+            manufacturer_dictList.append(_dict)
+            x+=1
+        filter_values = {'manufacturer':manufacturer_dictList}  
         return filter_values
 
 
@@ -231,17 +265,17 @@ class VendorActivity:
         
             print(self.data)
 
-            if _filters['truck_freight']:
-                self.data = self.data[self.data['truck_freight'] == True]
+            # if _filters['truck_freight']:
+            #     self.data = self.data[self.data['Truck Freight'] == True]
 
-            if _filters['oversized']:
-                self.data = self.data[self.data['oversized'] == True]
-            if _filters['third_party_marketplaces']:
-                self.data = self.data[self.data['third_party_marketplaces'] == True]
-            if _filters['returnable']:
-                self.data = self.data[self.data['returnable'] == True]
+            # if _filters['oversized']:
+            #     self.data = self.data[self.data['Oversized'] == True]
+            # if _filters['third_party_marketplaces']:
+            #     self.data = self.data[self.data['3rd Party Marketplaces'] == True]
+            # if _filters['returnable']:
+            #     self.data = self.data[self.data['Returnable'] == True]
         
-            self.data = self.data[self.data['Category Name'].isin(_filters['product_category'])] 
+            # self.data = self.data[self.data['Category Name'].isin(_filters['product_category'])] 
 
             for row in self.data.iterrows():
                 items = row[1].values   
