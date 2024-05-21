@@ -10,6 +10,8 @@ const initialData = () => {
             currentStep: 0,
 
             vendorName: '',
+
+            vendorName: '',
             street1: '',
             street2: '',
             city: '',
@@ -68,7 +70,7 @@ export const slice = createSlice({
         handlePreviousStep: (state, action) => {
             state.vendorData.currentStep--
         },
-
+        
         // the state will b changing by one i.e the currentstep will change either increase or decreaes by 1
         handleChange: (state, action) => {
             state.vendorData.currentStep = 1

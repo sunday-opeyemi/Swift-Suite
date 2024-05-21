@@ -1,7 +1,18 @@
 import React from 'react';
 import { vendor } from './Data';
+import { useNavigate } from 'react-router-dom';
 
-const Addvendor = () => {
+
+
+
+const Addmarketplaces = () => {
+    const navigate = useNavigate()
+
+    const marketPlace=(e)=>{
+        // console.log(e);
+        localStorage.setItem('marketPlace', JSON.stringify(e))
+        navigate('/layout/market')
+    }
     return (
         <>
             <h1 className='text-green-600 font-bold'>Add Marketplace</h1>
@@ -11,7 +22,7 @@ const Addvendor = () => {
                         <div><img src={item.image} width={150} className='mx-auto' alt="" /></div>
                         <div>{item.summaries}</div>
                         <div>{item.price}</div>
-                        <button className='bg-green-700 hover:bg-white border rounded hover:border-[#089451] hover:text-[#089451] text-white p-2  px-5 mt-5'>Add Marketplace</button>
+                        <button onClick={(e) => marketPlace(item.name)} className='bg-green-700 hover:bg-white border rounded hover:border-[#089451] hover:text-[#089451] text-white p-2  px-5 mt-5'>Add Marketplace</button>
                     </div>
                 ))}
             </div>
@@ -19,4 +30,4 @@ const Addvendor = () => {
     );
 };
 
-export default Addvendor;
+export default Addmarketplaces;
