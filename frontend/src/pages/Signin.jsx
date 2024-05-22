@@ -33,25 +33,6 @@ const SignIn = () => {
       setMyLoader(true)
       // console.log(values);
       axios.post(endpoint, values)
-<<<<<<< HEAD
-      .then((result)=>{
-   // console.log(result.data.full_name);
-   localStorage.setItem('token', JSON.stringify(result.data.access_token))
-   localStorage.setItem('fullName', JSON.stringify(result.data.full_name))
-   localStorage.setItem('userId', JSON.stringify(result.data.id))
-        toast.success("Sign in Successful!");
-        setMyLoader(false)
-        navigate('/layout/home')
-      })
-      .catch((error)=>{
-        console.log(error);
-        setMyLoader(false)
-        if(error.response.status == 401) {
-          // console.log("duplicate user found");
-          toast.error("Invalid credentials try again");
-      }
-      })
-=======
         .then((result) => {
           console.log(result);
           localStorage.setItem('token', JSON.stringify(result.data.access_token))
@@ -69,7 +50,6 @@ const SignIn = () => {
             toast.error("Invalid credentials try again");
           }
         })
->>>>>>> ea267b51474da8693ba4d42f822411b414030514
     },
     validationSchema: yup.object({
       email: yup.string().email('Invalid email format').required('Email is required'),
