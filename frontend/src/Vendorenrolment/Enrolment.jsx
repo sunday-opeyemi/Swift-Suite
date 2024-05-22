@@ -23,6 +23,10 @@ const Enrolment = () => {
 
   console.log(vendorName);
 
+
+  const connection = JSON.parse(localStorage.getItem('connection'));
+  console.log(connection);
+
   const navigate = useNavigate()
 
   const currentIndex = useSelector(state => state.vendor.vendorData.currentStep)

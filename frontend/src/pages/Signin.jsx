@@ -29,10 +29,11 @@ const SignIn = () => {
       password: "",
       // rememberMe: false 
     },
-    onSubmit: (values)=>{
+    onSubmit: (values) => {
       setMyLoader(true)
       // console.log(values);
       axios.post(endpoint, values)
+<<<<<<< HEAD
       .then((result)=>{
    // console.log(result.data.full_name);
    localStorage.setItem('token', JSON.stringify(result.data.access_token))
@@ -50,6 +51,25 @@ const SignIn = () => {
           toast.error("Invalid credentials try again");
       }
       })
+=======
+        .then((result) => {
+          console.log(result);
+          localStorage.setItem('token', JSON.stringify(result.data.access_token))
+          localStorage.setItem('fullName', JSON.stringify(result.data.full_name))
+          localStorage.setItem('userId', JSON.stringify(result.data.id))
+          toast.success("Sign in Successful!");
+          setMyLoader(false)
+          navigate('/layout/home')
+        })
+        .catch((error) => {
+          console.log(error);
+          setMyLoader(false)
+          if (error.response.status == 401) {
+            // console.log("duplicate user found");
+            toast.error("Invalid credentials try again");
+          }
+        })
+>>>>>>> ea267b51474da8693ba4d42f822411b414030514
     },
     validationSchema: yup.object({
       email: yup.string().email('Invalid email format').required('Email is required'),
@@ -60,7 +80,7 @@ const SignIn = () => {
 
   return (
     <div>
-     
+
       <section className='grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 border-4'>
         <div className='px-10'>
           <img src={signImage} alt="" className='lg:w-[500px] lg:h-[626px] md:w-full' />
@@ -81,12 +101,12 @@ const SignIn = () => {
               <span onClick={() => setPasswordVisible(!passwordVisible)} className='absolute top-[47px] right-5'>{passwordVisible ? <IoEyeSharp /> : <BsEyeSlashFill />}</span>
             </div>
             <div className='flex justify-between my-5'>
-            <div className='flex gap-3 font-semibold'>
-            <input type="checkbox" /> <span>Remember Me</span>
-            </div>
+              <div className='flex gap-3 font-semibold'>
+                <input type="checkbox" /> <span>Remember Me</span>
+              </div>
               <Link to="/enteremail" className='font-semibold hover:text-[#089451]'>Forgot password?</Link>
             </div>
-            <button type='submit' className='w-full bg-[#089451] flex justify-center items-center h-[40px] rounded text-white font-bold py-3 mt-5'>{myLoader? <img src={gif} alt="" className='w-[25px] ' /> : 'Sign In'}</button>
+            <button type='submit' className='w-full bg-[#089451] flex justify-center items-center h-[40px] rounded text-white font-bold py-3 mt-5'>{myLoader ? <img src={gif} alt="" className='w-[25px] ' /> : 'Sign In'}</button>
             <div className='flex justify-between my-2'>
               <div>
                 <span className='font-semibold'>Don't have an Account?</span>
@@ -95,7 +115,7 @@ const SignIn = () => {
             </div>
           </form>
         </div>
-        <ToastContainer/>
+        <ToastContainer />
       </section>
     </div>
   );
