@@ -391,7 +391,7 @@ const Catalogue = () => {
   const vendorIndex = (i) => {
     console.log(i);
   };
-  return (
+   return (
     <div className={error || loader ? 'bg-green-50 h-screen' : 'bg-green-50'}>
       <section
         className={
@@ -765,7 +765,7 @@ const Catalogue = () => {
                             {/* Lipsey */}
                             <p>{product.model || product.title ? `TITLE: ${product.model || product.title}` : ""}</p>
                             <p>{product.manufacturer || product.manufacturer_name ? `BRAND: ${product.manufacturer || product.manufacturer_name}` : ""}</p>
-                            <p>{product.price ? `PRICE: ${product.price}` : ""}</p>
+                <p>{product.price ? `PRICE: ${product.price}` : ""}</p>
                             <p>{product.quantity ? `QUANTITY: ${product.quantity}` : ""}</p>
                             <p>{product.upc || product.upccode ? `UPC: ${product.upc || product.upccode}` : ""}</p>
                             {/* cwr */}
