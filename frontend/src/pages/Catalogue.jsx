@@ -101,8 +101,8 @@ const Catalogue = () => {
       } else if(error.response && error.response.data && error.response.data.message) {
         // Set the error message state
         setError(error.response.data.message);
-      } 
-      // else {
+      }
+      //  else {
       //   setError("An error occurred while fetching data");
       // }
     }
@@ -391,13 +391,13 @@ const Catalogue = () => {
   const vendorIndex = (i) => {
     console.log(i);
   };
-  return (
+   return (
     <div className={error || loader ? 'bg-green-50 h-screen' : 'bg-green-50'}>
       <section
         className={
           filterOpen
             ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
-            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10   lg:ms-[22%] lg:me-[2] md:me-[5%]"
+            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
         <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center">
@@ -765,7 +765,7 @@ const Catalogue = () => {
                             {/* Lipsey */}
                             <p>{product.model || product.title ? `TITLE: ${product.model || product.title}` : ""}</p>
                             <p>{product.manufacturer || product.manufacturer_name ? `BRAND: ${product.manufacturer || product.manufacturer_name}` : ""}</p>
-                            <p>{product.price ? `PRICE: ${product.price}` : ""}</p>
+                <p>{product.price ? `PRICE: ${product.price}` : ""}</p>
                             <p>{product.quantity ? `QUANTITY: ${product.quantity}` : ""}</p>
                             <p>{product.upc || product.upccode ? `UPC: ${product.upc || product.upccode}` : ""}</p>
                             {/* cwr */}
