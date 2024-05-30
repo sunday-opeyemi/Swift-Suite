@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from ftplib import FTP
 import time, os, re
+import ftplib
+import ssl
 import csv
 import pandas as pd
 from rest_framework.views import APIView
@@ -14,7 +16,6 @@ from .models import Fragrancex, Lipsey, Ssi, Cwr, Zanders
 from rest_framework.generics import GenericAPIView
 from rest_framework.serializers import ModelSerializer
 from django.http import JsonResponse
-import pandas as pd
 from django.forms.models import model_to_dict
 
 class VendorActivity:
@@ -47,13 +48,29 @@ class VendorActivity:
         supplier_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name, index, port = supplier
         file_path = os.path.join(local_dir, file_name)
         
-        ftp = FTP()
-        ftp.connect(ftp_host, port)
-        ftp.login(user=ftp_user, passwd=ftp_password)
-        ftp.set_pasv(True)
-        ftp.cwd(ftp_path)
-        with open(os.path.join(local_dir, file_name), "wb") as local_file:
-            ftp.retrbinary(f"RETR {file_name}", local_file.write)
+        
+        if supplier_name == "RSR GROUP":
+            ctx = ssl.create_default_context()
+            ftps = ftplib.FTP_TLS(context=ctx)
+            ftps.connect(ftp_host, port)
+            ftps.login(ftp_user, ftp_password)
+            ftps.prot_p()
+            ftps.cwd(ftp_path)
+            # print(ftps.nlst())
+            with open(os.path.join(local_dir, file_name), "wb") as local_file:
+                ftps.retrbinary(f"RETR {file_name}", local_file.write)
+            print(f"{file_name} downloaded from FTPS for {ftp_user}.")
+            ftps.quit()
+        else:
+            ftp = FTP()
+            ftp.connect(ftp_host, port)
+            ftp.login(user=ftp_user, passwd=ftp_password)
+            ftp.set_pasv(True)
+            ftp.cwd(ftp_path)
+            with open(os.path.join(local_dir, file_name), "wb") as local_file:
+                ftp.retrbinary(f"RETR {file_name}", local_file.write)
+        
+            print(f"{file_name} downloaded from FTP for {ftp_user}.")
 
 
         value = self.process_csv(userid,supplier_name, local_dir, file_name, index, get_filters)
@@ -202,6 +219,14 @@ class VendorActivity:
                 description.append(str(row).split("~")[2].replace("}", ""))
             else:
                 items.append(row) 
+        if index == 3:
+            data2 = pd.DataFrame({"Itemnumber":itemNumber, "description":description})
+            data = data.merge(data2, left_on="itemnumber", right_on="Itemnumber")
+        elif index == 2:
+            data2 = pd.DataFrame(items)
+            data = data.merge(data2, left_on="itemnumber", right_on="ItemNumber")
+        else:
+            data = pd.DataFrame(items)
 
         self.data = pd.DataFrame(items)
         manufacturer = self.data['manufacturer'].unique()
