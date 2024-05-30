@@ -1,5 +1,5 @@
 from django.db import models
-from swiftsuite.accounts.models import User
+from accounts.models import User
 
 # Create your models here.
 
@@ -155,15 +155,15 @@ class Generalproducttable(models.Model):
     image = models.CharField(db_column='Image', max_length=255, blank=True, null=True)  # Field name made lowercase.
     category = models.CharField(db_column='Category', max_length=255, blank=True, null=True)  # Field name made lowercase.
     category_id = models.IntegerField(db_column='Category_ID', blank=True, null=True)  # Field name made lowercase.
-    msrp = models.DecimalField(db_column='MSRP', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    msrp = models.DecimalField(db_column='MSRP', max_digits=10, decimal_places=6, blank=True, null=True)  # Field name made lowercase.
     mpn = models.CharField(db_column='MPN', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    map = models.DecimalField(db_column='MAP', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    dimensionh = models.DecimalField(db_column='DimensionH', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    dimensionl = models.DecimalField(db_column='DimensionL', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    dimensionw = models.DecimalField(db_column='DimensionW', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    shipping_weight = models.DecimalField(db_column='Shipping_Weight', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    shipping_length = models.DecimalField(db_column='Shipping_Length', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
-    shipping_width = models.DecimalField(db_column='Shipping_Width', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    map = models.DecimalField(db_column='MAP', max_digits=10, decimal_places=6, blank=True, null=True)  # Field name made lowercase.
+    dimensionh = models.DecimalField(db_column='DimensionH', max_digits=10, decimal_places=6, blank=True, null=True)  # Field name made lowercase.
+    dimensionl = models.DecimalField(db_column='DimensionL', max_digits=10, decimal_places=6, blank=True, null=True)  # Field name made lowercase.
+    dimensionw = models.DecimalField(db_column='DimensionW', max_digits=10, decimal_places=6, blank=True, null=True)  # Field name made lowercase.
+    shipping_weight = models.DecimalField(db_column='Shipping_Weight', max_digits=10, decimal_places=6, blank=True, null=True)  # Field name made lowercase.
+    shipping_length = models.DecimalField(db_column='Shipping_Length', max_digits=10, decimal_places=6, blank=True, null=True)  # Field name made lowercase.
+    shipping_width = models.DecimalField(db_column='Shipping_Width', max_digits=10, decimal_places=6, blank=True, null=True)  # Field name made lowercase.
     shipping_height = models.TextField(db_column='Shipping_Height', blank=True, null=True)  # Field name made lowercase.
     attribute_1 = models.CharField(db_column='Attribute_1', max_length=255, blank=True, null=True)  # Field name made lowercase.
     attribute_2 = models.CharField(db_column='Attribute_2', max_length=255, blank=True, null=True)  # Field name made lowercase.
@@ -186,7 +186,7 @@ class Generalproducttable(models.Model):
     feature_9 = models.TextField(db_column='Feature_9', blank=True, null=True)  # Field name made lowercase.
     feature_10 = models.TextField(db_column='Feature_10', blank=True, null=True)  # Field name made lowercase.
     model = models.CharField(db_column='Model', max_length=255, blank=True, null=True)  # Field name made lowercase.
-    price = models.DecimalField(db_column='Price', max_digits=10, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    price = models.DecimalField(db_column='Price', max_digits=10, decimal_places=6, blank=True, null=True)  # Field name made lowercase.
     brand = models.CharField(db_column='Brand', max_length=255, blank=True, null=True)  # Field name made lowercase.
     manufacturer = models.CharField(db_column='Manufacturer', max_length=255, blank=True, null=True)  # Field name made lowercase.
     prop_65 = models.IntegerField(db_column='Prop_65', blank=True, null=True)  # Field name made lowercase.
