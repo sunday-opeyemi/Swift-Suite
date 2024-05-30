@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from ftplib import FTP
+import ftplib
+import ssl
 import time, os, re
 import csv
 import pandas as pd
@@ -8,17 +10,16 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import VendoEnronment
-from .serializers import *
+from .serializers import VendoEnronmentSerializer, VendorEnrolmentTestSerializer
 from rest_framework.permissions import IsAuthenticated
-from .models import Fragrancex, Lipsey, Ssi, Cwr, Zanders
+from .models import Fragrancex, Lipsey, Ssi, Cwr, Zanders, Rsr
 from rest_framework.generics import GenericAPIView
 from rest_framework.serializers import ModelSerializer
 from django.http import JsonResponse
-import pandas as pd
 
 class VendorActivity:
     def __init__(self):
-        self.data = ''
+        self.data = pd.DataFrame()
         self.insert_data = []
 
     def main(self, suppliers, userid, general_selection:dict = {}, _filters:dict = {}, get_filters = False):
@@ -46,13 +47,25 @@ class VendorActivity:
         supplier_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name, index, port = supplier
         file_path = os.path.join(local_dir, file_name)
         
-        ftp = FTP()
-        ftp.connect(ftp_host, port)
-        ftp.login(user=ftp_user, passwd=ftp_password)
-        ftp.set_pasv(True)
-        ftp.cwd(ftp_path)
-        with open(os.path.join(local_dir, file_name), "wb") as local_file:
-            ftp.retrbinary(f"RETR {file_name}", local_file.write)
+        if supplier_name == "RSR Group":
+            ctx = ssl.create_default_context()
+            ftps = ftplib.FTP_TLS(context=ctx)
+            ftps.connect(ftp_host, port)
+            ftps.login(ftp_user, ftp_password)
+            ftps.prot_p()
+            ftps.cwd(ftp_path)
+            with open(os.path.join(local_dir, file_name), "wb") as local_file:
+                ftps.retrbinary(f"RETR {file_name}", local_file.write)
+
+            ftps.quit()
+        else:
+            ftp = FTP()
+            ftp.connect(ftp_host, port)
+            ftp.login(user=ftp_user, passwd=ftp_password)
+            ftp.set_pasv(True)
+            ftp.cwd(ftp_path)
+            with open(os.path.join(local_dir, file_name), "wb") as local_file:
+                ftp.retrbinary(f"RETR {file_name}", local_file.write)
 
 
         value = self.process_csv(userid,supplier_name, local_dir, file_name, index, general_selection, _filters, get_filters)
@@ -89,7 +102,7 @@ class VendorActivity:
                     filter_values = self.filters_cwr(userid, csv_data, index)
                     return filter_values
                 else:
-                    success = self.process_cwr(userid, csv_data, index, general_selection, _filters)
+                    success = self.process_cwr(userid,  _filters)
                     return success
             elif supplier_name == "RSR":
                 if get_filters:
@@ -131,8 +144,10 @@ class VendorActivity:
         for row in csv_data:
             header = str(row).split(":", 1)[0]
             header = header.replace("{'", "").split("|")
-            item = str(row).split(":", 1)[1]
+            item = re.sub("[\"\'}\' ']", "", str(row))
+            item = item.split(":", 1)[1]
             item = item.replace("]}", "").split("|")
+            item[-1] = item[-1].replace("]", "")
             items.append(item)
             
         header[-1] = header[-1].replace("'", "")
@@ -171,42 +186,44 @@ class VendorActivity:
             else:
                 items.append(row) 
 
-        self.data = pd.DataFrame(items)
+        if index == 3:
+            data2 = pd.DataFrame({"Itemnumber":itemNumber, "description":description})
+            self.data = self.data.merge(data2, left_on="itemnumber", right_on="Itemnumber")
+        elif index == 2:
+                data2 = pd.DataFrame(items)
+                self.data = self.data.merge(data2, left_on="itemnumber", right_on="ItemNumber")
+        else:
+            self.data = pd.DataFrame(items)  
+
         manufacturer = self.data['manufacturer'].unique()
         filter_values = {'manufacturer':manufacturer}  
         return filter_values
 
 
     def process_fragranceX(self, userid, csv_data, general_selection, _filters):
-            try:
-                items = []
-                for row in csv_data:
-                    items.append(row)
-                    
-                self.data = pd.DataFrame(items)
-                self.data = self.data[self.data['brand'].isin(_filters['brand'])]
-                
-                for row in self.data.iterrows():
-                    row = row[1]
-                    self.insert_data.append(Fragrancex(user_id=userid, name=row["NAME"], item=row["ITEM"], description=row["DESCRIPTION"], brand=row["BRAND"], title=row["TITLE"], gender=row["GENDER"], size=row["Size"], metric_size=row["Metric_Size"], retail=row["RETAIL"], price=row["PRICE"], eur_price=row["EUR_PRICE"],gbp_price=row["GBP_PRICE"], cad_price=row["CAD_PRICE"], aud_price=row["AUD_PRICE"], image=row["IMAGE"], url=row["URL"], qty=row["QTY"], upc=row["UPC"]))
-
-                Fragrancex.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["size", "price", "qty"])
-                print('FrangranceX upload successfully')
-                return True
-            except Exception as e:
-                return e
-    
-    def process_lipsey(self, userid, csv_data, general_selection, _filters):
-        try:        
+        try:
             items = []
             for row in csv_data:
                 items.append(row)
                 
             self.data = pd.DataFrame(items)
+            self.data = self.data[self.data['brand'].isin(_filters['brand'])]
+            
+            for row in self.data.iterrows():
+                row = row[1]
+                self.insert_data.append(Fragrancex(user_id=userid, name=row["NAME"], item=row["ITEM"], description=row["DESCRIPTION"], brand=row["BRAND"], title=row["TITLE"], gender=row["GENDER"], size=row["Size"], metric_size=row["Metric_Size"], retail=row["RETAIL"], price=row["PRICE"], eur_price=row["EUR_PRICE"],gbp_price=row["GBP_PRICE"], cad_price=row["CAD_PRICE"], aud_price=row["AUD_PRICE"], image=row["IMAGE"], url=row["URL"], qty=row["QTY"], upc=row["UPC"]))
+
+            Fragrancex.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["size", "price", "qty"])
+            print('FrangranceX upload successfully')
+            return True
+        except Exception as e:
+            return e
+    
+    def process_lipsey(self, userid, general_selection, _filters):
+        try:        
             self.data = self.data[self.data['ItemType'].isin(_filters['product_filter'])]
             self.data = self.data[self.data['Manufacturer'].isin(_filters['manufacturer'])]
   
-
             for row in self.data.iterrows():
                 row = row[1]
                 self.insert_data.append(Lipsey(user_id=userid, itemnumber=row["ItemNo"], description1=row["Description1"], description2=row["Description2"], 
@@ -222,19 +239,8 @@ class VendorActivity:
         except Exception as e:
             return e
 
-    def process_ssi(self, userid, csv_data, general_selection, _filters):
+    def process_ssi(self, userid, general_selection, _filters):
         try:
-            items = []
-            for row in csv_data:
-                header = str(row).split(":", 1)[0]
-                header = header.replace("{'", "").split("|")
-                item = str(row).split(":", 1)[1]
-                item = item.replace("]}", "").split("|")
-                items.append(item)
-                
-            header[-1] = header[-1].replace("'", "")
-            
-            self.data = pd.DataFrame(items, columns=header)
             self.data = self.data[self.data['Category'].isin(_filters['product_category'])]
 
             for row in self.data.iterrows():
@@ -247,18 +253,8 @@ class VendorActivity:
         except Exception as e:
             return e
         
-    def process_cwr(self, userid, csv_data, index, general_selection, _filters):
-        # try: 
-
-        items = []
-        for row in csv_data:
-            items.append(row)
-            
-        if index == 1:
-            self.data = pd.DataFrame(items)
-        elif index == 2:
-            self.data2 = pd.DataFrame(items)
-            self.data = self.data.merge(self.data2, left_on="CWR Part Number", right_on="sku") 
+    def process_cwr(self, userid, csv_data, index, _filters):
+        try:    
             if _filters['truck_freight']:
                 self.data = self.data[self.data['truck_freight'] == True]
             if _filters['oversized']:
@@ -280,10 +276,10 @@ class VendorActivity:
 
             print('\nProduct Upload successful....')
             return True
-        # except Exception as e:
-        #     return e
+        except Exception as e:
+            return e
 
-    def process_rsr(self, userid, csv_data, general_selection, _filters):
+    def process_rsr(self, userid, csv_data, index, general_selection, _filters):
         try:
             for row in csv_data:
                 pass
@@ -291,25 +287,12 @@ class VendorActivity:
             return e
         
     def process_zanders(self, userid, csv_data, index, general_selection, _filters): 
-        try:
-            items = []
-            itemNumber = []
-            description = []
-            for row in csv_data:
-                if index == 3:
-                    itemNumber.append(str(row).split("~")[1].split(":")[1].replace("'", "").strip())
-                    description.append(str(row).split("~")[2].replace("}", ""))
-                else:
-                    items.append(row) 
-
-            self.data = pd.DataFrame(items)
+        try:    
             if _filters['serialized']:
-                self.data = self.data[self.data['serialized']=='YES']
-  
+                self.data = self.data[self.data['serialized']=='YES']   
             for row in self.data.iterrows():
-                items = row[1]      
-                self.insert_data.append(Zanders(user_id=userid, available=row['available'], category=row['category'], desc1=row['desc1'], desc2=row['desc2'], itemnumber=row['itemnumber'], manufacturer=row['manufacturer'], mfgpnumber=row['mfgpnumber'], msrp=row['msrp'], price1=row['price1'], price2=row['price2'], price3=row['price3'], qty1=row['qty1'], qty2=row['qty2'], qty3=row['qty3'], upc=row['upc'], weight=row['weight'], serialized=row['serialized'], mapprice=row['mapprice'], imagelink=row['ImageLink'], description=["description"]))       
-                
+                items = row[1]     
+                self.insert_data.append(Zanders(user_id=1, available=items['available'], category=items['category'], desc1=items['desc1'], desc2=items['desc2'], itemnumber=items['itemnumber'], manufacturer=items['manufacturer'], mfgpnumber=items['mfgpnumber'], msrp=items['msrp'], price1=items['price1'], price2=items['price2'], price3=items['price3'], qty1=items['qty1'], qty2=items['qty2'], qty3=items['qty3'], upc=items['upc'], weight=items['weight'], serialized=items['serialized'], mapprice=items['mapprice'], imagelink=items['ImageLink'], description=items["description"]))                           
 
             print(len(self.insert_data))                  
             Zanders.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["price1", "price2", "price3"])
@@ -318,8 +301,6 @@ class VendorActivity:
         except Exception as e:
             return e
 
-
-                                      
 
 VENDORS = {
     "fragrancex":[
@@ -402,6 +383,7 @@ class VendorEnrolmentTestView(APIView):
             return Response(filter_values, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+        
 class VendoEnronmentView(APIView):
     permission_classes = [IsAuthenticated]
 
