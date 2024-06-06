@@ -10,7 +10,7 @@ const MarketVendors = () => {
 
     const vendor=(e)=>{
         console.log(e);
-        localStorage.setItem('vendorName', JSON.stringify(e))
+        localStorage.setItem('vendor_name', JSON.stringify(e))
         navigate('/layout/enrolment')
     }
 

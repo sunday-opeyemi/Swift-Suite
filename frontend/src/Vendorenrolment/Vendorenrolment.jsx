@@ -1,18 +1,20 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { handleNextStep } from "../redux/vendor";
 import { useDispatch, useSelector } from "react-redux";
 
 const Vendorenrolment = () => {
-  let vendorName = JSON.parse(localStorage.getItem("vendorName"));
+  let vendor_name = JSON.parse(localStorage.getItem("vendor_name"));
+  // console.log(vendor_name);
 
   const store = useSelector((state) => state.vendor.vendorData);
 
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [selectedState, setSelectedState] = useState("");
+  const [country, setCountry] = useState("");
+  const [state, setState] = useState("");
   const [stateSelectDisabled, setStateSelectDisabled] = useState(true);
+  const [errorsVisible, setErrorsVisible] = useState(false);
 
   const countries = [
     {
@@ -128,19 +130,20 @@ const Vendorenrolment = () => {
       ],
     },
   ];
-  // console.log(select);
+
   const Schema = yup.object().shape({
-    // vendorName: yup.string().required(),
-    street1: yup.string().required(),
-    street2: yup.string().required(),
+    // vendor_name: yup.string().required(),
+    address_street1: yup.string().required(),
+    address_street2: yup.string().required(),
     city: yup.string().required(),
-    postalCode: yup.string().required(),
+    postal_code: yup.string().required(),
+    country: yup.string().required(),
+    state: yup.string().required(),
   });
 
   const {
     register,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(Schema),
@@ -152,32 +155,32 @@ const Vendorenrolment = () => {
     let form = {
       ...store,
       ...data,
-      vendorName: vendorName,
-      selectedCountry,
-      selectedState,
+      vendor_name: vendor_name,
+      country,
+      state,
     };
     console.log(form);
     dispatch(handleNextStep(form));
   };
 
-  useEffect(() => {
-    if (store) {
-      // setValue("vendorName", store.vendorName)
-      setValue("street1", store.street1);
-      setValue("street2", store.street2);
-      setValue("city", store.city);
-      setValue("postalCode", store.postalCode);
-    }
-  }, []);
+
 
   const handleCountryChange = (event) => {
-    setSelectedCountry(event.target.value);
-    setSelectedState(""); // Reset state when country changes
+    setCountry(event.target.value);
+    setState(""); // Reset state when country changes
     setStateSelectDisabled(false); // Enable state select when country is chosen
+    setErrorsVisible(false)
   };
+  
 
   const handleStateChange = (event) => {
-    setSelectedState(event.target.value);
+    setState(event.target.value);
+    setErrorsVisible(false)
+
+  };
+
+  const handleFocus = () => {
+    setErrorsVisible(true); // Show errors when a field is focused
   };
 
   return (
@@ -190,7 +193,7 @@ const Vendorenrolment = () => {
         <h1 className="lg:text-xl text-sm font-bold font-sans border-gray-500 border-b lg:p-4 p-0 py-2 px-4">
           Vendor Enrollment
         </h1>
-        <div className="">
+        
           <div className="flex lg:gap-10 gap-3 border-gray-500 border-b lg:p-5 p-4">
             <label
               className="font-bold lg:mt-5 mt-2 lg:text-xl text-sm"
@@ -199,19 +202,12 @@ const Vendorenrolment = () => {
               Vendor Name:
             </label>
             <input
-              {...register("vendorName"   , {required : true})}
-              type="text"
-              disabled
-              value={`${vendorName}`}
-              className={`border p-3 border-black focus:outline-none py-2 lg:w-[52%] md:w-[46%] w-[58%] ms-12 lg:ms-6 md:ms-20 rounded lg:mt-3 mt-0 ${
-                errors.vendorName && <span>This field is required</span>
-              }`}
+              // {...register("vendor_name"   , {required : true})}
+              type="text" disabled value={`${vendor_name}`}
+              className='border p-3 border-black focus:outline-none py-2 lg:w-[52%] md:w-[46%] w-[58%] ms-12 lg:ms-6 md:ms-20 rounded lg:mt-3 mt-0'
             />
           </div>
-          <small className="text-red-600 ms-[42%]">
-            {errors.vendorName && <span>This field is required</span>}
-          </small>
-        </div>
+        
         <h1 className="lg:text-xl text-sm font-bold font-sans border-gray-500 border-b lg:0 p-5 px-5">
           Vendor Address
         </h1>
@@ -222,15 +218,15 @@ const Vendorenrolment = () => {
                 Street 1:
               </label>
               <input
-                {...register("street1"   , {required : true})}
+                {...register("address_street1"   , {required : true})}
                 type="text"
                 className={`border border-black focus:outline-none p-3 py-4 lg:w-[50%] md:w-[45%] rounded ${
-                  errors.street1 && <span>This field is required</span>
+                  errors.address_street1 && <span>This field is required</span>
                 }`}
               />
             </div>
             <small className="text-red-600 ms-[42%]">
-              {errors.street1 && <span>This field is required</span>}
+              {errors.address_street1 && <span>This field is required</span>}
             </small>
           </div>
           <div className="">
@@ -239,15 +235,15 @@ const Vendorenrolment = () => {
                 Street 2:
               </label>
               <input
-                {...register("street2"   , {required : true})}
+                {...register("address_street2", {required : true})}
                 type="text"
                 className={`border border-black focus:outline-none p-3 py-4 lg:w-[50%] md:w-[45%] rounded ${
-                  errors.street2 && <span>This field is required</span>
+                  errors.address_street2 && <span>This field is required</span>
                 }`}
               />
             </div>
             <small className="text-red-600 ms-[42%]">
-              {errors.street2 && <span>This field is required</span>}
+              {errors.address_street2 && <span>This field is required</span>}
             </small>
           </div>
           <div className="">
@@ -256,10 +252,10 @@ const Vendorenrolment = () => {
                 City:
               </label>
               <input
-                {...register("city"   , {required : true})}
+                {...register("city", {required : true})}
                 type="text"
                 className={`border border-black focus:outline-none py-2 p-3  rounded ${
-                  errors.street2?.message && "error"
+                  errors.city?.message && "error"
                 }`}
               />
             </div>
@@ -269,20 +265,20 @@ const Vendorenrolment = () => {
           </div>
 
           <div className="">
-            <div className="flex lg:gap-10 md:gap-8 gap-2  lg:mt-0 mt-5">
+            <div className="flex lg:gap-10 md:gap-8 gap-2 lg:mt-0 mt-5">
               <label className="font-bold w-[140px] mt-3" htmlFor="">
                 Postal Code (Zip):
               </label>
               <input
-                {...register("postalCode"   , {required : true})}
-                type="text"
+                {...register("postal_code", {required : true})}
+                type="number"
                 className={`border border-black focus:outline-none py-2 p-3 rounded ${
-                  errors.postalCode && <span>This field is required</span>
+                  errors.postal_code && <span>This field is required</span>
                 }`}
               />
             </div>
             <small className="text-red-600 ms-[42%]">
-              {errors.postalCode && <span>This field is required</span>}
+              {errors.postal_code && <span>This field is required</span>}
             </small>
           </div>
           {/* <div className="container mx-auto"> */}
@@ -292,41 +288,48 @@ const Vendorenrolment = () => {
                   Country:
                 </label>
                 <select
-                  className="px-4 py-3 mb-4 lg:w-[50%] md:w-[45%] w-[250px] bg-white border border-black rounded-md shadow-sm focus:outline-none focus:ring focus:ring-black"
-                  value={selectedCountry}
+                  className="px-4 py-3 mb-4 lg:w-[50%] md:w-[45%] w-[250px] bg-white border border-black rounded-md shadow-sm focus:outline-none"
+                  value={country} onFocus={handleFocus} {...register("country")}
                   onChange={handleCountryChange}
                 >
                   <option value="">Select Country</option>
-                  {countries.map((country) => (
-                    <option key={country.name} value={country.name}>
-                      {country.name}
+                  {countries.map((selectedCountry) => (
+                    <option key={selectedCountry.name} value={selectedCountry.name}>
+                      {selectedCountry.name}
                     </option>
                   ))}
                 </select>
               </div>
+              <small className="text-red-600 ms-[42%]">
+              {(errors.country && errorsVisible) && <span>This field is required</span>}
+            </small>
+
               <div className="flex md:gap-8 lg:gap-10 gap-2">
                 <label className="font-bold  mt-3 w-[140px]" htmlFor="">
                   State:
                 </label>
                 <select
-                  className={`px-4 py-3 mb-4 lg:w-[50%] md:w-[45%] w-[250px] bg-white border border-black rounded-md shadow-sm focus:outline-none focus:ring focus:ring-black ${
+                  className={`px-4 py-3 mb-4 lg:w-[50%] md:w-[45%] w-[250px] bg-white border border-black rounded-md shadow-sm focus:outline-none  ${
                     stateSelectDisabled && "opacity-50 pointer-events-none"
                   }`}
-                  value={selectedState}
+                  value={state} onFocus={handleFocus} {...register ("state")}
                   onChange={handleStateChange}
                   disabled={stateSelectDisabled}
                 >
                   <option value="">Select State</option>
-                  {selectedCountry &&
+                  {country &&
                     countries
-                      .find((country) => country.name === selectedCountry)
-                      .states.map((state) => (
-                        <option key={state} value={state}>
-                          {state}
+                      .find((selectedCountry) => selectedCountry.name === country)
+                      .states.map((selectedState) => (
+                        <option key={selectedState} value={selectedState}>
+                          {selectedState}
                         </option>
                       ))}
                 </select>
               </div>
+              <small className="text-red-600 ms-[42%]">
+              {(errors.state && errorsVisible) && <span>This field is required</span>}
+            </small>
             </div>
           </div>
         {/* </div> */}

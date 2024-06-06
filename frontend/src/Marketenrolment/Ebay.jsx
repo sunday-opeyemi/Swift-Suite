@@ -165,6 +165,7 @@ const Ebay = () => {
                 </div>
                 <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[180px]'>{errors.roistrategy && <span>This field is required</span>}</small>
               </div>
+
               <div>
                 <div className='flex lg:gap-28 md:gap-12 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Min Profit Margin:</h3>

@@ -88,16 +88,16 @@ const Woocommerce = () => {
 
               <div className='flex lg:gap-28 md:gap-12 my-2 px-5'>
                 <h3 className='mt-2 text-sm font-semibold h-[25px]  w-[55%] md:w-[52%]  lg:w-[30%]'>Store Logo:</h3>
-                <input {...register("storelogo" , { required: true })} type="file" className='h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
+                <input {...register("storelogo", { required: true })} type="file" className='h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
 
-                  <div>
-                    <div className='flex lg:gap-28 md:gap-12  mt-10 px-5'>
-                      <h3 className='pt-1 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Consumer URL:</h3>
-                      <input {...register("marketplacename" , { required: true })} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
-                    </div>
-                    <small className='text-red-600 md:ms-[59%] lg:ms-[50%] ms-[150px]'>{errors.marketplacename && <span>This field is required</span>}</small>
-                  </div>
+              <div>
+                <div className='flex lg:gap-28 md:gap-12  mt-10 px-5'>
+                  <h3 className='pt-1 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Consumer URL:</h3>
+                  <input {...register("marketplacename", { required: true })} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
+                </div>
+                <small className='text-red-600 md:ms-[59%] lg:ms-[50%] ms-[150px]'>{errors.marketplacename && <span>This field is required</span>}</small>
+              </div>
 
               <div className='border-b pb-2'>
                 <div className='flex mt-3 lg:gap-28 md:gap-12 px-5'>
@@ -111,7 +111,7 @@ const Woocommerce = () => {
               <div>
                 <div className='flex lg:gap-28 md:gap-12  mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[25px] w-[55%] md:w-[52%] lg:w-[30%]'>Fixed %:</h3>
-                  <input {...register("fixed" , { required: true })} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
+                  <input {...register("fixed", { required: true })} type="text" className='border h-[35px] w-[50%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
                 <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[200px]'>{errors.fixed && <span>This field is required</span>}</small>
               </div>
@@ -119,7 +119,7 @@ const Woocommerce = () => {
               <div>
                 <div className='flex lg:gap-28 md:gap-12 mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[25px] w-[55%] md:w-[52%] lg:w-[30%]'>Fixed $:</h3>
-                  <input {...register("marketfix" , { required: true })} type="text" className='border h-[35px] w-[50%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
+                  <input {...register("marketfix", { required: true })} type="text" className='border h-[35px] w-[50%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
                 <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[190px]'>{errors.marketfix && <span>This field is required</span>}</small>
               </div>
@@ -134,10 +134,11 @@ const Woocommerce = () => {
               <div>
                 <div className='flex lg:gap-28 md:gap-12 mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[25px] w-[55%] md:w-[52%] lg:w-[30%]'>Business Price Margin Type:</h3>
-                  <input {...register("businessprice" , { required: true })} type="text" className='border h-[35px]  w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("businessprice", { required: true })} type="text" className='border h-[35px]  w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
                 <small className='text-red-600 md:ms-[60%] lg:ms-[55%]  ms-[180px]'>{errors.businessprice && <span>This field is required</span>}</small>
               </div>
+
               <div>
                 <div className='flex lg:gap-28 md:gap-12 mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>ROI strategy:</h3>
@@ -150,6 +151,15 @@ const Woocommerce = () => {
                 </div>
                 <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[180px]'>{errors.roistrategy && <span>This field is required</span>}</small>
               </div>
+
+              <div>
+                <div className='flex lg:gap-28 md:gap-12 px-5'>
+                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Min Profit Margin:</h3>
+                  <input {...register("minprofit", { required: true })} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                </div>
+                <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[180px]'>{errors.minprofit && <span>This field is required</span>}</small>
+              </div>
+
               <div>
                 <div className='flex lg:gap-28 md:gap-12 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Margin:</h3>
@@ -160,18 +170,18 @@ const Woocommerce = () => {
 
               <div className='flex px-5 lg:gap-28 md:gap-12'>
                 <p className='text-sm lg:w-[30%] md:w-[52%] w-[55%] font-semibold'>Map Enforcement</p>
-                  <div>
+                <div>
                   <input {...register("enforcement")} type="checkbox" onChange={() => setEnforcement(!enforcement)} checked={enforcement} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] border-gray-500 focus:outline-none py-1 rounded' />
-                  </div>
+                </div>
               </div>
               <div className='flex px-5 lg:gap-28 md:gap-12 my-5'>
                 <p className='text-sm lg:w-[30%] md:w-[52%] w-[55%] font-semibold'>Auto Populate MSRP</p>
-                <input {...register("msrp" )} type="checkbox" onChange={() => setMsrp(!msrp)} checked={msrp} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] border-gray-500 focus:outline-none py-1 rounded' />
+                <input {...register("msrp")} type="checkbox" onChange={() => setMsrp(!msrp)} checked={msrp} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
               <div>
                 <div className='flex lg:gap-28 md:gap-12 px-5 mt-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Maximum Quantity:</h3>
-                  <input {...register("maximumquantity" , { required: true })} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none px-3 py-1 rounded' />
+                  <input {...register("maximumquantity", { required: true })} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none px-3 py-1 rounded' />
                 </div>
                 <small className='text-red-600 md:ms-[59%] lg:ms-[52%]  ms-[150px]'>{errors.maximumquantity && <span>This field is required</span>}</small>
               </div>
@@ -181,7 +191,7 @@ const Woocommerce = () => {
             </div>
           </div>
         </form>
-      </section>
+      </section >
     </>
 
   );
