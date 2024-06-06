@@ -56,19 +56,6 @@ const Lipsey = () => {
 
 
 
-  // const [checkBoxesManufacturer, setCheckBoxesManufacturer] = useState([
-  //   { id: 1, label: 'RSR', checked: false },
-  //   { id: 2, label: 'Shoes', checked: false },
-  //   { id: 3, label: 'Heels', checked: false },
-  //   { id: 4, label: 'Jackets', checked: false },
-  //   { id: 5, label: 'Stationeries', checked: false },
-  //   { id: 6, label: 'Shoes', checked: false },
-  //   { id: 7, label: 'Shoes', checked: false },
-  //   { id: 8, label: 'Glasses', checked: false },
-  // ]);
-
-
-
   const [isChecked, setIsChecked] = useState(false);
   const [inventory, setInventory] = useState(false);
   const [order, setOrder] = useState(false);
@@ -85,8 +72,17 @@ const Lipsey = () => {
 
 
   const Schema = yup.object().shape({
-    percentage_markup: yup.string().required(),
-    fixed_markup: yup.string().required(),
+    select_markup: yup.string().required('Markup type is required'),
+    percentage_markup: yup.string().when('select_markup', {
+      is: 'percentage',
+      then: schema => schema.required('Percentage markup is required'),
+      otherwise: schema => schema.notRequired()
+    }),
+    fixed_markup: yup.string().when('select_markup', {
+      is: 'fixed',
+      then: schema => schema.required('Fixed markup is required'),
+      otherwise: schema => schema.notRequired()
+    }),
     shipping_cost: yup.string().required(),
     stock_minimum: yup.string().required(),
     stock_maximum: yup.string().required(),
@@ -202,7 +198,7 @@ const Lipsey = () => {
 
 
 
-  
+
 
 
 
@@ -214,16 +210,16 @@ const Lipsey = () => {
     setHost(true);
   };
 
-  const toggleUpCategory = () => {
+  const toggleUpManufacturer = () => {
     setHostCategory(false);
   };
 
-  const toggleDownCategory = () => {
+  const toggleDownManufacturer = () => {
     setHostCategory(true);
   };
 
 
- 
+
 
 
 
@@ -255,7 +251,7 @@ const Lipsey = () => {
 
 
 
-  const handlePrevious=()=>{
+  const handlePrevious = () => {
     dispatch(handlePreviousStep())
   }
 
@@ -268,19 +264,19 @@ const Lipsey = () => {
       <section className='bg-green-50 mb-10'>
         <form onSubmit={handleSubmit(onSubmit)}>
 
-          <div className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:h-[20%] lg:ms-0 ms-3 py-10 lg:mt-8 mt-0'>
+          <div className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:h-[20%] lg:ms-0 ms-3 py-10 lg:mt-8 mt-0 shadow-sm rounded-xl'>
             <div>
               <h1 className='ms-5 lg:text-xl text-sm font-bold'>Product Type</h1>
-              <div className='flex lg:ms-0 md:ms-0 ms-1 lg:gap-[32%] gap-[25%] md:gap-[32%] border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
-                <label className='mt-2 text-sm font-semibold h-8' htmlFor="">Select Products:</label>
+              <div className='flex mt-5 px-5'>
+                <label className='mt-2 text-sm font-semibold h-8  w-[55%] md:w-[52%] lg:w-[50%]' htmlFor="">Select Products:</label>
                 <div className='border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[230px] w-[160px] md:w-[200px]'>
                   <span className='text-gray-500 p-1'>Select Products</span>
                   <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-32 hover:text-green-700">
                     <span onClick={toggleUp} className={host ? '' : 'hidden'}>
-                      <IoIosArrowUp size={18}  />
+                      <IoIosArrowUp size={18} />
                     </span>
                     <span onClick={toggleDown} className={host ? 'hidden' : ''}>
-                      <IoChevronDown size={18}  className={(hostCategory) ? 'hidden' : 'block'}/>
+                      <IoChevronDown size={18} className={(hostCategory) ? 'hidden' : 'block'} />
                     </span>
                   </p>
                   <div className={`p-2 mt-[-4%] ${host ? 'block' : 'hidden'}`}>
@@ -311,16 +307,16 @@ const Lipsey = () => {
 
 
               <h1 className='ms-5 lg:text-xl font-bold mt-5'>Manufacturer</h1>
-              <div className='flex lg:gap-[30%] md:gap-[30%] lg:ms-0 md:ms-0 ms-1 gap-[23%] border-gray-300 border-b lg:p-5 p-4'>
-                <label className=' text-sm font-semibold h-8' htmlFor="">Select Manufacturer:</label>
+              <div className='flex  mt-5 px-5'>
+                <label className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]' htmlFor="">Select Manufacturer:</label>
                 <div className={host ? '-z-1' : `border border-gray-500 rounded text-sm lg:pe-20 h-8 py-1 lg:w-[230px] w-[160px] md:w-[200px]`}>
                   <span className={host ? 'hidden' : `text-gray-500 p-1`}>Select Manufacturer</span>
                   <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-[85%] hover:text-green-700">
-                    <span onClick={toggleUpCategory} className={hostCategory ? '' : 'hidden'}>
+                    <span onClick={toggleUpManufacturer} className={hostCategory ? '' : 'hidden'}>
                       <IoIosArrowUp className={host ? 'hidden' : ''} size={18} />
                     </span>
-                    <span onClick={toggleDownCategory} className={hostCategory ? 'hidden' : ''}>
-                      <IoChevronDown className={(host)? 'hidden' : ''} size={18} />
+                    <span onClick={toggleDownManufacturer} className={hostCategory ? 'hidden' : ''}>
+                      <IoChevronDown className={(host) ? 'hidden' : ''} size={18} />
                     </span>
                   </p>
                   <div className={`p-2 mt-[-4%] ${hostCategory ? 'block' : 'hidden'}`}>
@@ -347,27 +343,28 @@ const Lipsey = () => {
               </div>
 
 
-            
+
 
 
 
 
               <h1 className='ms-5 lg:text-xl font-bold mt-2'>Pricing Option</h1>
               <div className='flex  mt-5 px-5'>
-                    <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Select Markup Type</h3>
-              <select className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' onChange={handleSelectChange} value={selectedOption}>
-                <option  value="">Select Markup Type</option>
-                <option value="fixed">Fixed Markup</option>
-                <option value="percentage">Percentage Markup</option>
-              </select>
+                <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Select Markup Type</h3>
+                <select {...register('select_markup', { required: true })} className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' onChange={handleSelectChange} value={selectedOption}>
+                  <option value="">Select Markup Type</option>
+                  <option value="fixed">Fixed Markup</option>
+                  <option value="percentage">Percentage Markup</option>
+                </select>
               </div>
+              <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.select_markup && <span>This field is required</span>}</small>
               {selectedOption === 'percentage' && (
                 <div>
                   <div className='flex  mt-5 px-5'>
                     <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Percentage Markup:</h3>
                     <input {...register("percentage_markup", { required: true })} type="text" className='border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
                   </div>
-                  <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.percentage_markup && <span>This field is required</span>}</small>
+                  <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.select_markup && <span>This field is required</span>}</small>
                 </div>
               )}
 
@@ -389,8 +386,8 @@ const Lipsey = () => {
               </div>
 
 
-              <div className='flex gap-5 lg:gap-5 border-b md:gap-[70px] mt-5 h-10 px-5'>
-                <h3 className='text-sm font-semibold'>Use Shipping Cost Average:</h3>
+              <div className='flex gap-5 lg:gap-3 border-b md:gap-[80px] mt-5 h-10 px-5'>
+                <h3 className='text-sm font-semibold w-[150px]'>Use Shipping Cost Average:</h3>
                 <input {...register("cost_average")} type="checkbox" onChange={() => setIsChecked(!isChecked)} checked={isChecked} className='lg:mt-0 mt-2 ms-0 lg:ms-0 md:ms-5 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
 
@@ -410,16 +407,16 @@ const Lipsey = () => {
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stock_maximum && <span>This field is required</span>}</small>
               </div>
-              <div className='flex gap-20 lg:gap-[70px] md:gap-[142px] mt-5 h-10 px-5'>
-                <h3 className='text-sm font-semibold'>Update Inventory:</h3>
+              <div className='flex gap-10 lg:gap-[40px] md:gap-[140px] mt-5 h-10 px-5'>
+                <h3 className='text-sm font-semibold w-[120px]'>Update Inventory:</h3>
                 <input type="checkbox" {...register("update_inventory")} onChange={() => setInventory(!inventory)} checked={inventory} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
-              <div className='flex gap-[32%] lg:gap-[100px] md:gap-[170px]  mt-5 h-10 px-5'>
-                <h3 className='text-sm font-semibold'>Send Orders:</h3>
+              <div className='flex gap-10 lg:gap-[40px] md:gap-[140px]  mt-5 h-10 px-5'>
+                <h3 className='text-sm font-semibold w-[120px]'>Send Orders:</h3>
                 <input type="checkbox" {...register("send_orders")} onChange={() => setOrder(!order)} checked={order} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
-              <div className='flex gap-[26%] lg:gap-[80px] md:gap-[150px] mt-5 h-10 px-5'>
-                <h3 className='text-sm font-semibold'>Update Tracking:</h3>
+              <div className='flex gap-10 lg:gap-[40px] md:gap-[140px] mt-5 h-10 px-5'>
+                <h3 className='text-sm font-semibold w-[120px]'>Update Tracking:</h3>
                 <input type="checkbox" {...register("update_tracking")} onChange={() => setTracking(!tracking)} checked={tracking} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
               <div className='flex gap-20 justify-center my-5'>
