@@ -127,7 +127,7 @@ const Sidebar = () => {
 
       <motion.div ref={sidebarRef} variants={Nav_animation} initial={{ x: isTablet ? -250 : 0 }} animate={sideBarOpen ? "open" : "closed"} className="shadow-xl md:z-[9] z-[9999] max-w-[16rem]  w-[16rem] fixed top-0 left-0 h-screen">
 
-        <div className="flex items-center gap-2.5 font-medium bg-white border-b py-4  text-white" >
+        <div className="flex items-center gap-2.5 font-medium bg-white border-b py-4  text-white">
           <Link to="/">
             <img src={swift} alt="" />
           </Link>
