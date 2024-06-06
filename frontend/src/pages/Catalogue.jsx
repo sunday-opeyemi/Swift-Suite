@@ -66,7 +66,6 @@ const Catalogue = () => {
     user: '',
     sku: '',
     upc: '',
-    model: '',
     detailed_description: '',
     shipping_width: '',
     shipping_height: '',
