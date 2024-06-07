@@ -1,4 +1,4 @@
-from .models import VendoEnronment
+from .models import * 
 from rest_framework import serializers
 
 
@@ -32,3 +32,9 @@ class VendoEnronmentSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         validated_data.pop('user_id', None)
         return super().update(instance, validated_data)
+
+
+class GeneralProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Generalproducttable
+        fields = '__all__'

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from ftplib import FTP
+import time, os, re
 import ftplib
 import ssl
-import time, os, re
 import csv
 import pandas as pd
 from rest_framework.views import APIView
@@ -10,53 +10,56 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import VendoEnronment
-from .serializers import VendoEnronmentSerializer, VendorEnrolmentTestSerializer
+from .serializers import *
 from rest_framework.permissions import IsAuthenticated
-from .models import Fragrancex, Lipsey, Ssi, Cwr, Zanders, Rsr
+from .models import Fragrancex, Lipsey, Ssi, Cwr, Zanders
 from rest_framework.generics import GenericAPIView
 from rest_framework.serializers import ModelSerializer
 from django.http import JsonResponse
+from django.forms.models import model_to_dict
 
 class VendorActivity:
     def __init__(self):
         self.data = pd.DataFrame()
         self.insert_data = []
 
-    def main(self, suppliers, userid, general_selection:dict = {}, _filters:dict = {}, get_filters = False):
+    def main(self, suppliers, userid, get_filters = False):
         for supplier in suppliers:
-            value = self.process_supplier(supplier, userid,general_selection, _filters, get_filters)
+            value = self.process_supplier(supplier, userid, get_filters)
             return value
 
-    def process_supplier(self, supplier, userid, general_selection, _filters, get_filters):
+    def process_supplier(self, supplier, userid, get_filters):
         """Process each supplier."""
         supplier_name, *_ = supplier
         print(f"Processing {supplier_name}...")
         local_dir = os.path.join("local_dir", supplier_name)
         os.makedirs(local_dir, exist_ok=True)
         try:
-            value = self.download_csv_from_ftp(userid, supplier, general_selection, _filters, get_filters, local_dir)
+            value = self.download_csv_from_ftp(userid, supplier, get_filters, local_dir)
             print(f"{supplier_name} data processed successfully.")
             return value
         except Exception as e:
             print(f"Error processing {supplier_name}: {str(e)}")
 
 
-    def download_csv_from_ftp(self, userid, supplier, general_selection, _filters, get_filters, local_dir=".", port=21):
+    def download_csv_from_ftp(self, userid, supplier, get_filters, local_dir=".", port=21):
         """Download CSV file from FTP server."""
         
         supplier_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name, index, port = supplier
         file_path = os.path.join(local_dir, file_name)
         
-        if supplier_name == "RSR Group":
+        
+        if supplier_name == "RSR GROUP":
             ctx = ssl.create_default_context()
             ftps = ftplib.FTP_TLS(context=ctx)
             ftps.connect(ftp_host, port)
             ftps.login(ftp_user, ftp_password)
             ftps.prot_p()
             ftps.cwd(ftp_path)
+            # print(ftps.nlst())
             with open(os.path.join(local_dir, file_name), "wb") as local_file:
                 ftps.retrbinary(f"RETR {file_name}", local_file.write)
-
+            print(f"{file_name} downloaded from FTPS for {ftp_user}.")
             ftps.quit()
         else:
             ftp = FTP()
@@ -66,60 +69,63 @@ class VendorActivity:
             ftp.cwd(ftp_path)
             with open(os.path.join(local_dir, file_name), "wb") as local_file:
                 ftp.retrbinary(f"RETR {file_name}", local_file.write)
+        
+            print(f"{file_name} downloaded from FTP for {ftp_user}.")
 
 
-        value = self.process_csv(userid,supplier_name, local_dir, file_name, index, general_selection, _filters, get_filters)
+        value = self.process_csv(userid,supplier_name, local_dir, file_name, index, get_filters)
         return value
 
-    def process_csv(self, userid, supplier_name, local_dir, file_name, index, general_selection, _filters, get_filters):
+    def process_csv(self, userid, supplier_name, local_dir, file_name, index, get_filters):
         with open(os.path.join(local_dir, file_name), "r", encoding='latin1') as file:
             csv_data = csv.DictReader(file)
             print(csv_data, supplier_name)
 
-            if supplier_name == "FragranceX":
+            supplier_name = supplier_name.upper()
+
+            if supplier_name == "FRAGRANCEX":
                 if get_filters:
                     filter_values = self.filters_fragranceX(userid, csv_data)
                     return filter_values
                 else:
-                    success = self.process_fragranceX(userid, csv_data, general_selection, _filters)
+                    success = self.process_fragranceX(userid, csv_data)
                     return success
-            elif supplier_name == "Lipsey":
+            elif supplier_name == "LIPSEY":
                 if get_filters:
                     filter_values = self.filters_lipsey(userid, csv_data)
                     return filter_values
                 else:
-                    success = self.process_lipsey(userid, csv_data, general_selection, _filters)
+                    success = self.process_lipsey(userid, csv_data)
                     return success
             elif supplier_name == "SSI":
                 if get_filters:
                     filter_values = self.filters_ssi(userid, csv_data)
                     return filter_values
                 else:
-                    success = self.process_ssi(userid, csv_data, general_selection, _filters)
+                    success = self.process_ssi(userid, csv_data)
                     return success
             elif supplier_name == "CWR":
                 if get_filters:
                     filter_values = self.filters_cwr(userid, csv_data, index)
                     return filter_values
                 else:
-                    success = self.process_cwr(userid,  _filters)
+                    success = self.process_cwr(userid, csv_data, index)
                     return success
             elif supplier_name == "RSR":
                 if get_filters:
                     filter_values = self.filters_rsr(userid, csv_data)
                     return filter_values
                 else:
-                    success =self.process_rsr(userid, csv_data, general_selection, _filters)
+                    success =self.process_rsr(userid, csv_data)
                     return success
-            elif supplier_name == "Zanders":
+            elif supplier_name == "ZANDERS":
                 if get_filters:
                     filter_values = self.filters_zanders(userid, csv_data, index)
                     return filter_values
                 else:
-                    success = self.process_zanders(userid, csv_data, index, general_selection, _filters)
+                    success = self.process_zanders(userid, csv_data, index)
                     return success
         
-
     def filters_fragranceX(self, userid, csv_data):
         items = []
         for row in csv_data:
@@ -135,7 +141,22 @@ class VendorActivity:
         self.data = pd.DataFrame(items)
         productType =self.data['ItemType'].unique()
         manufacturer = self.data['Manufacturer'].unique()
-        filter_values = {'productType':productType, 'manufacturer':manufacturer}
+         
+        manufacturer_dictList = []
+        productType_dictList = []
+        x= 1
+        for value in productType:
+            _dict = {"id":x, "label":value, "checked":False}
+            productType_dictList.append(_dict)
+            x+=1
+
+        y = 1
+        for value in manufacturer:
+            _dict = {"id":y, "label":value, "checked":False}
+            manufacturer_dictList.append(_dict)
+            y+=1
+
+        filter_values = {'productType':productType_dictList, 'manufacturer':manufacturer_dictList}
 
         return filter_values
 
@@ -152,9 +173,16 @@ class VendorActivity:
             
         header[-1] = header[-1].replace("'", "")
         
-        self.data = pd.DataFrame(items, columns=header)
+        data = pd.DataFrame(items, columns=header)
         category = self.data['Category'].unique()
-        filter_values = {'category':category}
+
+        category_dictList = []
+        x = 1
+        for value in category:
+            _dict = {"id":x, "label":value, "checked":False}
+            category_dictList.append(_dict)
+            x+=1
+        filter_values = {'category':category_dictList}
         return filter_values
     
     def filters_cwr(self, userid, csv_data, index):
@@ -169,7 +197,13 @@ class VendorActivity:
             self.data = self.data.merge(data2, left_on="CWR Part Number", right_on="sku")  
         
         category = self.data['Category Name'].unique()
-        filter_values = {'category':category}
+        category_dictList = []
+        x = 1
+        for value in category:
+            _dict = {"id":x, "label":value, "checked":False}
+            category_dictList.append(_dict)
+            x+=1
+        filter_values = {'category':category_dictList}
         return filter_values
 
     def filters_rsr(self, userid, csv_data):
@@ -185,45 +219,46 @@ class VendorActivity:
                 description.append(str(row).split("~")[2].replace("}", ""))
             else:
                 items.append(row) 
-
+        
         if index == 3:
             data2 = pd.DataFrame({"Itemnumber":itemNumber, "description":description})
-            self.data = self.data.merge(data2, left_on="itemnumber", right_on="Itemnumber")
+            data = data.merge(data2, left_on="itemnumber", right_on="Itemnumber")
         elif index == 2:
-                data2 = pd.DataFrame(items)
-                self.data = self.data.merge(data2, left_on="itemnumber", right_on="ItemNumber")
+            data2 = pd.DataFrame(items)
+            data = data.merge(data2, left_on="itemnumber", right_on="ItemNumber")
         else:
-            self.data = pd.DataFrame(items)  
+            data = pd.DataFrame(items)
 
         manufacturer = self.data['manufacturer'].unique()
-        filter_values = {'manufacturer':manufacturer}  
+        manufacturer_dictList = []
+        x = 1
+        for value in manufacturer:
+            _dict = {"id":x, "label":value, "checked":False}
+            manufacturer_dictList.append(_dict)
+            x+=1
+        filter_values = {'manufacturer':manufacturer_dictList}  
         return filter_values
 
 
-    def process_fragranceX(self, userid, csv_data, general_selection, _filters):
-        try:
-            items = []
-            for row in csv_data:
-                items.append(row)
+    def process_fragranceX(self, userid, _filters):
+            try:
+                self.data = self.data[self.data['brand'].isin(_filters['brand'])]
                 
-            self.data = pd.DataFrame(items)
-            self.data = self.data[self.data['brand'].isin(_filters['brand'])]
-            
-            for row in self.data.iterrows():
-                row = row[1]
-                self.insert_data.append(Fragrancex(user_id=userid, name=row["NAME"], item=row["ITEM"], description=row["DESCRIPTION"], brand=row["BRAND"], title=row["TITLE"], gender=row["GENDER"], size=row["Size"], metric_size=row["Metric_Size"], retail=row["RETAIL"], price=row["PRICE"], eur_price=row["EUR_PRICE"],gbp_price=row["GBP_PRICE"], cad_price=row["CAD_PRICE"], aud_price=row["AUD_PRICE"], image=row["IMAGE"], url=row["URL"], qty=row["QTY"], upc=row["UPC"]))
+                for row in self.data.iterrows():
+                    row = row[1]
+                    self.insert_data.append(Fragrancex(user_id=userid, name=row["NAME"], item=row["ITEM"], description=row["DESCRIPTION"], brand=row["BRAND"], title=row["TITLE"], gender=row["GENDER"], size=row["Size"], metric_size=row["Metric_Size"], retail=row["RETAIL"], price=row["PRICE"], eur_price=row["EUR_PRICE"],gbp_price=row["GBP_PRICE"], cad_price=row["CAD_PRICE"], aud_price=row["AUD_PRICE"], image=row["IMAGE"], url=row["URL"], qty=row["QTY"], upc=row["UPC"]))
 
-            Fragrancex.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["size", "price", "qty"])
-            print('FrangranceX upload successfully')
-            return True
-        except Exception as e:
-            return e
+                Fragrancex.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["size", "price", "qty"])
+                print('FrangranceX upload successfully')
+                return True
+            except Exception as e:
+                return e
     
-    def process_lipsey(self, userid, general_selection, _filters):
+    def process_lipsey(self, userid, _filters):
         try:        
             self.data = self.data[self.data['ItemType'].isin(_filters['product_filter'])]
             self.data = self.data[self.data['Manufacturer'].isin(_filters['manufacturer'])]
-  
+
             for row in self.data.iterrows():
                 row = row[1]
                 self.insert_data.append(Lipsey(user_id=userid, itemnumber=row["ItemNo"], description1=row["Description1"], description2=row["Description2"], 
@@ -239,68 +274,65 @@ class VendorActivity:
         except Exception as e:
             return e
 
-    def process_ssi(self, userid, general_selection, _filters):
+    def process_ssi(self, userid, _filters):
         try:
             self.data = self.data[self.data['Category'].isin(_filters['product_category'])]
-
             for row in self.data.iterrows():
                 items = row[1].values
-                self.insert_data.append(Ssi(user_id=userid, sku=items[0], description=items[1], datecreated=items[2], dimensionh=items[3], dimensionl=items[4], dimensionw=items[5], manufacturer=items[6], imageurl=items[7], thumbnailurl=items[8], upccode=items[9], weight=items[10], weightunits=items[11], category=items[12], subcategory=items[13], status=items[14], map=items[15], msrp=items[16], mpn=items[17], minimumorderquantity=items[18], detaileddescription=items[19], shippingweight=items[20], shippinglength=items[21], shippingwidth=items[22], shippingheight=items[23], attribute1=items[24], attribute2=items[25], attribute3=items[26], attribute4=items[27], attribute5=items[28], attribute6=items[29], attribute7=items[30], prop65warning=items[31], prop65reason=items[32], countryoforigin=items[33], groundshippingrequired=items[34]))
-
-            Ssi.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["description", "status", "weight"])
+                self.insert_data.append(Ssi(user_id=1, sku=items[0], description=items[1], datecreated=items[2], dimensionh=items[3], dimensionl=items[4], dimensionw=items[5], manufacturer=items[6], imageurl=items[7], thumbnailurl=items[8], upccode=items[9], weight=items[10], weightunits=items[11], category=items[12], subcategory=items[13], status=items[14], map=items[15], msrp=items[16], mpn=items[17], minimumorderquantity=items[18], detaileddescription=items[19], shippingweight=items[20], shippinglength=items[21], shippingwidth=items[22], shippingheight=items[23], attribute1=items[24], attribute2=items[25], attribute3=items[26], attribute4=items[27], attribute5=items[28], attribute6=items[29], attribute7=items[30], prop65warning=items[31], prop65reason=items[32], countryoforigin=items[33], groundshippingrequired=items[34]))
+            print(len(insert_data))
+            Ssi.objects.bulk_create(insert_data, batch_size=500, update_conflicts=True, update_fields=["description", "status", "weight"])
             print('SSI upload successfully')
             return True
         except Exception as e:
             return e
         
-    def process_cwr(self, userid, csv_data, index, _filters):
-        try:    
+    def process_cwr(self, userid, _filters):
+        try: 
             if _filters['truck_freight']:
-                self.data = self.data[self.data['truck_freight'] == True]
+                self.data = self.data[self.data['Truck Freight'] == True]
+
             if _filters['oversized']:
-                self.data = self.data[self.data['oversized'] == True]
+                self.data = self.data[self.data['Oversized'] == True]
             if _filters['third_party_marketplaces']:
-                self.data = self.data[self.data['third_party_marketplaces'] == True]
+                self.data = self.data[self.data['3rd Party Marketplaces'] == True]
             if _filters['returnable']:
-                self.data = self.data[self.data['returnable'] == True]
-       
+                self.data = self.data[self.data['Returnable'] == True]
+        
             self.data = self.data[self.data['Category Name'].isin(_filters['product_category'])] 
- 
+
             for row in self.data.iterrows():
                 items = row[1].values   
                 items = list(items)
-                self.insert_data.append(Cwr(user_id=userid, cwr_part_number=items[0], manufacturer_part_number=items[1], upc_code=items[2], quantity_available_to_ship_combined=items[3], quantity_available_to_ship_nj=items[4], quantity_available_to_ship_fl=items[5], next_shipment_date_combined=items[6], next_shipment_date_nj=items[7], next_shipment_date_fl=items[8], your_cost=items[9], list_price=items[10], m_a_p_price=items[11], m_r_p_price=items[12], uppercase_title=items[13], title=items[14], full_description=items[15], category_id=items[16], category_name=items[17], manufacturer_name=items[18], shipping_weight=items[19], box_height=items[20], box_length=items[21], box_width=items[22], list_of_accessories_by_sku=items[23], list_of_accessories_by_mfg=items[24], quick_specs=items[29], hazardous_materials=items[30], truck_freight=items[31], exportable=items[32], first_class_mail=items[33], oversized=items[34], remanufactured=items[35], closeout=items[36], harmonization_code=items[37], country_of_origin=items[38], sale=items[39], original_price_if_on_sale_closeout=items[40], sale_start_date=items[41], sale_end_date=items[42], rebate=items[43], rebate_description=items[44], rebate_start_date=items[45], rebate_end_date=items[46], google_merchant_category=items[47], quick_guide_literature_pdf_url=items[48], owners_manual_pdf_url=items[49], brochure_literature_pdf_url=items[50], installation_guide_pdf_url=items[51], video_urls=items[52], prop_65=items[53], prop_65_description=items[54], free_shipping=items[55], free_shipping_end_date=items[56], returnable=items[57], image_additional_1000x1000_urls=items[58], case_qty_nj=items[59], case_qty_fl=items[60], number_3rd_party_marketplaces=items[61], fcc_id=items[62], sku=items[63], mfgn=items[64], qty=items[65], qtynj=items[66], qtyfl=items[67], price=items[68], map=items[69], mrp=items[70]))
-            
-            print(len(self.insert_data))
-            Cwr.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["qty", "qtynj", "qtyfl", "price", "map", "mrp"])
-
+                self.insert_data.append(Cwr(user_id=1, cwr_part_number=items[0], manufacturer_part_number=items[1], upc_code=items[2], quantity_available_to_ship_combined=items[3], quantity_available_to_ship_nj=items[4], quantity_available_to_ship_fl=items[5], next_shipment_date_combined=items[6], next_shipment_date_nj=items[7], next_shipment_date_fl=items[8], your_cost=items[9], list_price=items[10], m_a_p_price=items[11], m_r_p_price=items[12], uppercase_title=items[13], title=items[14], full_description=items[15], category_id=items[16], category_name=items[17], manufacturer_name=items[18], shipping_weight=items[19], box_height=items[20], box_length=items[21], box_width=items[22], list_of_accessories_by_sku=items[23], list_of_accessories_by_mfg=items[24], quick_specs=items[29], hazardous_materials=items[30], truck_freight=items[31], exportable=items[32], first_class_mail=items[33], oversized=items[34], remanufactured=items[35], closeout=items[36], harmonization_code=items[37], country_of_origin=items[38], sale=items[39], original_price_if_on_sale_closeout=items[40], sale_start_date=items[41], sale_end_date=items[42], rebate=items[43], rebate_description=items[44], rebate_start_date=items[45], rebate_end_date=items[46], google_merchant_category=items[47], quick_guide_literature_pdf_url=items[48], owners_manual_pdf_url=items[49], brochure_literature_pdf_url=items[50], installation_guide_pdf_url=items[51], video_urls=items[52], prop_65=items[53], prop_65_description=items[54], free_shipping=items[55], free_shipping_end_date=items[56], returnable=items[57], image_additional_1000x1000_urls=items[58], case_qty_nj=items[59], case_qty_fl=items[60], number_3rd_party_marketplaces=items[61], fcc_id=items[62], sku=items[63], mfgn=items[64], qty=items[65], qtynj=items[66], qtyfl=items[67], price=items[68], map=items[69], mrp=items[70]))
+                    
+            print(len(insert_data))
+            Cwr.objects.bulk_create(insert_data, batch_size=500, update_conflicts=True, update_fields=["qty", "qtynj", "qtyfl", "price", "map", "mrp"])
             print('\nProduct Upload successful....')
             return True
         except Exception as e:
             return e
 
-    def process_rsr(self, userid, csv_data, index, general_selection, _filters):
-        try:
-            for row in csv_data:
-                pass
-        except Exception as e:
-            return e
+    def process_rsr(self, userid,  _filters):
+        pass
+  
         
-    def process_zanders(self, userid, csv_data, index, general_selection, _filters): 
-        try:    
+    def process_zanders(self, userid,  _filters): 
+        try:
             if _filters['serialized']:
-                self.data = self.data[self.data['serialized']=='YES']   
+                self.data = self.data[self.data['serialized']=='YES']
+  
             for row in self.data.iterrows():
                 items = row[1]     
                 self.insert_data.append(Zanders(user_id=1, available=items['available'], category=items['category'], desc1=items['desc1'], desc2=items['desc2'], itemnumber=items['itemnumber'], manufacturer=items['manufacturer'], mfgpnumber=items['mfgpnumber'], msrp=items['msrp'], price1=items['price1'], price2=items['price2'], price3=items['price3'], qty1=items['qty1'], qty2=items['qty2'], qty3=items['qty3'], upc=items['upc'], weight=items['weight'], serialized=items['serialized'], mapprice=items['mapprice'], imagelink=items['ImageLink'], description=items["description"]))                           
 
-            print(len(self.insert_data))                  
-            Zanders.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["price1", "price2", "price3"])
+            print(len(insert_data))                  
+            Zanders.objects.bulk_create(insert_data, batch_size=500, update_conflicts=True, update_fields=["price1", "price2", "price3"])
             print('\nProduct upload successful....')
             return True
         except Exception as e:
             return e
-
+                       
 
 VENDORS = {
     "fragrancex":[
@@ -362,6 +394,7 @@ def get_suppliers_for_vendor(ftp_name, ftp_host, ftp_user, ftp_password):
     elif ftp_name == 'SSI':
         return [(ftp_name, ftp_host, ftp_user, ftp_password, "/Products", "RR_Products.csv", 1, 21)]
 
+pull = VendorActivity()
 class VendorEnrolmentTestView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request):
@@ -376,14 +409,13 @@ class VendorEnrolmentTestView(APIView):
 
         suppliers = get_suppliers_for_vendor(ftp_name, ftp_host, ftp_user, ftp_password)
 
-        pull = VendorActivity()                
+                       
         filter_values = pull.main(suppliers, userid, get_filters=True)
 
         if filter_values:
             return Response(filter_values, status=status.HTTP_200_OK)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
 class VendoEnronmentView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -415,10 +447,11 @@ class VendoEnronmentView(APIView):
                     'update_tracking':vendor_data['update_tracking']
                 }
 
-                if ftp_name == 'FragranceX':
+                if ftp_name.upper() == 'FRAGRANCEX':
                     extra_data = {'brand': vendor_data['brand']}
+                    success = pull.process_fragranceX(userid,extra_data)
 
-                elif ftp_name == 'CWR':
+                elif ftp_name.upper() == 'CWR':
                     extra_data = {
                         'truck_freight': vendor_data['truck_freight'],
                         'oversized': vendor_data['oversized'],
@@ -427,39 +460,32 @@ class VendoEnronmentView(APIView):
                         'product_category': vendor_data['product_category']
                     }
 
-                elif ftp_name == 'Lipsey':
+                    success = pull.process_cwr(userid,extra_data)
+
+                elif ftp_name.upper() == 'LIPSEY':
                     extra_data = {
                         'product_filter': vendor_data['product_filter'], 
                         'manufacturer': vendor_data['manufacturer']
                     }
+                    
+                    success = pull.process_lipsey(userid,extra_data)
 
-                elif ftp_name == 'SSI':
+                elif ftp_name.upper() == 'SSI':
                     extra_data = {
                         'product_category': vendor_data['product_category'], 
                         'shipping_cost_average': vendor_data['shipping_cost_average']
                     }
-                
-                elif ftp_name == 'Zanders':
+
+                    success = pull.process_ssi(userid,extra_data)
+
+                elif ftp_name.upper() == 'ZANDERS':
                     extra_data = {
                         'serialized': vendor_data['serialized'],
                     }
-                print(extra_data)
 
-                suppliers = get_suppliers_for_vendor(ftp_name, ftp_host, ftp_user, ftp_password)
+                    success = pull.process_zanders(userid,extra_data)
 
-                pull = VendorActivity()                
-                success = pull.main(suppliers, userid, general_selection, extra_data)
                 if success == True:
-                    # if 'product_filter' in extra_data:
-                    #     extra_data['product_filter'] = str(extra_data['product_filter'])
-                    # if 'product_category' in extra_data:
-                    #     extra_data['product_category'] = str(extra_data['product_category'])
-                    # if 'brand' in extra_data:
-                    #     extra_data['brand'] = str(extra_data['brand'])
-                    # if 'manufacturer' in extra_data:
-                    #     extra_data['manufacturer'] = str(extra_data['manufacturer'])
-
-                    print(extra_data)
 
                     serializer.save()
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -470,7 +496,6 @@ class VendoEnronmentView(APIView):
             return Response({"error": str(e)},status=status.HTTP_400_BAD_REQUEST)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  
-
 
 class CatalogueBaseView(APIView):
     permission_classes = [IsAuthenticated]
@@ -487,7 +512,8 @@ class CatalogueBaseView(APIView):
             return JsonResponse(list(queryset), safe=False)
         
         except VendoEnronment.DoesNotExist:
-            return JsonResponse({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)       
+            return JsonResponse({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)  
+             
 class CatalogueFragrancexView(CatalogueBaseView):
     model = Fragrancex
     vendor_name = 'FragranceX'
@@ -515,15 +541,194 @@ class AllCatalogueView(APIView):
     }
 
     def get(self, request, pk):
-        user = VendoEnronment.objects.filter(user_id=pk).first()
-        if not user:
+        vendors = VendoEnronment.objects.filter(user_id=pk).values_list('vendor_name', flat=True)
+        vendors = [vendor.lower() for vendor in vendors]
+        print(vendors)
+
+        if not vendors:
             return JsonResponse({"message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
 
         all_products = []
 
         for model_name, model_class in self.MODELS_MAPPING.items():
-            if getattr(user, f'has_{model_name}', False):
+            if model_name in vendors:
                 products = model_class.objects.all().values()
                 all_products.extend(list(products))
 
         return JsonResponse(all_products, safe=False)
+
+
+class AddProductView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    MODELS_MAPPING = {
+        'fragrancex': Fragrancex,
+        'cwr': Cwr,
+        'lipsey': Lipsey,
+        'ssi': Ssi,
+        'zanders': Zanders,
+    }
+
+    def get(self, request, userid, product_id, vendor_name):
+        vendor_name = vendor_name.lower()
+
+        if vendor_name not in self.MODELS_MAPPING:
+            return JsonResponse({'error': 'Invalid vendor name'}, status=400)
+
+        VENDOR = self.MODELS_MAPPING[vendor_name]
+
+        product = get_object_or_404(VENDOR, id=product_id, user_id=userid)
+        product_data = model_to_dict(product)
+        
+        general_product_data = self.map_vendor_data_to_general(vendor_name, product_data, userid)
+
+        return JsonResponse(general_product_data, safe=False, status=status.HTTP_200_OK)
+
+    def put(self, request, userid, product_id, vendor_name):
+        vendor_name = vendor_name.lower()
+
+        if vendor_name not in self.MODELS_MAPPING:
+            return JsonResponse({'error': 'Invalid vendor name'}, status=400)
+
+        product = get_object_or_404(self.MODELS_MAPPING[vendor_name], id=product_id, user_id=userid)
+        product_data = model_to_dict(product)
+
+        general_product_data = self.map_vendor_data_to_general(vendor_name, product_data, userid)
+
+        # Retrieve the User instance
+        user = get_object_or_404(User, id=userid)
+        general_product_data['user'] = user
+
+        general_product, created = Generalproducttable.objects.get_or_create(
+            user=user,
+            sku=general_product_data['sku'],
+            defaults=general_product_data
+        )
+
+        if not created:
+            # Update the existing record with new data
+            for key, value in general_product_data.items():
+                setattr(general_product, key, value)
+            general_product.save()
+
+        # Update the Generalproducttable instance with the data from the request
+        serializer = GeneralProductSerializer(general_product, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def map_vendor_data_to_general(self, vendor_name, product_data, userid):
+        if vendor_name == 'lipsey':
+            return {
+                'user': userid,
+                'sku': product_data.get('itemnumber'),
+                'quantity': product_data.get('quantity'),
+                'upc': product_data.get('upc'),
+                'title': product_data.get('description1'),
+                'detailed_description': product_data.get('description2'),
+                'image': product_data.get('imagename'),
+                'category': product_data.get('type'),
+                'msrp': product_data.get('msrp'),
+                'mpn': product_data.get('manufacturermodelno'),
+                'price': product_data.get('currentprice'),
+                'model': product_data.get('model'),
+                'brand': product_data.get('manufacturer'),
+                'shipping_weight': product_data.get('shippingweight'),
+                'shipping_length': product_data.get('packagelength'),
+                'shipping_width': product_data.get('packagewidth'),
+                'shipping_height': product_data.get('packageheight'),
+            }
+        elif vendor_name == 'cwr':
+            return {
+                'user': userid,
+                'sku': product_data.get('cwr_part_number'),
+                'quantity': product_data.get('quantity_available_to_ship_combined'),
+                'upc': product_data.get('upc_code'),
+                'title': product_data.get('title'),
+                'detailed_description': product_data.get('full_description'),
+                'image': product_data.get('image_300x300_url'),
+                'category': product_data.get('category_name'),
+                'msrp': product_data.get('list_price'),
+                'mpn': product_data.get('manufacturer_part_number'),
+                'price': product_data.get('your_cost'),
+                'model': None,  
+                'brand': product_data.get('manufacturer_name'),
+                'shipping_weight': product_data.get('shipping_weight'),
+                'shipping_length': product_data.get('box_length'),
+                'shipping_width': product_data.get('box_width'),
+                'shipping_height': product_data.get('box_height'),
+            }
+
+        elif vendor_name == 'fragrancex':
+            return {
+                'user': userid,
+                'sku': product_data.get('item'),
+                'title': product_data.get('title'),
+                'detailed_description': product_data.get('description'),
+                'image': product_data.get('image'),
+                'category': None, 
+                'msrp': product_data.get('retail'),
+                'price': product_data.get('price'),
+                'upc': product_data.get('upc'),
+                'brand': product_data.get('brand'),
+                'quantity': product_data.get('qty'),
+                'model': None,  
+                'shipping_weight': None, 
+                'shipping_length': None, 
+                'shipping_width': None, 
+                'shipping_height': None, 
+            }
+
+        elif vendor_name == 'ssi':
+            return {
+                'user': userid,
+                'sku': product_data.get('sku'),
+                'title': product_data.get('description'),
+                'detailed_description': product_data.get('detaileddescription'),
+                'image': product_data.get('imageurl'),
+                'category': product_data.get('category'),
+                'msrp': product_data.get('msrp'),
+                'map': product_data.get('map'),
+                'price': product_data.get('price'),
+                'upc': product_data.get('upccode'),
+                'brand': product_data.get('manufacturer'),
+                'quantity': product_data.get('qty'),
+                'model': product_data.get('mpn'),
+                'dimensionh': product_data.get('dimensionh'),
+                'dimensionl': product_data.get('dimensionl'),
+                'dimensionw': product_data.get('dimensionw'),
+                'shipping_weight': product_data.get('shippingweight'),
+                'shipping_length': product_data.get('shippinglength'),
+                'shipping_width': product_data.get('shippingwidth'),
+                'shipping_height': product_data.get('shippingheight'),
+            }
+        elif vendor_name == 'zanders':
+            return {
+                'user': userid,
+                'sku': product_data.get('itemnumber'),
+                'quantity': product_data.get('qty1'),
+                'upc': product_data.get('upc'),
+                'title': product_data.get('desc1'),
+                'detailed_description': product_data.get('desc2'),
+                'image': product_data.get('imagelink'),
+                'category': product_data.get('category'),
+                'msrp': product_data.get('msrp'),
+                'mpn': product_data.get('mfgpnumber'),
+                'map': product_data.get('mapprice'),
+                'price': product_data.get('price1'),
+                'brand': product_data.get('manufacturer'),
+                'shipping_weight': product_data.get('weight'),
+            }
+        else:
+            return {}
+
+
+class ViewAllProducts(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, userid):
+        all_products = Generalproducttable.objects.filter(user_id = userid)
+        serializer = GeneralProductSerializer(all_products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
