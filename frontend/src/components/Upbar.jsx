@@ -9,6 +9,10 @@ import { Link, useLocation } from 'react-router-dom'
 const Upbar = ({onClickHandler}) => {
 
 
+// const location = useLocation()
+// const hiddenRoutes = []
+
+// const isHidden = hiddenRoutes.some(route => location.pathname.startsWith(route));
 
 
   return (
