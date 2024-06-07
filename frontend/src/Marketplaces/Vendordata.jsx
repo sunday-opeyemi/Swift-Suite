@@ -4,7 +4,7 @@ export const Vendordata = [
         image:"/image/vendorone.png",
         summaries:'Send orders and receive tracking with CWR',
         price: "$50.00/month",
-        name: "cwr",
+        name: "CWR",
       },
       {
         id: 2,
@@ -25,7 +25,7 @@ export const Vendordata = [
         image:"/image/vendorfour.png",
         summaries:'Send orders and receive tracking with FRAGRANCEX',
         price: "$50.00/month",
-        name: "FragranceX",
+        name: "Fragrancex",
       },
       {
         id: 5,
@@ -39,7 +39,7 @@ export const Vendordata = [
         image:"/image/si.png",
         summaries:'Send orders and receive tracking with SSI',
         price: "$50.00/month",
-        name: "ssi",
+        name: "SSI",
       },     
   ];
   
