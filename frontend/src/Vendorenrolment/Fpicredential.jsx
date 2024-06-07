@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { handleNextStep, handlePreviousStep } from '../redux/vendor'
+import vendor, { handleNextStep, handlePreviousStep } from '../redux/vendor'
 import { useDispatch, useSelector } from 'react-redux'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom'
 const Fpicredential = () => {
   const navigate = useNavigate()
   let token = JSON.parse(localStorage.getItem('token'))
-  const vendor_name = JSON.parse(localStorage.getItem('vendorName'));
+  const vendor_name = JSON.parse(localStorage.getItem('vendor_name'));
 
   console.log(vendor_name);
 
@@ -59,7 +59,7 @@ const Fpicredential = () => {
   const onSubmit = (data) => {
     setMyLoader(true)
     // console.log(data);
-    let form = { ...store, ...data }
+    let form = { ...store, ...data, vendor_name }
     console.log(form);
     axios.post(
       endpoint,
@@ -129,7 +129,7 @@ const Fpicredential = () => {
                 <h3 className='font-semibold'>Vendor Name:</h3>
                 <input
                   {...register("vendor_name", { required: true })} type="text" disabled value={`${vendor_name}`}
-                  className={`border p-3 border-black focus:outline-none py-1 lg:w-[52%] md:w-[46%] w-[58%] ms-12 lg:ms-6 md:ms-20 rounded mt-0 ${errors.vendorName && <span>This field is required</span>}`}
+                  className={`border border-black focus:outline-none py-1 rounded  h-[35px] p-3 w-[60%] lg:w-[50%] ${errors.vendorName && <span>This field is required</span>}`}
                 />
               </div>
               <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.host && <span>This field is required</span>}</small>
