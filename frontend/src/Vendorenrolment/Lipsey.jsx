@@ -233,7 +233,9 @@ const Lipsey = () => {
 
     axios.post(endpoint, formData, {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+          Accept: "application/json",
       }
     })
       .then((response) => {

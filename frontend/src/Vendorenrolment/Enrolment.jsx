@@ -80,7 +80,7 @@ const Enrolment = () => {
               myList.map((items, index)=>(
                 <ul key={index} className='flex justify-between border-b border-gray-500 p-5'>
                     <li className='font-semibold'>{items.name}</li>
-                    <li className={currentIndex >= index ? 'mt-2 text-[#089451]' : 'mt-2'}>{currentIndex >= index ? items.icon2 : items.icon}</li>
+                    <li className={currentIndex > index ? 'mt-2 text-[#089451]' : 'mt-2'}>{currentIndex > index ? items.icon2 : items.icon}</li>
                 </ul>
               ))
             }

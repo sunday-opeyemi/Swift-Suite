@@ -35,8 +35,8 @@ const Fpicredential = () => {
 
   const Schema = yup.object().shape({
     host: yup.string().required(),
-    ftpusername: yup.string().required(),
-    ftppassword: yup.string().required(),
+    ftp_username: yup.string().required(),
+    ftp_password: yup.string().required(),
   })
 
   const { register, handleSubmit, setValue, formState: { errors }, } = useForm({
@@ -65,13 +65,15 @@ const Fpicredential = () => {
       endpoint,
       {
         vendor_name: vendor_name,
-        ftp_username: form.ftpusername,
-        ftp_password: form.ftppassword,
+        ftp_username: form.ftp_username,
+        ftp_password: form.ftp_password,
         host: form.host
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          // "Content-Type": "application/json",
+          // Accept: "application/json",
         }
       }
     )
@@ -143,17 +145,17 @@ const Fpicredential = () => {
             <div>
               <div className='flex justify-between mt-5'>
                 <h3 className='font-semibold'>FTP Username:</h3>
-                <input {...register("ftpusername", { required: true })} type="text" className={`border h-[35px] w-[60%] lg:w-[50%] border-black focus:outline-none p-3 py-1 rounded ${errors.ftpusername?.message && 'error'}`} />
+                <input {...register("ftp_username", { required: true })} type="text" className={`border h-[35px] w-[60%] lg:w-[50%] border-black focus:outline-none p-3 py-1 rounded ${errors.ftp_username?.message && 'error'}`} />
               </div>
-              <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftpusername && <span>This field is required</span>}</small>
+              <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftp_username && <span>This field is required</span>}</small>
             </div>
             <div>
               <div className='flex justify-between mt-5 relative'>
                 <h3 className='font-semibold'>FTP Password:</h3>
-                <input {...register("ftppassword", { required: true })} type={confirmVisible ? 'text' : 'password'} className={`border border-black focus:outline-none py-1 rounded p-3 h-[35px] w-[60%] lg:w-[50%] ${errors.ftppassword?.message && 'error'}`} />
+                <input {...register("ftp_password", { required: true })} type={confirmVisible ? 'text' : 'password'} className={`border border-black focus:outline-none py-1 rounded p-3 h-[35px] w-[60%] lg:w-[50%] ${errors.ftp_password?.message && 'error'}`} />
                 <span onClick={() => togglePasswordVisibility('ftppassword')} className='absolute right-[3%] top-[26%]'>{!confirmVisible ? <IoEyeSharp /> : <BsEyeSlashFill />}</span>
               </div>
-              <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftppassword && <span>This field is required</span>}</small>
+              <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftp_password && <span>This field is required</span>}</small>
             </div>
             <div className='flex flex-col my-10 gap-8 w-2/3 mx-auto'>
               <div className='grid lg:grid-cols-2 md:grid-cols-2 grid-cols-2 gap-12 lg:gap-10'>
