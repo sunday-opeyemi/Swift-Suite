@@ -26,7 +26,7 @@ import Productmodal from "./Productmodal";
 const Catalogue = () => {
 
   const store = useSelector((state) => state.vendor.productId);
-  console.log(store);
+  // console.log(store);
   const dispatch = useDispatch()
 
 
