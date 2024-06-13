@@ -8,26 +8,36 @@ import { useNavigate } from "react-router-dom";
 import { BsFillFilterSquareFill } from "react-icons/bs";
 import { FaList, FaTh } from "react-icons/fa";
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  Button,
+  // Modal,
+  // ModalContent,
+  // ModalHeader,
+  // ModalBody,
+  // Button,
   useDisclosure,
-  ModalFooter,
+  // ModalFooter,
 } from "@nextui-org/react";
 import FilterComponent from "../components/FilterComponent";
 import { catalogue } from "./Cataloguedata";
+import { useDispatch, useSelector } from "react-redux";
+import { addToProduct, setProductId } from "../redux/vendor";
+import Productmodal from "./Productmodal";
+
 
 const Catalogue = () => {
+
+  const store = useSelector((state) => state.vendor.productId);
+  // console.log(store);
+  const dispatch = useDispatch()
+
+
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("token"));
-  console.log(token);
+  // console.log(token);
   const [catalogueProduct, setCatalogueProduct] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [currentItems, setCurrentItems] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState([]);
   const [loader, setLoader] = useState(false);
   const [filterOpen, setfilterOpen] = useState(false);
   const [viewMode, setViewMode] = useState("list"); // 'list' or 'grid'
@@ -40,7 +50,31 @@ const Catalogue = () => {
   const [filterQuantityValue, setFilterQuantityValue] = useState("");
   const [productChange, setProductChange] = useState("All")
   const [endpoint, setEndpoint] = useState("");
-  // console.log(productChange);
+  const [filter, setFilter] = useState(false)
+  const [error, setError] = useState(null);
+  const [editableValue, setEditableValue] = useState('');
+  // const [productId, setProductId] = useState('')
+  const [selectProduct, setSelectProduct] = useState({
+    category: '',
+    brand: '',
+    price: '',
+    model: '',
+    title: '',
+    quantity: '',
+    mpn: '',
+    msrp: '',
+    user: '',
+    sku: '',
+    upc: '',
+    detailed_description: '',
+    shipping_width: '',
+    shipping_height: '',
+    shipping_weight: '',
+  });
+
+  const [editingUser, setEditingUser] = useState(null);
+
+
   // console.log(endpoint);
 
 
@@ -86,24 +120,34 @@ const Catalogue = () => {
       console.log(response.data);
       setCatalogueProduct(response.data);
       setLoader(false);
+      setFilter(true);
+      setError(null)
     } catch (error) {
       setLoader(false);
-      console.log(error);
+      console.log(error.response.data.message);
       if (error.response.data.detail) {
         console.log("Token has expired");
         toast.error("Token has expired");
         localStorage.removeItem("token");
         navigate("/signin");
+      } else if (error.response && error.response.data && error.response.data.message) {
+        // Set the error message state
+        setError(error.response.data.message);
       }
+      //  else {
+      //   setError("An error occurred while fetching data");
+      // }
     }
   };
 
+
   const handleProductChange = (event) => {
     const selectedProduct = catalogue.find(item => item.name === event.target.value);
-    // console.log(selectedProduct);
+    console.log(selectedProduct.endpoint);
     if (selectedProduct) {
       setProductChange(event.target.value);
       setEndpoint(selectedProduct.endpoint); // Update the endpoint state
+      setError(null)
     }
   };
 
@@ -116,11 +160,92 @@ const Catalogue = () => {
     setCurrentPage(selected);
   };
 
-  const handleProductClick = (product) => {
-    // Step 2: Function to handle product click
-    setSelectedProduct(product);
-    onOpen(); // Step 3: Open the modal
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSelectProduct((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
+
+  // const dispatch = useDispatch()
+  const handleProductClick = async (product) => {
+    console.log(product);
+    const productId = product.id; // Ensure productId is set correctly
+    setProductId(productId);
+    localStorage.setItem('productId', JSON.stringify(productId));
+    dispatch(setProductId(productId));
+
+
+    try {
+      const result = await axios.get(`https://service.swiftsuite.app/vendor/add-to-product/46/${productId}/lipsey/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+
+      console.log(result.data);
+      onOpen();
+      setSelectProduct(result.data);
+      // setProductId(result.data.id); // Ensure correct product ID is set
+      setEditingUser(result.data); // Assuming you want to edit user details
+      setEditableValue(result.data.model); // Assuming model is editable
+      setError(null);
+
+    } catch (err) {
+      console.log(err);
+      toast.error('Request failed try again');
+    }
+  };
+
+
+
+  const handleSave = () => {
+    console.log(selectProduct);
+    if (!selectProduct) {
+      console.error('No product selected for editing');
+      return null;
+    }
+    onClose(); // Close the modal
+    return selectProduct; // Return the updated product
+  };
+
+
+  // https://service.swiftsuite.app/vendor/add-to-product/46/1/lipsey/
+
+
+  const handleUpdateProduct = async () => {
+    let productId = JSON.parse(localStorage.getItem('productId'))
+    console.log(productId);
+    const updatedProduct = handleSave();
+    if (updatedProduct) {
+      console.log(updatedProduct);
+      setSelectProduct(updatedProduct);
+
+
+      try {
+        const result = await axios.put(`https://service.swiftsuite.app/vendor/add-to-product/46/${productId}/lipsey/`, updatedProduct, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+
+        console.log(result);
+        toast.success('Product added Successfully')
+        setSelectProduct(result);
+        localStorage.setItem('selectProduct', JSON.stringify(updatedProduct));
+      } catch (err) {
+        console.log(err);
+        toast.error('Request failed try again');
+      }
+    }
+  };
+
 
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
@@ -187,15 +312,6 @@ const Catalogue = () => {
         (item) => item.type && item.type.toLowerCase() === formFilters.type.toLowerCase()
       );
     }
-
-    // if (formFilters.msrp !== "") {
-    //   const filterMsrp = parseFloat(formFilters.msrp);
-    //   console.log(filterMsrp);
-    //   filteredItems = filteredItems.filter(
-    //     (item) => typeof item.msrp === item.msrp && item.msrp === filterMsrp
-    //   );
-    // }
-
 
     if (formFilters.msrp !== "") {
       const filterMsrp = parseFloat(formFilters.msrp);
@@ -304,7 +420,6 @@ const Catalogue = () => {
       }
 
     }
-    // Apply other filters
     filteredItems = filteredItems.filter(item => {
       return (
         (!searchQuery || // If searchQuery is empty, don't apply keyword filter
@@ -316,7 +431,6 @@ const Catalogue = () => {
           (item.category_name && item.category_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
           (item.type && item.type.toLowerCase().includes(searchQuery.toLowerCase()))
         )
-        // Add additional conditions here if needed
       );
     });
 
@@ -379,13 +493,18 @@ const Catalogue = () => {
   const vendorIndex = (i) => {
     console.log(i);
   };
+
+
+
+
+
   return (
-    <div className="bg-green-50 h-screen ">
+    <div className={error || loader ? 'bg-green-50 h-screen' : 'bg-green-50'}>
       <section
         className={
           filterOpen
-            ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
-            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] py-10   lg:ms-[22%] lg:me-[2] md:me-[5%]"
+            ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
         <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center">
@@ -393,11 +512,11 @@ const Catalogue = () => {
             <button
               className="flex gap-1"
               onClick={() => {
-                if (loader == false) {
+                if (filter == true) {
                   filterControl();
                 }
               }}
-              disabled={loader == true}
+              disabled={filter == false}
             >
               <span className="mt-1">Filter</span>
               <span className="mt-[9px] text-[#089451]">
@@ -496,282 +615,201 @@ const Catalogue = () => {
           filterQuantityValue={filterQuantityValue}
           onFilterQuantityChange={onFilterQuantityChange}
         />
-        {/* <div>
-        {currentItems.length > 0 && (
-          <p className="lg:ms-4">{currentItems.length} products match your criteria.</p>
-        )}
-        </div> */}
       </div>
       {/* Modal */}
-      <Modal
-        className="p-5" style={{ maxHeight: "80vh", overflowY: "auto" }}
+      <Productmodal
         isOpen={isOpen}
         onClose={onClose}
-        isDismissable={false}
-      >
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            {selectedProduct && selectedProduct.name ? `Title: ${selectedProduct && selectedProduct.name}` : ''}
-          </ModalHeader>
-          <ModalBody>
-            {selectedProduct && (
-              <>
-                <div>
-                  <p>{selectedProduct.metric_size ? `METRIC_SIZE: ${selectedProduct.metric_size}` : ''}</p>
-                  <p>{selectedProduct.description ? `Description: ${selectedProduct.description}` : ''}</p>
-                  <p>{selectedProduct.user_id ? `USER ID: ${selectedProduct.user_id}` : ''}</p>
-                  <p>{selectedProduct.retail ? `RETAIL: ${selectedProduct.retail}` : ''}</p>
-                  <p>{selectedProduct.cad_price ? `CAD_PRICE: ${selectedProduct.cad_price}` : ''}</p>
-                  <p>{selectedProduct.eur_price ? `EUD_PRICE: ${selectedProduct.eur_price}` : ''}</p>
-                  <p>{selectedProduct.gbp_price ? `GBP_PRICE: ${selectedProduct.gbp_price}` : ''}</p>
-                  <p>{selectedProduct.item ? `ITEM: ${selectedProduct.item}` : ''}</p>
-                  <p>{selectedProduct.qty ? `QUANTITY: ${selectedProduct.qty}` : ''}</p>
-                  <p>{selectedProduct.size ? `SIZE: ${selectedProduct.size}` : ''}</p>
-                  <p>{selectedProduct.url ? `URL: ${selectedProduct.url}` : ''}</p>
-                  <p>{selectedProduct.aud_price ? `PRICE: ${selectedProduct.aud_price}` : ''}</p>
-                </div>
-                <div>
-                  {/* Lipsey */}
-                  <p>{selectedProduct.additionalfeature1 && `Feature1: ${selectedProduct.additionalfeature1}`}</p>
-                  <p>{selectedProduct.additionalfeature2 && `Feature2: ${selectedProduct.additionalfeature2}`}</p>
-                  <p>{selectedProduct.additionalfeature3 && `Feature3: ${selectedProduct.additionalfeature3}`}</p>
-                  <p>{selectedProduct.itemnumber && `Itemnumber: ${selectedProduct.itemnumber}`}</p>
-                  <p>{selectedProduct.description1 && `Description1: ${selectedProduct.description1}`}</p>
-                  <p>{selectedProduct.description2 && `Description2: ${selectedProduct.description2}`}</p>
-                  <p>{selectedProduct.calibergauge && `Calibergauge: ${selectedProduct.calibergauge}`}</p>
-                  <p>{selectedProduct.capacity && `Capacity: ${selectedProduct.capacity}`}</p>
-                  <p>{selectedProduct.family && `Family: ${selectedProduct.family}`}</p>
-                  <p>{selectedProduct.finish && `Finish: ${selectedProduct.finish}`}</p>
-                  <p>{selectedProduct.itemgroup && `Itemgroup: ${selectedProduct.itemgroup}`}</p>
-                  <p>{selectedProduct.itemheight && `Itemheight: ${selectedProduct.itemheight}`}</p>
-                  <p>{selectedProduct.itemlength && `Itemlength: ${selectedProduct.itemlength}`}</p>
-                  <p>{selectedProduct.itemwidth && `Itemwidth: ${selectedProduct.itemwidth}`}</p>
-                  <p>{selectedProduct.magazine && `Magazine: ${selectedProduct.magazine}`}</p>
-                  <p>{selectedProduct.packageheight && `Packageheight: ${selectedProduct.packageheight}`}</p>
-                  <p>{selectedProduct.packagelength && `Packagelength: ${selectedProduct.packagelength}`}</p>
-                  <p>{selectedProduct.packagewidth && `Packagewidth: ${selectedProduct.packagewidth}`}</p>
-                  <p>{selectedProduct.manufacturer && `Manufacturer: ${selectedProduct.manufacturer}`}</p>
-                  <p>{selectedProduct.shippingweight && `Shippingweight: ${selectedProduct.shippingweight}`}</p>
-                  <p>{selectedProduct.sightstype && `Sightstype: ${selectedProduct.sightstype}`}</p>
-                  <p>{selectedProduct.stockframegrips && `Stockframegrips: ${selectedProduct.stockframegrips}`}</p>
-                </div>
-                <div>
-                  {/* cwr */}
-                  <p>{selectedProduct.category_name && 'Name: ' + selectedProduct.category_name}</p>
-                  <p>{selectedProduct.manufacturer_name && 'Brand: ' + selectedProduct.manufacturer_name}</p>
-                  <p>{selectedProduct.country_of_origin && 'Country of origin: ' + selectedProduct.country_of_origin}</p>
-                  <p>{selectedProduct.shipping_weight && 'Shipping weight: ' + selectedProduct.shipping_weight}</p>
-                  <p>{selectedProduct.harmonization_code && 'Harmonization code: ' + selectedProduct.harmonization_code}</p>
-                  <p>{selectedProduct.category_id && 'Category ID: ' + selectedProduct.category_id}</p>
-                  <p>{selectedProduct.exportable && 'Exportable: ' + selectedProduct.exportable}</p>
-                  <p>{selectedProduct.fcc_id && 'Fcc ID: ' + selectedProduct.fcc_id}</p>
-                  <p>{selectedProduct.box_height && 'Box Height: ' + selectedProduct.box_height}</p>
-                  <p>{selectedProduct.manufacturer_part_number && 'Manufacturer part number: ' + selectedProduct.manufacturer_part_number}</p>
-                  <p>{selectedProduct.sku && 'SKU: ' + selectedProduct.sku}</p>
-                  <p>{selectedProduct.title && 'Title: ' + selectedProduct.title}</p>
-                </div>
-                {/* SSI */}
-                <div>
-                  <p>{selectedProduct.detaileddescription && 'Detaileddescription: ' + selectedProduct.detaileddescription}</p>
-                  <p>{selectedProduct.status && 'Status: ' + selectedProduct.status}</p>
-                  <p>{selectedProduct.groundshippingrequired && 'Groundshippingrequired: ' + selectedProduct.groundshippingrequired}</p>
-                  <p>{selectedProduct.datecreated && 'Datecreated: ' + selectedProduct.datecreated}</p>
-                  <p>{selectedProduct.countryoforigin && 'Countryoforigin: ' + selectedProduct.countryoforigin}</p>
-                  <p>{selectedProduct.shippingheight && 'Shippingheight: ' + selectedProduct.shippingheight}</p>
-                  <p>{selectedProduct.shippinglength && 'Shippinglength: ' + selectedProduct.manufacturer}</p>
-                  <p>{selectedProduct.shippingwidth && 'Sippingwidth: ' + selectedProduct.shippingwidth}</p>
-                </div>
-              </>
-            )}
-          </ModalBody>
-          <ModalFooter>
-            <Button color="danger" variant="light" onPress={onClose}>
-              CANCEL
-            </Button>
-            <Button className="bg-[#089451] text-white" onPress={onClose}>
-              ADD TO PRODUCT
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        selectedProduct={selectedProduct}
+        selectProduct={selectProduct}
+        handleChange={handleChange}
+        handleUpdateProduct={handleUpdateProduct}
+        handleProductClick={handleProductClick}
+        handleSave={handleSave}
+      />
 
-      <div className="lg:ms-[22%] py-40 bg-green-50 p-10">
-        <div className="flex gap-6 mb-34">
-          <div className="rounded-lg overflow-hidden">
-            {loader && (
-              <div className="flex justify-center items-center">
-                <img
-                  src={gif}
-                  alt="Loading..."
-                  className="lg:ms-[400px] border p-3 shadow-xl rounded-xl w-[50px] mt-10"
-                />
-              </div>
-            )}
-            {!loader &&
-              (paginatedItems.length > 0 && currentItems.length > 0 ? (
-                <>
-                  {viewMode === "list" ? (
-                    <div className="list-view-container">
-                      {/* List view  */}
-                      {paginatedItems.map((product, index) => (
-                        <div
-                          onClick={() => handleProductClick(product)}
-                          className={`${filterOpen
-                            ? "grid grid-cols-3 mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                            : "grid grid-cols-3 mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                            }`}
-                          key={index}
-                        >
-                          <div className="">
-                            {/* FRAGRANCEX */}
-                            {product.image ? (
-                              <img
-                                src={product.image}
-                                alt={product.image}
-                                className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
-                              />
-                            ) : (
-                              ''
-                            )}
-                            {/* LIPSEY*/}
-                            {product.imagename ? (
-                              <img
-                                src={`https://www.lipseyscloud.com/images/${product.imagename}`}
-                                alt={product.imagename}
-                                className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
-                              />
-                            ) : (
-                              ''
-                            )}
-                            {/* CWR */}
-                            {product.image_300x300_url ? (
-                              <img
-                                src={product.image_300x300_url}
-                                alt={product.image_300x300_url}
-                                className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
-                              />
-                            ) : (
-                              ''
-                            )}
-                            {/* SSI */}
-                            {product.imageurl ? (
-                              <img
-                                src={product.imageurl}
-                                alt={product.imageurl}
-                                className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
-                              />
-                            ) : (
-                              ''
-                            )}
-                          </div>
-                          {/* FragranceX */}
-                          <div className="p-4 bg-green-50 my-5 flex flex-col justify-center m-0 rounded-xl">
-                            {/* <p>{product.title ? `TITLE: ${product.title}` : ""}</p> */}
-                            <p>{product.name ? `NAME: ${product.name}` : ""}</p>
-
-                            {/* Lipsey */}
-                            <p>{product.type || product.category_name || product.category ? `NAME: ${product.type || product.category_name || product.category} ` : ""}</p>
-                            <p>{product.manufacturer || product.manufacturer_name ? `BRAND: ${product.manufacturer || product.manufacturer_name}` : ""}</p>
-                            <p>{product.price ? `PRICE: ${product.price}` : ""}</p>
-                          </div>
-                          <div className="p-4 flex flex-col justify-center rounded-xl">
-                            {/* FragranceX */}
-
-                            <p>{product.model || product.title ? `TITLE: ${product.model || product.title}` : ""}</p>
-                            <p>{product.brand ? `BRAND: ${product.brand}` : ""}</p>
-                            <p>{product.gender ? `GENDER: ${product.gender}` : ""}</p>
-                            {/* Lipsey */}
-
-                            <p>{product.quantity || product.quantity_available_to_ship_combined ? `QUANTITY: ${product.quantity || product.quantity_available_to_ship_combined}` : ""}</p>
-                            <p>{product.upc || product.upc_code || product.upccode ? `UPC: ${product.upc || product.upc_code || product.upccode}` : ""}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="grid gap-6 sm:grid-cols-2 lg:px-0 px-4 lg:grid-cols-4">
-                      {/* Grid view  */}
-                      {paginatedItems.map((product, index) => (
-                        <div
-                          onClick={() => handleProductClick(product)}
-                          className={`${filterOpen
-                            ? "mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                            : "mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                            }`}
-                          key={index}
-                        >
-                          <div className="px-4">
-                            {product.image ? (
-                              <img
-                                src={product.image}
-                                alt={product.image}
-                                className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
-                              />
-                            ) : (
-                              ''
-                            )}
-                            {/* CWR */}
-                            {product.image_300x300_url ? (
-                              <img
-                                src={product.image_300x300_url}
-                                alt={product.image_300x300_url}
-                                className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
-                              />
-                            ) : (
-                              ''
-                            )}
-                            {/* LIPSEY*/}
-                            {product.imagename ? (
-                              <img
-                                src={`https://www.lipseyscloud.com/images/${product.imagename}`}
-                                alt={product.imagename}
-                                className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
-                              />
-                            ) : (
-                              ''
-                            )}
-                            {/* SSI */}
-                            {product.imageurl ? (
-                              <img
-                                src={product.imageurl}
-                                alt={product.imageurl}
-                                className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
-                              />
-                            ) : (
-                              ''
-                            )}
-                            {/* FragranceX */}
-                            {/* <p>{product.title ? `TITLE: ${product.title}` : ""}</p> */}
-                            <p>{product.name || product.category ? `NAME: ${product.name || product.category}` : ""}</p>
-                            <p>{product.brand ? `BRAND: ${product.brand}` : ""}</p>
-                            <p>{product.gender ? `GENDER: ${product.gender}` : ""}</p>
-
-                            {/* Lipsey */}
-                            <p>{product.model || product.title ? `TITLE: ${product.model || product.title}` : ""}</p>
-                            <p>{product.manufacturer || product.manufacturer_name ? `BRAND: ${product.manufacturer || product.manufacturer_name}` : ""}</p>
-                            <p>{product.price ? `PRICE: ${product.price}` : ""}</p>
-                            <p>{product.quantity ? `QUANTITY: ${product.quantity}` : ""}</p>
-                            <p>{product.upc || product.upccode ? `UPC: ${product.upc || product.upccode}` : ""}</p>
-                            {/* cwr */}
-                            {/* <p>{product.manufacturer_name && 'BRAND: '+ product.manufacturer_name}</p> */}
-                            <p>{product.category_name && 'NAME: ' + product.category_name}</p>
-                            <p>{product.upc_code && 'UPC: ' + product.upc_code}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="text-black text-xl lg:ms-[100px] w-[90%] mt-20">
-                  Sorry, we couldn't find any results
-                </div>
-              ))}
+      <div className="lg:ms-[26%] py-40 bg-green-50 p-10">
+        {loader && (
+          <div className="flex justify-center items-center">
+            <img
+              src={gif}
+              alt="Loading..."
+              className="lg:ms-[-100px] border p-3 shadow-xl rounded-xl w-[50px] mt-10"
+            />
           </div>
-        </div>
+        )}
+        {error ? (
+          <div className="lg:ms-[36%] text-red-500 text-xl mb-4">{error}</div>
+        ) : (
+          <div className="flex gap-6 mb-34">
+            <div className="rounded-lg overflow-hidden">
+              {!loader &&
+                (paginatedItems.length > 0 && currentItems.length > 0 ? (
+                  <>
+                    {viewMode === "list" ? (
+                      <div className="list-view-container">
+                        {/* List view  */}
+                        {paginatedItems.map((product, index) => (
+                          <div
+                            onClick={() => handleProductClick(product)}
+                            className={`${filterOpen
+                              ? "grid grid-cols-3 mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                              : "grid grid-cols-3 mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                              }`}
+                            key={index}
+                          >
+                            <div className="">
+                              {/* FRAGRANCEX */}
+                              {product.image ? (
+                                <img
+                                  src={product.image}
+                                  alt={product.image}
+                                  className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
+                                />
+                              ) : (
+                                ''
+                              )}
+                              {/* LIPSEY*/}
+                              {product.imagename ? (
+                                <img
+                                  src={`https://www.lipseyscloud.com/images/${product.imagename}`}
+                                  alt={product.imagename}
+                                  className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
+                                />
+                              ) : (
+                                ''
+                              )}
+                              {/* CWR */}
+                              {product.image_300x300_url ? (
+                                <img
+                                  src={product.image_300x300_url}
+                                  alt={product.image_300x300_url}
+                                  className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
+                                />
+                              ) : (
+                                ''
+                              )}
+                              {/* SSI */}
+                              {product.imageurl ? (
+                                <img
+                                  src={product.imageurl}
+                                  alt={product.imageurl}
+                                  className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
+                                />
+                              ) : (
+                                ''
+                              )}
+                            </div>
+                            {/* FragranceX */}
+
+                            <div className="p-4 bg-green-50 my-5 flex flex-col justify-center m-0 rounded-xl">
+                              {/* <p>{product.title ? `TITLE: ${product.title}` : ""}</p> */}
+                              <p>{product.name ? `NAME: ${product.name}` : ""}</p>
+
+                              {/* Lipsey */}
+                              <p>{product.type || product.category_name || product.category ? `NAME: ${product.type || product.category_name || product.category} ` : ""}</p>
+                              <p>{product.manufacturer || product.manufacturer_name ? `BRAND: ${product.manufacturer || product.manufacturer_name}` : ""}</p>
+                              <p>{product.price ? `PRICE: ${product.price}` : ""}</p>
+                            </div>
+                            <div className="p-4 flex flex-col justify-center rounded-xl">
+                              {/* FragranceX */}
+
+                              <p>{product.model || product.title ? `TITLE: ${product.model || product.title}` : ""}</p>
+                              <p>{product.brand ? `BRAND: ${product.brand}` : ""}</p>
+                              <p>{product.gender ? `GENDER: ${product.gender}` : ""}</p>
+                              {/* Lipsey */}
+
+                              <p>{product.quantity || product.quantity_available_to_ship_combined ? `QUANTITY: ${product.quantity || product.quantity_available_to_ship_combined}` : ""}</p>
+                              <p>{product.upc || product.upc_code || product.upccode ? `UPC: ${product.upc || product.upc_code || product.upccode}` : ""}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="grid gap-6 sm:grid-cols-2 lg:px-0 px-4 lg:grid-cols-4">
+                        {/* Grid view  */}
+                        {paginatedItems.map((product, index) => (
+                          <div
+                            onClick={() => handleProductClick(product)}
+                            className={`${filterOpen
+                              ? "mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                              : "mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                              }`}
+                            key={index}
+                          >
+                            <div className="px-4">
+                              {product.image ? (
+                                <img
+                                  src={product.image}
+                                  alt={product.image}
+                                  className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
+                                />
+                              ) : (
+                                ''
+                              )}
+                              {/* CWR */}
+                              {product.image_300x300_url ? (
+                                <img
+                                  src={product.image_300x300_url}
+                                  alt={product.image_300x300_url}
+                                  className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
+                                />
+                              ) : (
+                                ''
+                              )}
+                              {/* LIPSEY*/}
+                              {product.imagename ? (
+                                <img
+                                  src={`https://www.lipseyscloud.com/images/${product.imagename}`}
+                                  alt={product.imagename}
+                                  className="w-20 mt-10 flex justify-center items-center rounded-md mx-auto object-cover"
+                                />
+                              ) : (
+                                ''
+                              )}
+                              {/* SSI */}
+                              {product.imageurl ? (
+                                <img
+                                  src={product.imageurl}
+                                  alt={product.imageurl}
+                                  className="w-20 mt-5 flex justify-center items-center rounded-md mx-auto object-cover"
+                                />
+                              ) : (
+                                ''
+                              )}
+                              {/* FragranceX */}
+                              {/* <p>{product.title ? `TITLE: ${product.title}` : ""}</p> */}
+                              <p>{product.name || product.category ? `NAME: ${product.name || product.category}` : ""}</p>
+                              <p>{product.brand ? `BRAND: ${product.brand}` : ""}</p>
+                              <p>{product.gender ? `GENDER: ${product.gender}` : ""}</p>
+
+                              {/* Lipsey */}
+                              <p>{product.model || product.title ? `TITLE: ${product.model || product.title}` : ""}</p>
+                              <p>{product.manufacturer || product.manufacturer_name ? `BRAND: ${product.manufacturer || product.manufacturer_name}` : ""}</p>
+                              <p>{product.price ? `PRICE: ${product.price}` : ""}</p>
+                              <p>{product.quantity ? `QUANTITY: ${product.quantity}` : ""}</p>
+                              <p>{product.upc || product.upccode ? `UPC: ${product.upc || product.upccode}` : ""}</p>
+                              {/* cwr */}
+                              {/* <p>{product.manufacturer_name && 'BRAND: '+ product.manufacturer_name}</p> */}
+                              <p>{product.category_name && 'NAME: ' + product.category_name}</p>
+                              <p>{product.upc_code && 'UPC: ' + product.upc_code}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="text-black bg-green-50 h-screen text-xl lg:ms-[100px] w-[90%] mt-20">
+                    Sorry, we couldn't find any results
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
       </div>
       <ToastContainer />
-    </div>
+    </div >
   );
 };
 

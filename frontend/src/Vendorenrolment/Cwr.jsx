@@ -7,6 +7,9 @@ import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { handleNextStep, handlePreviousStep } from '../redux/vendor';
 import { useNavigate } from 'react-router-dom';
+import gif from '../Images/gif.gif'
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 
@@ -15,23 +18,21 @@ const Cwr = () => {
   const store = useSelector(state => state.vendor.vendorData)
 
   const vendorName = JSON.parse(localStorage.getItem('vendorName'));
+  
+  let token = JSON.parse(localStorage.getItem('token'))
 //   console.log(vendorName);
+const connection = JSON.parse(localStorage.getItem('connection'));
+  // console.log(connection);
 
 const navigate = useNavigate()
 
-  const [checkBoxesCategory, setCheckBoxesCategory] = useState([
-    { id: 1, label: 'RSR', checked: false },
-    { id: 2, label: 'Shoes', checked: false },
-    { id: 3, label: 'Heels', checked: false },
-    { id: 4, label: 'Jackets', checked: false },
-    { id: 5, label: 'Stationeries', checked: false },
-    { id: 6, label: 'Shoes', checked: false },
-    { id: 7, label: 'Shoes', checked: false },
-    { id: 8, label: 'Glasses', checked: false },
-  ]);
+  const [checkBoxesCategory, setCheckBoxesCategory] = useState([]);
 
 
-  const [isChecked, setIsChecked] = useState(false);
+  const [truck, setTruck] = useState(false);
+  const [oversized, setOversized] = useState(false);
+  const [party, setParty] = useState(false);
+  const [returnable, setReturnable] = useState(false);
   const [inventory, setInventory] = useState(false);
   const [order, setOrder] = useState(false);
   const [tracking, setTracking] = useState(false);
@@ -40,20 +41,30 @@ const navigate = useNavigate()
   const [host, setHost] = useState(false)
   const [hostCategory, setHostCategory] = useState(false)
   const [categoryChecked, setCategoryChecked] = useState([])
+  const [myLoader, setMyLoader] = useState(false)
+  const [selectedOption, setSelectedOption] = useState('');
+  
+
  
 
+  useEffect(() => {
+    setCheckBoxesCategory(connection.category)
+  }, [])
 
   const Schema = yup.object().shape({
-    percentagemarkup: yup.string().required(),
-    fixedmarkup: yup.string().required(),
-    shippingcost: yup.string().required(),
-    stockminimum: yup.string().required(),
-    stockmaximum: yup.string().required(),
-    costaverage: yup.string(),
-    inventory: yup.string(),
-    order: yup.string(),
-    tracking: yup.string(),
-
+    percentage_markup: yup.string().required(),
+    fixed_markup: yup.string().required(),
+    shipping_cost: yup.string().required(),
+    stock_minimum: yup.string().required(),
+    stock_maximum: yup.string().required(),
+    cost_average: yup.string(),
+    update_inventory: yup.string(),
+    send_orders: yup.string(),
+    update_tracking: yup.string(),
+    oversized: yup.string(),
+    returnable: yup.string(),
+    truck_freight: yup.string(),
+    third_party_marketplaces:yup.string()
   })
 
   const { register, handleSubmit, formState: { errors }, } = useForm({
@@ -79,6 +90,7 @@ const navigate = useNavigate()
     const category = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
     console.log(category);
     setCategoryChecked(category)
+    setHost(true)
   };
 
 
@@ -88,6 +100,7 @@ const navigate = useNavigate()
     setCheckBoxesCategory(updatedCheckboxes);
     const theSelectedCategories = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
     setCategoryChecked(theSelectedCategories);
+    setHost(true)
   };
 
 
@@ -97,27 +110,42 @@ const navigate = useNavigate()
     const deselect = checkBoxesCategory.map(checkbox => ({ ...checkbox, checked: false }));
     console.log(deselect);
     setCheckBoxesCategory(deselect)
+    setHost(true)
   };
 
 
-
-
-  const toggleUp = () => {
-    setHost(false);
-  };
-
-  const toggleDown = () => {
-    setHost(true);
+  const categorySelect = () => {
+    setHost(!host);
   };
 
 
   let dispatch = useDispatch();
 
+
+
+  let endpoint = 'https://service.swiftsuite.app/vendor/vendor-enrolment/'
+
   const onSubmit = (data) => {
-    // const formData = { ...store, ...data, selectedProducts, selectedCategories, selectedBrand, productChecked, categoryChecked, brandChecked };
-    const formData = { ...store, ...data, categoryChecked };
+    const formData = { ...store, ...data, product_category:categoryChecked };
+    console.log(formData);
+    setMyLoader(true)
+
+    axios.post(endpoint, formData,  {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then((response)=>{
+    setMyLoader(false)
+      console.log(response);
+      toast.success('Enrolment successful')
+      dispatch(handleNextStep(formData));
+    }) .catch((err)=>{
+      console.log(err);
+      setMyLoader(false)
+      toast.error('duplicate Enrolment')
+    })
     // console.log(formData);
-    dispatch(handleNextStep(formData));
   };
 
 
@@ -125,6 +153,11 @@ const navigate = useNavigate()
   const handlePrevious=()=>{
     dispatch(handlePreviousStep())
   }
+
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value)
+  }
+
   return (
     <>
       <section className='bg-green-50 mb-10'>
@@ -135,41 +168,41 @@ const navigate = useNavigate()
               <h1 className='ms-5 lg:text-xl text-sm font-bold'>Product Type</h1>
               <div className='flex gap-5 lg:gap-5 md:gap-[70px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold w-[140px]'>Truck Freight:</h3>
-                <input {...register("costaverage")} type="checkbox" onChange={() => setIsChecked(!isChecked)} checked={isChecked} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+                <input {...register("truck_freight")} type="checkbox" onChange={() => setTruck(!truck)} checked={truck} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
               <div className='flex gap-5 lg:gap-5 md:gap-[70px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold w-[140px]'>Oversized:</h3>
-                <input {...register("costaverage")} type="checkbox" onChange={() => setIsChecked(!isChecked)} checked={isChecked} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+                <input {...register("oversized")} type="checkbox" onChange={() => setOversized(!oversized)} checked={oversized} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
               <div className='flex gap-5 lg:gap-5 md:gap-[70px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold w-[140px]'>3rd Party Marketplace:</h3>
-                <input {...register("costaverage")} type="checkbox" onChange={() => setIsChecked(!isChecked)} checked={isChecked} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+                <input {...register("third_party_marketplaces")} type="checkbox" onChange={() => setParty(!party)} checked={party} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
               <div className='flex gap-5 lg:gap-5 md:gap-[70px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold w-[140px]'>Returnable:</h3>
-                <input {...register("costaverage")} type="checkbox" onChange={() => setIsChecked(!isChecked)} checked={isChecked} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+                <input {...register("returnable")} type="checkbox" onChange={() => setReturnable(!returnable)} checked={returnable} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
               <div className='flex lg:ms-0 md:ms-0 ms-1 gap-[30%] md:gap-[21%] border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
                 <label className='mt-2 text-sm font-semibold h-8 md:w-[140px]' htmlFor="">Categories:</label>
-                <div className='border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[230px] w-[160px] md:w-[200px]'>
-                  <span className='text-gray-500 p-1'>Select Categories</span>
-                  <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-32 hover:text-green-700">
-                    <span onClick={toggleUp} className={host ? '' : 'hidden'}>
+                <div className='relative border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[230px] w-[160px] md:w-[200px]' onClick={categorySelect}>
+                  <span className='text-gray-500 p-1' >Select Categories</span>
+                  <p className="mt-[-12%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-32 hover:text-green-700" >
+                    <span  className={host ? '' : 'hidden'}>
                       <IoIosArrowUp size={18}  />
                     </span>
-                    <span onClick={toggleDown} className={host ? 'hidden' : ''}>
+                    <span  className={host ? 'hidden' : ''}>
                       <IoChevronDown size={18}  className={(host) ? 'hidden' : 'block'}/>
                     </span>
                   </p>
-                  <div className={`p-2 mt-[-4%] ${host ? 'block' : 'hidden'}`}>
+                  <div className={`${host ? 'block p-2 mt-[-4%]' : 'hidden'}`}>
                     <div className='bg-white shadow-lg z-100 lg:w-[250px] md:w-[250px] w-[200px] lg:ms-[-10px] md:ms-[-20%] ms-[-20%] p-3 mt-2'>
                       <div className='flex gap-6'>
                         <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={selectallCategory}>Select All</button>
                         <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={deselectallCategory}>Deselect All</button>
                       </div>
-                      <div className='p-2'>
+                      <div className='p-2 max-h-[50vh] overflow-y-auto'>
                         {checkBoxesCategory.map(checkbox => (
-                          <div className='flex justify-between' key={checkbox.id}>
+                          <div className='flex justify-between border-b-2 border-green-400' key={checkbox.id}>
                             {checkbox.label}
                             <input
                               type="checkbox"
@@ -184,71 +217,83 @@ const navigate = useNavigate()
 
                 </div>
               </div>
-
-
-              <h1 className='ms-5 lg:text-xl font-bold mt-5'>Pricing Option</h1>
-              <div>
-                <div className='flex  mt-5 px-5'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Percentage Markup:</h3>
-                  <input {...register("percentagemarkup", {required : true})} type="text" className={(host) ? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
-                </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.percentagemarkup && <span>This field is required</span>}</small>
+              <h1 className='ms-5 lg:text-xl font-bold mt-2'>Pricing Option</h1>
+              <div className='flex  mt-5 px-5'>
+                    <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Select Markup Type</h3>
+              <select className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' onChange={handleSelectChange} value={selectedOption}>
+                <option  value="">Select Markup Type</option>
+                <option value="fixed">Fixed Markup</option>
+                <option value="percentage">Percentage Markup</option>
+              </select>
               </div>
+              {selectedOption === 'percentage' && (
+                <div>
+                  <div className='flex  mt-5 px-5'>
+                    <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Percentage Markup:</h3>
+                    <input {...register("percentage_markup", { required: true })} type="text" className='border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
+                  </div>
+                  <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.percentage_markup && <span>This field is required</span>}</small>
+                </div>
+              )}
+
+              {selectedOption === 'fixed' && (
+                <div>
+                  <div className='flex mt-5 px-5'>
+                    <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Fixed Markup:</h3>
+                    <input {...register("fixed_markup", { required: true })} type="text" className='border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
+                  </div>
+                  <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.fixed_markup && <span>This field is required</span>}</small>
+                </div>
+              )}
 
               <div>
-                <div className='flex mt-5 px-5'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Fixed Markup:</h3>
-                  <input {...register("fixedmarkup", {required : true})} type="text" className={(host) ? 'hidden' : `border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded `} />
-                </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.fixedmarkup && <span>This field is required</span>}</small>
-              </div>
-
-              <div className='border-b'>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] md:w-[52%] w-[55%] lg:w-[50%]'>Shipping Cost:</h3>
-                  <input {...register("shippingcost", {required : true})} type="text" className='border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
+                  <input {...register("shipping_cost", { required: true })} type="text" className='border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.shippingcost && <span>This field is required</span>}</small>
+                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.shipping_cost && <span>This field is required</span>}</small>
               </div>
+
 
               <h1 className='ms-5 lg:text-xl font-bold mt-5'>Inventory</h1>
               <div>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Stock Minimum:</h3>
-                  <input {...register("stockminimum", {required : true})} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("stock_minimum", {required : true})} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stockminimum && <span>This field is required</span>}</small>
+                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stock_minimum && <span>This field is required</span>}</small>
               </div>
 
               <div>
                 <div className='flex  mt-5 px-5 pb-5 border-b'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Stock Maximum:</h3>
-                  <input {...register("stockmaximum", {required : true})} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("stock_maximum", {required : true})} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stockmaximum && <span>This field is required</span>}</small>
+                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stock_maximum && <span>This field is required</span>}</small>
               </div>
 
 
               <h1 className='ms-5 lg:text-xl font-bold mt-5'>Integration Settings</h1>
-              <div className='flex gap-20 md:gap-[70px] mt-5 h-10 px-5'>
+              <div className='flex gap-20 lg:gap-[70px] md:gap-[130px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold md:w-[100px] w-[100px]'>Update Inventory:</h3>
-                <input type="checkbox" {...register("inventory")} onChange={() => setInventory(!inventory)} checked={inventory} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+                <input type="checkbox" {...register("update_inventory")} onChange={() => setInventory(!inventory)} checked={inventory} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
-              <div className='flex gap-20  md:gap-[70px]  mt-5 h-10 px-5'>
+              <div className='flex gap-20  lg:gap-[70px] md:gap-[130px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold md:w-[100px] w-[100px]'>Send Orders:</h3>
-                <input type="checkbox" {...register("orders")} onChange={() => setOrder(!order)} checked={order} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+                <input type="checkbox" {...register("send_orders")} onChange={() => setOrder(!order)} checked={order} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
-              <div className='flex gap-20 md:gap-[70px] mt-5 h-10 px-5'>
+              <div className='flex gap-20 lg:gap-[70px] md:gap-[130px] mt-5 h-10 px-5'>
                 <h3 className='text-sm font-semibold md:w-[100px] w-[100px]'>Update Tracking:</h3>
-                <input type="checkbox" {...register("tracking")} onChange={() => setTracking(!tracking)} checked={tracking} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+                <input type="checkbox" {...register("update_tracking")} onChange={() => setTracking(!tracking)} checked={tracking} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
               <div className='flex gap-20 justify-center my-5'>
             <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>
-              <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>Submit</button>
+            <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>{myLoader ? <img src={gif} alt="" className='w-[25px] ' /> : 'Submit' }</button>
             </div>
             </div>
           </div>
         </form>
+        <ToastContainer/>
       </section>
     </>
 

@@ -152,10 +152,16 @@ const Amazon = () => {
               <div>
                 <div className='flex lg:gap-28 md:gap-12 mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>ROI strategy:</h3>
-                  <input {...register("roistrategy", {required : true})} type="text" className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <select className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded'>
+                    <option value="">Select ROI Strategy</option>
+                    <option value="ROI Strategy">ROI Strategy</option>
+                    <option value="ROI Margin">ROI Margin</option>
+                    <option value="ROI Fixed">ROI Fixed</option>
+                  </select>
                 </div>
                 <small className='text-red-600 md:ms-[62%] lg:ms-[55%]  ms-[180px]'>{errors.roistrategy && <span>This field is required</span>}</small>
               </div>
+
               <div>
                 <div className='flex lg:gap-28 md:gap-12 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[30%]'>Min Profit Margin:</h3>

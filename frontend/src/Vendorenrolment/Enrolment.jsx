@@ -19,9 +19,13 @@ import Rsr from './Rsr'
 
 const Enrolment = () => {
   const token = JSON.parse(localStorage.getItem('token'));
-  const vendorName = JSON.parse(localStorage.getItem('vendorName'));
+  const vendor_name = JSON.parse(localStorage.getItem('vendor_name'));
 
-  console.log(vendorName);
+  console.log(vendor_name);
+
+
+  // const connection = JSON.parse(localStorage.getItem('connection'));
+  // console.log(connection);
 
   const navigate = useNavigate()
 
@@ -68,7 +72,7 @@ const Enrolment = () => {
           {currentIndex === 0 && <Vendorenrolment />}
           {currentIndex === 1 && <Fpicredential />}
           {currentIndex === 2 && <Fpioption />}
-          {currentIndex === 3 && (vendorName === 'Lipseys' ? <Lipsey /> : vendorName === 'FragranceX' ? <Fragrancex /> : vendorName === 'Zanders' ? <Zanders/> : vendorName === 'cwr' ? <Cwr/> : vendorName === 'ssi' ? <Ssi/> : <Rsr />)}
+          {currentIndex === 3 && (vendor_name === 'Lipsey' ? <Lipsey /> : vendor_name === 'Fragrancex' ? <Fragrancex /> : vendor_name === 'Zanders' ? <Zanders/> : vendor_name === 'CWR' ? <Cwr/> : vendor_name === 'SSI' ? <Ssi/> : <Rsr />)}
           {currentIndex === 4 && <Thank />}
         </div>
       <div className='lg:w-[30%] md:w-[63%] w-[84%] md:ms-[21%] lg:ms-0 ms-7 border-2 lg:order-last bg-white -order-last mt-8 h-[30%] shadow'>
@@ -76,7 +80,7 @@ const Enrolment = () => {
               myList.map((items, index)=>(
                 <ul key={index} className='flex justify-between border-b border-gray-500 p-5'>
                     <li className='font-semibold'>{items.name}</li>
-                    <li className={currentIndex >= index ? 'mt-2 text-[#089451]' : 'mt-2'}>{currentIndex >= index ? items.icon2 : items.icon}</li>
+                    <li className={currentIndex > index ? 'mt-2 text-[#089451]' : 'mt-2'}>{currentIndex > index ? items.icon2 : items.icon}</li>
                 </ul>
               ))
             }

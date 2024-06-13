@@ -23,9 +23,8 @@ const Fpioption = () => {
 
 
   const Schema = yup.object().shape({
-    accountnumber: yup.string().required(),
-    dealername: yup.string().required(),
-    dealerzip: yup.string().required(),
+    file_urls: yup.string().required(),
+    ftp_url: yup.string().required(),
   })
 
   const { register, handleSubmit, formState: { errors }, } = useForm({
@@ -36,7 +35,7 @@ const Fpioption = () => {
   const onSubmit = (data) => {
     // console.log(data);
     let form = { ...store, ...data }
-    // console.log(form);
+    console.log(form);
     dispatch(handleNextStep(form))
   }
 
@@ -55,25 +54,19 @@ const Fpioption = () => {
          
             <div>
               <div className='flex justify-between my-2'>
-                <h3 className='font-semibold'>Account Number:</h3>
-                <input {...register("accountnumber" , {required : true})} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.accountnumber?.message && 'error'}`} />
+                <h3 className='font-semibold'>File_urls:</h3>
+                <input {...register("file_urls" , {required : true})} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.file_urls?.message && 'error'}`} />
               </div>
-              <small className='text-red-600 ms-[42%] lg:ms-[53%]'>{errors.accountnumber  && <span>This field is required</span>}</small>
+              <small className='text-red-600 ms-[42%] lg:ms-[53%]'>{errors.file_urls  && <span>This field is required</span>}</small>
             </div>
             <div>
               <div className='flex justify-between my-2'>
-                <h3 className='font-semibold'>Dealer Name:</h3>
-                <input {...register("dealername" , {required : true})} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.dealername?.message && 'error'}`} />
+                <h3 className='font-semibold'>Ftp_url:</h3>
+                <input {...register("ftp_url" , {required : true})} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.ftp_url?.message && 'error'}`} />
               </div>
-              <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.dealername  && <span>This field is required</span>}</small>
+              <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.ftp_url  && <span>This field is required</span>}</small>
             </div>
-            <div>
-              <div className='flex justify-between my-2'>
-                <h3 className='font-semibold'>Dealer Zip:</h3>
-                <input {...register("dealerzip" , {required : true})} type='' className={`border border-black focus:outline-none py-1 rounded  h-[35px] w-[60%] p-3 lg:w-[50%] ${errors.dealerzip?.message && 'error'}`} />
-              </div>
-              <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.dealerzip  && <span>This field is required</span>}</small>
-            </div>
+            
             <div className='flex gap-20 justify-center my-14'>
               <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>
               <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>Next</button>

@@ -6,6 +6,9 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { handleNextStep, handlePreviousStep } from '../redux/vendor';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import gif from '../Images/gif.gif'
 
 
 
@@ -13,37 +16,43 @@ import { handleNextStep, handlePreviousStep } from '../redux/vendor';
 const Lipsey = () => {
   const store = useSelector(state => state.vendor.vendorData)
 
-  const vendorName = JSON.parse(localStorage.getItem('vendorName'));
-//   console.log(vendorName);
+  let token = JSON.parse(localStorage.getItem('token'))
+  // console.log(token);
+  const vendor_name = JSON.parse(localStorage.getItem('vendor_name'));
+  // console.log(vendor_name);
+
+
+  const connection = JSON.parse(localStorage.getItem('connection'));
+  // console.log(connection);
+
+
+  const [checkBoxesProduct, setCheckBoxesProduct] = useState([])
+  const [checkBoxesManufacturer, setCheckBoxesManufacturer] = useState([])
+  const [myLoader, setMyLoader] = useState(false)
+  const [selectedOption, setSelectedOption] = useState('');
 
 
 
+  // const [checkBoxesProduct, setCheckBoxesProduct] = useState([
+  //   { id: 1, label: 'RSR', checked: false },
+  //   { id: 2, label: 'Shoes', checked: false },
+  //   { id: 3, label: 'Heels', checked: false },
+  //   { id: 4, label: 'Jackets', checked: false },
+  //   { id: 5, label: 'Stationeries', checked: false },
+  //   { id: 6, label: 'Shoes', checked: false },
+  //   { id: 7, label: 'Shoes', checked: false },
+  //   { id: 8, label: 'Glasses', checked: false },
+  // ]);
 
 
-  const [checkBoxesProduct, setCheckBoxesProduct] = useState([
-    { id: 1, label: 'RSR', checked: false },
-    { id: 2, label: 'Shoes', checked: false },
-    { id: 3, label: 'Heels', checked: false },
-    { id: 4, label: 'Jackets', checked: false },
-    { id: 5, label: 'Stationeries', checked: false },
-    { id: 6, label: 'Shoes', checked: false },
-    { id: 7, label: 'Shoes', checked: false },
-    { id: 8, label: 'Glasses', checked: false },
-  ]);
+  useEffect(() => {
+    setCheckBoxesProduct(connection.productType)
+  }, [])
 
+  useEffect(() => {
+    setCheckBoxesManufacturer(connection.manufacturer)
+  }, [])
 
-
-
-  const [checkBoxesManufacturer, setCheckBoxesManufacturer] = useState([
-    { id: 1, label: 'RSR', checked: false },
-    { id: 2, label: 'Shoes', checked: false },
-    { id: 3, label: 'Heels', checked: false },
-    { id: 4, label: 'Jackets', checked: false },
-    { id: 5, label: 'Stationeries', checked: false },
-    { id: 6, label: 'Shoes', checked: false },
-    { id: 7, label: 'Shoes', checked: false },
-    { id: 8, label: 'Glasses', checked: false },
-  ]);
 
 
 
@@ -51,32 +60,58 @@ const Lipsey = () => {
   const [inventory, setInventory] = useState(false);
   const [order, setOrder] = useState(false);
   const [tracking, setTracking] = useState(false);
+  const [hostCategory, setHostCategory] = useState(false)
 
 
   const [host, setHost] = useState(false)
   const [hostManufacturer, setHostManufacturer] = useState(false)
   const [productChecked, setProductChecked] = useState([])
-
   const [manufacturerChecked, setManufacturerChecked] = useState([])
 
 
 
 
   const Schema = yup.object().shape({
-    percentagemarkup: yup.string().required(),
-    fixedmarkup: yup.string().required(),
-    shippingcost: yup.string().required(),
-    stockminimum: yup.string().required(),
-    stockmaximum: yup.string().required(),
+    select_markup: yup.string().required('Markup type is required'),
+    percentage_markup: yup.string().when('select_markup', {
+      is: 'percentage',
+      then: schema => schema.required('Percentage markup is required'),
+      otherwise: schema => schema.notRequired()
+    }),
+    fixed_markup: yup.string().when('select_markup', {
+      is: 'fixed',
+      then: schema => schema.required('Fixed markup is required'),
+      otherwise: schema => schema.notRequired()
+    }),
+    shipping_cost: yup.string().required(),
+    stock_minimum: yup.string().required(),
+    stock_maximum: yup.string().required(),
     costaverage: yup.string(),
     inventory: yup.string(),
-    order: yup.string(),
-    tracking: yup.string(),
+    send_orders: yup.string(),
+    update_tracking: yup.string(),
+    update_inventory: yup.string(),
+    cost_average: yup.string(),
   })
 
-  const { register, handleSubmit, formState: { errors }, } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors }, } = useForm({
     resolver: yupResolver(Schema)
   })
+
+  useEffect(() => {
+    if (store) {
+      setValue("percentagemarkup", store.percentagemarkup)
+      setValue("fixedmarkup", store.fixedmarkup)
+      setValue("shippingcost", store.shippingcost)
+      setValue("stockminimum", store.stockminimum)
+      setValue("stockmaximum", store.stockmaximum)
+    }
+  }, [])
+
+
+
+
+
 
 
 
@@ -138,7 +173,7 @@ const Lipsey = () => {
 
     setCheckBoxesManufacturer(updatedCheckboxes);
     const manufacturer = updatedCheckboxes.filter(checkbox => checkbox.checked).map(checkbox => checkbox.label);
-    console.log(manufacturer);
+    // console.log(manufacturer);
     setManufacturerChecked(manufacturer)
   };
 
@@ -161,6 +196,12 @@ const Lipsey = () => {
   };
 
 
+
+
+
+
+
+
   const toggleUp = () => {
     setHost(false);
   };
@@ -170,11 +211,11 @@ const Lipsey = () => {
   };
 
   const toggleUpManufacturer = () => {
-    setHostManufacturer(false);
+    setHostCategory(false);
   };
 
   const toggleDownManufacturer = () => {
-    setHostManufacturer(true);
+    setHostCategory(true);
   };
 
 
@@ -183,18 +224,41 @@ const Lipsey = () => {
 
 
   let dispatch = useDispatch();
+  let endpoint = 'https://service.swiftsuite.app/vendor/vendor-enrolment/'
 
   const onSubmit = (data) => {
-    const formData = { ...store, ...data, productChecked, manufacturerChecked };
+    const formData = { ...store, ...data, product_filter: productChecked, manufacturer: manufacturerChecked, product_category: [] };
     console.log(formData);
+    setMyLoader(true)
+
+    axios.post(endpoint, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+          Accept: "application/json",
+      }
+    })
+      .then((response) => {
+        setMyLoader(false)
+        console.log(response);
+        toast.success('Enrolment successful')
+        dispatch(handleNextStep(formData));
+      }).catch((err) => {
+        console.log(err);
+        setMyLoader(false)
+        toast.error('duplicate Enrolment')
+      })
     // console.log(formData);
-    dispatch(handleNextStep(formData));
   };
 
 
 
-  const handlePrevious=()=>{
+  const handlePrevious = () => {
     dispatch(handlePreviousStep())
+  }
+
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value)
   }
 
   return (
@@ -202,19 +266,19 @@ const Lipsey = () => {
       <section className='bg-green-50 mb-10'>
         <form onSubmit={handleSubmit(onSubmit)}>
 
-          <div className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:h-[20%] lg:ms-0 ms-3 py-10 lg:mt-8 mt-0'>
+          <div className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:h-[20%] lg:ms-0 ms-3 py-10 lg:mt-8 mt-0 shadow-sm rounded-xl'>
             <div>
               <h1 className='ms-5 lg:text-xl text-sm font-bold'>Product Type</h1>
-              <div className='flex lg:ms-0 md:ms-0 ms-1 lg:gap-[31%] gap-[20%] md:gap-[33%] border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
-                <label className='mt-2 text-sm font-semibold h-8' htmlFor="">Select Products:</label>
-                <div className='border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[240px] w-[180px] md:w-[210px]'>
+              <div className='flex mt-5 px-5'>
+                <label className='mt-2 text-sm font-semibold h-8  w-[55%] md:w-[52%] lg:w-[50%]' htmlFor="">Select Products:</label>
+                <div className='border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[230px] w-[160px] md:w-[200px]'>
                   <span className='text-gray-500 p-1'>Select Products</span>
-                  <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-[85%] hover:text-green-700">
+                  <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-32 hover:text-green-700">
                     <span onClick={toggleUp} className={host ? '' : 'hidden'}>
-                      <IoIosArrowUp size={18}  />
+                      <IoIosArrowUp size={18} />
                     </span>
                     <span onClick={toggleDown} className={host ? 'hidden' : ''}>
-                      <IoChevronDown size={18}  className={(hostManufacturer) ? 'hidden' : 'block'}/>
+                      <IoChevronDown size={18} className={(hostCategory) ? 'hidden' : 'block'} />
                     </span>
                   </p>
                   <div className={`p-2 mt-[-4%] ${host ? 'block' : 'hidden'}`}>
@@ -237,6 +301,7 @@ const Lipsey = () => {
                       </div>
                     </div>
                   </div>
+
                 </div>
               </div>
 
@@ -244,20 +309,20 @@ const Lipsey = () => {
 
 
               <h1 className='ms-5 lg:text-xl font-bold mt-5'>Manufacturer</h1>
-              <div className='flex lg:gap-[26%] md:gap-[29%] lg:ms-0 md:ms-0 ms-1 gap-[13%] border-gray-300 border-b lg:p-5 p-4'>
-                <label className='text-sm font-semibold h-8' htmlFor="">Select Manufacturer:</label>
-                <div className={host ? '-z-1' : `border border-gray-500 rounded text-sm lg:pe-20 h-8 py-1 lg:w-[240px] w-[180px] md:w-[210px]`}>
+              <div className='flex  mt-5 px-5'>
+                <label className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]' htmlFor="">Select Manufacturer:</label>
+                <div className={host ? '-z-1' : `border border-gray-500 rounded text-sm lg:pe-20 h-8 py-1 lg:w-[230px] w-[160px] md:w-[200px]`}>
                   <span className={host ? 'hidden' : `text-gray-500 p-1`}>Select Manufacturer</span>
                   <p className="mt-[-10%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-[85%] hover:text-green-700">
-                    <span onClick={toggleUpManufacturer} className={hostManufacturer ? '' : 'hidden'}>
+                    <span onClick={toggleUpManufacturer} className={hostCategory ? '' : 'hidden'}>
                       <IoIosArrowUp className={host ? 'hidden' : ''} size={18} />
                     </span>
-                    <span onClick={toggleDownManufacturer} className={hostManufacturer ? 'hidden' : ''}>
+                    <span onClick={toggleDownManufacturer} className={hostCategory ? 'hidden' : ''}>
                       <IoChevronDown className={(host) ? 'hidden' : ''} size={18} />
                     </span>
                   </p>
-                  <div className={`p-2 mt-[-4%] ${hostManufacturer ? 'block' : 'hidden'}`}>
-                    <div className='bg-white shadow-lg z-100 lg:w-[250px] md:w-[250px] w-[200px] lg:ms-[-10px] md:ms-[-20%] ms-[-20%] p-3 mt-2'>
+                  <div className={`p-2 mt-[-4%] ${hostCategory ? 'block' : 'hidden'}`}>
+                    <div className='relative max-h-[50vh] overflow-y-auto bg-white shadow-lg z-100 lg:w-[250px] md:w-[250px] w-[200px] lg:ms-[-10px] md:ms-[-20%] ms-[-20%] p-3 mt-2'>
                       <div className='flex gap-6'>
                         <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={selectallManufacturer}>Select All</button>
                         <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={deselectallManufacturer}>Deselect All</button>
@@ -281,71 +346,89 @@ const Lipsey = () => {
 
 
 
+
+
+
+
               <h1 className='ms-5 lg:text-xl font-bold mt-2'>Pricing Option</h1>
-              <div>
-                <div className='flex  mt-5 px-5'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Percentage Markup:</h3>
-                  <input {...register("percentagemarkup", {required : true})} type="text" className={(host || hostManufacturer )? 'hidden' : `border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded`} />
-                </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.percentagemarkup && <span>This field is required</span>}</small>
+              <div className='flex  mt-5 px-5'>
+                <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Select Markup Type</h3>
+                <select {...register('select_markup', { required: true })} className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' onChange={handleSelectChange} value={selectedOption}>
+                  <option value="">Select Markup Type</option>
+                  <option value="fixed">Fixed Markup</option>
+                  <option value="percentage">Percentage Markup</option>
+                </select>
               </div>
-
-              <div>
-                <div className='flex mt-5 px-5'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Fixed Markup:</h3>
-                  <input {...register("fixedmarkup", {required : true})} type="text" className={hostManufacturer ? 'hidden' : `border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded `} />
+              <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.select_markup && <span>This field is required</span>}</small>
+              {selectedOption === 'percentage' && (
+                <div>
+                  <div className='flex  mt-5 px-5'>
+                    <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Percentage Markup:</h3>
+                    <input {...register("percentage_markup", { required: true })} type="text" className='border h-[35px] w-[55%] p-3 md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none py-1 rounded' />
+                  </div>
+                  <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.select_markup && <span>This field is required</span>}</small>
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.fixedmarkup && <span>This field is required</span>}</small>
-              </div>
+              )}
 
+              {selectedOption === 'fixed' && (
+                <div>
+                  <div className='flex mt-5 px-5'>
+                    <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Fixed Markup:</h3>
+                    <input {...register("fixed_markup", { required: true })} type="text" className='border h-[35px] w-[55%] p-3 lg:w-[230px] md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
+                  </div>
+                  <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.fixed_markup && <span>This field is required</span>}</small>
+                </div>
+              )}
               <div>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] md:w-[52%] w-[55%] lg:w-[50%]'>Shipping Cost:</h3>
-                  <input {...register("shippingcost", {required : true})} type="text" className='border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
+                  <input {...register("shipping_cost", { required: true })} type="text" className='border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.shippingcost && <span>This field is required</span>}</small>
+                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.shipping_cost && <span>This field is required</span>}</small>
               </div>
 
-              <div className='flex gap-5 lg:gap-5 border-b md:gap-[70px] mt-5 h-10 px-5'>
-                <h3 className='text-sm font-semibold'>Use Shipping Cost Average:</h3>
-                <input {...register("costaverage")} type="checkbox" onChange={() => setIsChecked(!isChecked)} checked={isChecked} className='lg:mt-0 mt-2 ms-0 lg:ms-0 md:ms-5 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+
+              <div className='flex gap-5 lg:gap-3 border-b md:gap-[80px] mt-5 h-10 px-5'>
+                <h3 className='text-sm font-semibold w-[150px]'>Use Shipping Cost Average:</h3>
+                <input {...register("cost_average")} type="checkbox" onChange={() => setIsChecked(!isChecked)} checked={isChecked} className='lg:mt-0 mt-2 ms-0 lg:ms-0 md:ms-5 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
 
               <h1 className='ms-5 lg:text-xl font-bold mt-10'>Inventory</h1>
               <div>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Stock Minimum:</h3>
-                  <input {...register("stockminimum", {required : true})} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("stock_minimum", { required: true })} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stockminimum && <span>This field is required</span>}</small>
+                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stock_minimum && <span>This field is required</span>}</small>
               </div>
 
               <div>
                 <div className='flex  mt-5 px-5 pb-5 border-b'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Stock Maximum:</h3>
-                  <input {...register("stockmaximum", {required : true})} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("stock_maximum", { required: true })} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
-                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stockmaximum && <span>This field is required</span>}</small>
+                <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stock_maximum && <span>This field is required</span>}</small>
               </div>
-              <div className='flex gap-20 lg:gap-[70px] md:gap-[142px] mt-5 h-10 px-5'>
-                <h3 className='text-sm font-semibold'>Update Inventory:</h3>
-                <input type="checkbox" {...register("inventory")} onChange={() => setInventory(!inventory)} checked={inventory} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+              <div className='flex gap-10 lg:gap-[40px] md:gap-[140px] mt-5 h-10 px-5'>
+                <h3 className='text-sm font-semibold w-[120px]'>Update Inventory:</h3>
+                <input type="checkbox" {...register("update_inventory")} onChange={() => setInventory(!inventory)} checked={inventory} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
-              <div className='flex gap-[32%] lg:gap-[100px] md:gap-[170px]  mt-5 h-10 px-5'>
-                <h3 className='text-sm font-semibold'>Send Orders:</h3>
-                <input type="checkbox" {...register("orders")} onChange={() => setOrder(!order)} checked={order} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+              <div className='flex gap-10 lg:gap-[40px] md:gap-[140px]  mt-5 h-10 px-5'>
+                <h3 className='text-sm font-semibold w-[120px]'>Send Orders:</h3>
+                <input type="checkbox" {...register("send_orders")} onChange={() => setOrder(!order)} checked={order} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
-              <div className='flex gap-[26%] lg:gap-[80px] md:gap-[150px] mt-5 h-10 px-5'>
-                <h3 className='text-sm font-semibold'>Update Tracking:</h3>
-                <input type="checkbox" {...register("tracking")} onChange={() => setTracking(!tracking)} checked={tracking} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
+              <div className='flex gap-10 lg:gap-[40px] md:gap-[140px] mt-5 h-10 px-5'>
+                <h3 className='text-sm font-semibold w-[120px]'>Update Tracking:</h3>
+                <input type="checkbox" {...register("update_tracking")} onChange={() => setTracking(!tracking)} checked={tracking} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
               <div className='flex gap-20 justify-center my-5'>
-            <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>
-              <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>Submit</button>
-            </div>
+                <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>
+                <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>{myLoader ? <img src={gif} alt="" className='w-[25px] ' /> : 'Submit'}</button>
+              </div>
             </div>
           </div>
         </form>
+        <ToastContainer />
       </section>
     </>
 

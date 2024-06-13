@@ -20,6 +20,10 @@ import { MdOutlineReorder } from 'react-icons/md'
 import { AppContext } from "../context/Dashboard";
 import { IoIosArrowBack } from "react-icons/io";
 import { vendor } from "../Marketplaces/Data";
+import { IoMdArrowRoundDown } from "react-icons/io";
+import { IoMdArrowRoundUp } from "react-icons/io";
+
+
 
 
 
@@ -140,23 +144,23 @@ const Sidebar = () => {
             <li className="flex lg:gap-10 gap-5">
               <NavLink to={"/layout/catalogue"} className="link flex gap-8 hover:text-green-600 ">
                 <FaRegAddressBook size={23} className="mt-2 min-w-max " />
-                <div className="flex gap-5">
+                <div className="flex gap-5  lg:w-[70px]">
                   <p>
                     Catalogue
                   </p>
                 </div>
               </NavLink>
-              <p className="mt-3 cursor-pointer hover:text-green-600">
+              <p className="mt-[14px] cursor-pointer hover:text-green-600">
                 <span onClick={toggleUp} className={host ? '' : 'hidden'}>
-                  <IoIosArrowUp size={18} />
+                <IoMdArrowRoundUp size={18} />
                 </span>
                 <span onClick={toggleDown} className={host ? 'hidden' : ''}>
-                  <IoChevronDown size={18} />
+                <IoMdArrowRoundDown size={18} />
                 </span>
               </p>
             </li>
             <li>
-              <li className={`ms-10 shadow w-20 p-2 mt-[-4%] ${host ? 'block' : 'hidden'}`}>
+              <li className={`mx-10 shadow-md w-[85px] text-center mt-[-4%] ${host ? 'block' : 'hidden'}`}>
                 <p className="hover:text-green-600 ">
                   <Link to="/layout/catalogue">catalogue</Link>
                 </p>
@@ -172,20 +176,22 @@ const Sidebar = () => {
             <li className="flex lg:gap-10 gap-5">
               <NavLink className="link flex gap-8 hover:text-green-600">
                 <IoBagHandleOutline size={23} className="mt-2 min-w-max" />
+                <p className=" lg:w-[70px]">
                 Marketplace
+                </p>
               </NavLink>
 
-              <p className="mt-3 cursor-pointer hover:text-green-600">
+              <p className="mt-[12px] cursor-pointer hover:text-green-600">
                 <span onClick={toggleUpMarket} className={market ? '' : 'hidden'}>
-                  <IoIosArrowUp size={18} />
+                  <IoMdArrowRoundUp size={18} />
                 </span>
                 <span onClick={toggleDownMarket} className={market ? 'hidden' : ''}>
-                  <IoChevronDown size={18} />
+                  <IoMdArrowRoundDown size={18} />
                 </span>
               </p>
             </li>
 
-            <div className={`ms-10 shadow w-28 p-2 mt-[-4%] ${market ? 'block' : 'hidden'}`}>
+            <div className={`ms-10 shadow-md w-[95px] text-center mt-[-4%] ${market ? 'block' : 'hidden'}`}>
               {vendor.map((item, i) => (
                 <div key={i}>
                   <div className="cursor-pointer hover:text-green-600" onClick={(e) => marketPlace(item.name)}>{item.name}</div>
