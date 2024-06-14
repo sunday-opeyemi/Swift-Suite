@@ -50,10 +50,10 @@ class VendoEnronment(models.Model):
 class Cwr(models.Model):
     id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    cwr_part_number = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    cwr_part_number = models.TextField(unique=True,  blank=True, null=True)
     manufacturer_part_number = models.TextField(blank=True, null=True)
-    upc_code = models.CharField(max_length=255, blank=True, null=True)
-    quantity_available_to_ship_combined = models.IntegerField(blank=True, null=True)
+    upc_code = models.TextField(blank=True, null=True)
+    quantity_available_to_ship_combined = models.TextField(blank=True, null=True)
     quantity_available_to_ship_nj = models.TextField(blank=True, null=True)
     quantity_available_to_ship_fl = models.TextField(blank=True, null=True)
     next_shipment_date_combined = models.TextField(blank=True, null=True)
@@ -81,19 +81,19 @@ class Cwr(models.Model):
     non_stock = models.TextField(blank=True, null=True)
     drop_ships_direct_from_vendor = models.TextField(blank=True, null=True)
     hazardous_materials = models.TextField(blank=True, null=True)
-    truck_freight = models.TextField(blank=True, null=True)
+    truck_freight = models.BooleanField(blank=True, null=True)
     exportable = models.TextField(blank=True, null=True)
     first_class_mail = models.TextField(blank=True, null=True)
-    oversized = models.TextField(blank=True, null=True)
+    oversized = models.BooleanField(blank=True, null=True)
     remanufactured = models.TextField(blank=True, null=True)
     closeout = models.TextField(blank=True, null=True)
-    harmonization_code = models.TextField(max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    country_of_origin = models.TextField(max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    harmonization_code = models.TextField( blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    country_of_origin = models.TextField( blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     sale = models.TextField(blank=True, null=True)
     original_price_if_on_sale_closeout = models.TextField(blank=True, null=True)
     sale_start_date = models.TextField(blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     sale_end_date = models.TextField(blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    rebate = models.IntegerField(db_column='Rebate', blank=True, null=True)  # Field name made lowercase.
+    rebate = models.TextField(db_column='Rebate', blank=True, null=True)  # Field name made lowercase.
     rebate_description = models.TextField(db_column='Rebate Description', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     rebate_start_date = models.TextField(blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     rebate_end_date = models.TextField(blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
@@ -106,12 +106,12 @@ class Cwr(models.Model):
     prop_65 = models.TextField(blank=True, null=True)
     prop_65_description = models.TextField(db_column='Prop 65 Description', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     free_shipping = models.TextField(blank=True, null=True)
-    free_shipping_end_date = models.CharField(db_column='Free Shipping End Date', max_length=255, blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
-    returnable = models.TextField(blank=True, null=True)
+    free_shipping_end_date = models.TextField(db_column='Free Shipping End Date', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
+    returnable = models.BooleanField(blank=True, null=True)
     image_additional_1000x1000_urls = models.TextField(db_column='Image Additional (1000x1000) Urls', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     case_qty_nj = models.TextField(blank=True, null=True)
     case_qty_fl = models.TextField(blank=True, null=True)
-    number_3rd_party_marketplaces = models.TextField(db_column='3rd Party Marketplaces', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it wasn't a valid Python identifier.
+    number_3rd_party_marketplaces = models.BooleanField(db_column='3rd Party Marketplaces', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it wasn't a valid Python identifier.
     fcc_id = models.TextField(db_column='FCC ID', blank=True, null=True)  # Field name made lowercase. Field renamed to remove unsuitable characters.
     sku = models.TextField(blank=True, null=True)
     mfgn = models.TextField(blank=True, null=True)

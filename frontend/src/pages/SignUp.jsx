@@ -55,7 +55,7 @@ const SignUp = () => {
       // console.log(values);
       axios.post(endpoint, values)
       .then((result)=>{
-        // console.log(result);
+        console.log(result);
         console.log(result.data.message);
         setMyloader(false)
         toast.success("Sign up Successful!");
@@ -67,6 +67,9 @@ const SignUp = () => {
         if(error.response.status == 400) {
           console.log("duplicate user found");
           toast.error("Duplicate user found");
+      } else{
+        console.log("Internal server error");
+          toast.error("Internal server error");
       }
       })
     },

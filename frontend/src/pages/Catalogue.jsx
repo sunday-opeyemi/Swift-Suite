@@ -26,7 +26,7 @@ import Productmodal from "./Productmodal";
 const Catalogue = () => {
 
   const store = useSelector((state) => state.vendor.productId);
-  console.log(store);
+  // console.log(store);
   const dispatch = useDispatch()
 
 
@@ -66,7 +66,6 @@ const Catalogue = () => {
     user: '',
     sku: '',
     upc: '',
-    model: '',
     detailed_description: '',
     shipping_width: '',
     shipping_height: '',
