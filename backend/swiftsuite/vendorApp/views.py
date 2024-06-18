@@ -49,7 +49,6 @@ class VendorActivity:
         supplier_name, ftp_host, ftp_user, ftp_password, ftp_path, file_name, index, port = supplier
         file_path = os.path.join(local_dir, file_name)
         
-
         
         if supplier_name == "RSR GROUP":
             ctx = ssl.create_default_context()
@@ -283,7 +282,7 @@ class VendorActivity:
         except Exception as e:
             return e
         
-    def process_cwr(self, userid, _filters):
+    def process_cwr(self, userid):
         try: 
             for row in self.data.iterrows():
                 items = row[1].values   
@@ -297,10 +296,10 @@ class VendorActivity:
         except Exception as e:
             return e
 
-    def process_rsr(self, userid,  _filters):
+    def process_rsr(self, userid):
         pass
         
-    def process_zanders(self, userid,  _filters): 
+    def process_zanders(self, userid): 
         try:
             for row in self.data.iterrows():
                 items = row[1]     
@@ -396,7 +395,7 @@ class VendorEnrolmentTestView(APIView):
         ftp_password = vendor['ftp_password']
 
         suppliers = get_suppliers_for_vendor(ftp_name, ftp_host, ftp_user, ftp_password)
-        print(suppliers)
+        # print(suppliers)
                        
         filter_values = pull.main(suppliers, userid, get_filters=True)
 
@@ -530,6 +529,8 @@ class CatalogueBaseView(APIView):
                 user_id=userid,
                 category__in=ast.literal_eval(extra_data['product_category']),
             ).values()
+
+            return queryset
         
         elif self.vendor_name == 'Zanders':
             queryset = self.model.objects.filter(
@@ -537,6 +538,7 @@ class CatalogueBaseView(APIView):
                 serialized= vendor_data['serialized'],
             ).values()
 
+            return queryset
 
     def get(self, request, pk):
         try:
@@ -737,7 +739,6 @@ class AddProductView(APIView):
             }
         else:
             return {}
-
 
 class ViewAllProducts(APIView):
     permission_classes = [IsAuthenticated]
