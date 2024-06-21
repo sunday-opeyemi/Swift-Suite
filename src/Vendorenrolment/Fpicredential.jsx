@@ -25,6 +25,8 @@ const Fpicredential = () => {
 
 
 
+
+
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [dispatchCheck, setDispatchCheck] = useState(false)
@@ -44,12 +46,11 @@ const Fpicredential = () => {
   const togglePasswordVisibility = (field) => {
     if (field === 'password') {
       setPasswordVisible(!passwordVisible);
-    } else if (field === 'ftp_password') {
+    } else if (field === 'ftppassword') {
       setConfirmVisible(!confirmVisible);
     }
   };
 
-  
   let endpoint = 'https://service.swiftsuite.app/vendor/vendor-enrolment-test/'
 
 
@@ -71,8 +72,8 @@ const Fpicredential = () => {
       {
         headers: {
           Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          // "Content-Type": "application/json",
+          // Accept: "application/json",
         }
       }
     )
@@ -104,13 +105,14 @@ const Fpicredential = () => {
 
   }
 
-
   useEffect(() => {
-    if(store) {
-      setValue("host", store.host);
-      setValue("ftp_username", store.ftp_username)
-    }
+    setValue("host", store.host),
+      setValue("ftpusername", store.ftpusername)
+    setValue("ftppassword", store.ftppassword)
   }, [])
+
+
+
 
   const handlePrevious = () => {
     dispatch(handlePreviousStep())
@@ -151,7 +153,7 @@ const Fpicredential = () => {
               <div className='flex justify-between mt-5 relative'>
                 <h3 className='font-semibold'>FTP Password:</h3>
                 <input {...register("ftp_password", { required: true })} type={confirmVisible ? 'text' : 'password'} className={`border border-black focus:outline-none py-1 rounded p-3 h-[35px] w-[60%] lg:w-[50%] ${errors.ftp_password?.message && 'error'}`} />
-                <span onClick={() => togglePasswordVisibility('ftp_password')} className='absolute right-[3%] top-[26%]'>{!confirmVisible ? <IoEyeSharp /> : <BsEyeSlashFill />}</span>
+                <span onClick={() => togglePasswordVisibility('ftppassword')} className='absolute right-[3%] top-[26%]'>{!confirmVisible ? <IoEyeSharp /> : <BsEyeSlashFill />}</span>
               </div>
               <small className='text-red-600 lg:ms-[55%] ms-[40%]'>{errors.ftp_password && <span>This field is required</span>}</small>
             </div>
