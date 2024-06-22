@@ -217,9 +217,9 @@ const navigate = useNavigate()
 
                 </div>
               </div>
-              <h1 className='ms-5 lg:text-xl font-bold mt-2'>Pricing Option</h1>
+              <h1 className='ms-5 lg:text-xl font-bold my-2'>Pricing Option</h1>
               <div className='flex  mt-5 px-5'>
-                    <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Select Markup Type</h3>
+                    <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[40%] border'>Select Markup Type</h3>
               <select className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' onChange={handleSelectChange} value={selectedOption}>
                 <option  value="">Select Markup Type</option>
                 <option value="fixed">Fixed Markup</option>
@@ -248,7 +248,7 @@ const navigate = useNavigate()
 
               <div>
                 <div className='flex mt-5 px-5'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] md:w-[52%] w-[55%] lg:w-[50%]'>Shipping Cost:</h3>
+                  <h3 className='mt-2 text-sm font-semibold h-[35px] md:w-[52%] w-[55%] lg:w-[50%] border'>Shipping Cost:</h3>
                   <input {...register("shipping_cost", { required: true })} type="text" className='border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.shipping_cost && <span>This field is required</span>}</small>

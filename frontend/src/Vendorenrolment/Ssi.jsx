@@ -19,19 +19,21 @@ const Ssi = () => {
 
 const navigate = useNavigate()
 
-  const [checkBoxesCategory, setCheckBoxesCategory] = useState([
-    { id: 1, label: 'RSR', checked: false },
-    { id: 2, label: 'Shoes', checked: false },
-    { id: 3, label: 'Heels', checked: false },
-    { id: 4, label: 'Jackets', checked: false },
-    { id: 5, label: 'Stationeries', checked: false },
-    { id: 6, label: 'Shoes', checked: false },
-    { id: 7, label: 'Shoes', checked: false },
-    { id: 8, label: 'Glasses', checked: false },
-  ]);
+  // const [checkBoxesCategory, setCheckBoxesCategory] = useState([
+  //   { id: 1, label: 'RSR', checked: false },
+  //   { id: 2, label: 'Shoes', checked: false },
+  //   { id: 3, label: 'Heels', checked: false },
+  //   { id: 4, label: 'Jackets', checked: false },
+  //   { id: 5, label: 'Stationeries', checked: false },
+  //   { id: 6, label: 'Shoes', checked: false },
+  //   { id: 7, label: 'Shoes', checked: false },
+  //   { id: 8, label: 'Glasses', checked: false },
+  // ]);
 
 
 
+  const [checkBoxesProduct, setCheckBoxesProduct] = useState([])
+  const [checkBoxesManufacturer, setCheckBoxesManufacturer] = useState([])
   const [isChecked, setIsChecked] = useState(false);
   const [inventory, setInventory] = useState(false);
   const [order, setOrder] = useState(false);
@@ -40,6 +42,19 @@ const navigate = useNavigate()
 
   const [host, setHost] = useState(false)
   const [hostCategory, setHostCategory] = useState(false)
+
+
+const connection = JSON.parse(localStorage.getItem('connection'));
+console.log(connection)
+
+  useEffect(() => {
+    setCheckBoxesProduct(connection.category)
+    console.log(connection.category);
+  }, [])
+
+  // useEffect(() => {
+  //   setCheckBoxesManufacturer(connection.manufacturer)
+  // }, [])
 
   const Schema = yup.object().shape({
     percentagemarkup: yup.string().required(),
@@ -123,7 +138,6 @@ const navigate = useNavigate()
   return (
     <>
       <section className='bg-green-50 mb-10'>
-        cvxcbcxvnbccvnbvnb
         <form onSubmit={handleSubmit(onSubmit)}>
 
           <div className='bg-white lg:w-[100%] w-[130%] md:w-[90%] md:ms-[30%] lg:h-[20%] lg:ms-0 ms-3 py-10 lg:mt-8 mt-0'>
@@ -149,13 +163,13 @@ const navigate = useNavigate()
                         <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={deselectallCategory}>Deselect All</button>
                       </div>
                       <div className='p-2'>
-                        {checkBoxesCategory.map(checkbox => (
+                        {checkBoxesProduct.map(checkbox => (
                           <div className='flex justify-between' key={checkbox.id}>
                             {checkbox.label}
                             <input
                               type="checkbox"
                               checked={checkbox.checked}
-                              onChange={() => handleCheckBoxCategory(checkbox.id)}
+                              onChange={() => handleCheckBoxProduct(checkbox.id)}
                             />
                           </div>
                         ))}
