@@ -13,21 +13,14 @@ const Fpioption = () => {
   const navigate = useNavigate()
   let token = JSON.parse(localStorage.getItem('token'))
   const store = useSelector(state => state.vendor.vendorData)
-
-
-    useEffect(() => {
-      if(!token){
-        navigate('/signin')
-      }
-    }, [])
-
+ 
 
   const Schema = yup.object().shape({
     file_urls: yup.string().required(),
     ftp_url: yup.string().required(),
   })
 
-  const { register, handleSubmit, formState: { errors }, } = useForm({
+  const { register, handleSubmit, setValue, formState: { errors }, } = useForm({
     resolver: yupResolver(Schema)
   })
 
@@ -43,6 +36,12 @@ const Fpioption = () => {
     dispatch(handlePreviousStep())
   }
 
+useEffect(() => {
+  if(store) {
+    setValue("file_urls", store.file_urls);
+    setValue("ftp_url", store.ftp_url);
+  }
+}, [])
 
 
   return (

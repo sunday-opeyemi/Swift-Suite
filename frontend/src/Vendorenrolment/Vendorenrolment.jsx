@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { handleNextStep } from "../redux/vendor";
@@ -145,6 +145,7 @@ const Vendorenrolment = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue
   } = useForm({
     resolver: yupResolver(Schema),
   });
@@ -164,6 +165,17 @@ const Vendorenrolment = () => {
   };
 
 
+  useEffect(() => {
+    if(store) {
+      setValue("address_street1", store.address_street1);
+      setValue("address_street2", store.address_street2);
+      setValue("city", store.city);
+      setValue("country", store.country);
+      setValue("postal_code", store.postal_code);
+      setValue("state", store.state);
+    }
+  }, [])
+  
 
   const handleCountryChange = (event) => {
     setCountry(event.target.value);
