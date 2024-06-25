@@ -9,6 +9,7 @@ import Enrolment from '../Vendorenrolment/Enrolment';
 import Catalogue from '../pages/Catalogue';
 import Inventory from '../pages/Inventory';
 import Market from '../Marketenrolment/Market';
+import Editvendors from '../Editvendor/Editvendors';
 
 
 const Rootlayout = ({ children }) => {
@@ -34,6 +35,7 @@ const Rootlayout = ({ children }) => {
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/enrolment" element={<Enrolment />} />
         <Route path="/market" element={<Market />} />
+        <Route path="/editvendor" element={<Editvendors />} />
       </Routes>
     </>
   );

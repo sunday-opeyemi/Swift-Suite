@@ -21,12 +21,15 @@ import { catalogue } from "./Cataloguedata";
 import { useDispatch, useSelector } from "react-redux";
 import { addToProduct, setProductId } from "../redux/vendor";
 import Productmodal from "./Productmodal";
+import Vendors from "../Editvendor/Vendors";
 
 
 const Catalogue = () => {
 
   const store = useSelector((state) => state.vendor.productId);
   // console.log(store);
+  const userId = JSON.parse (localStorage.getItem('userId'))
+// console.log(userId);
   const dispatch = useDispatch()
 
 
@@ -117,16 +120,16 @@ const Catalogue = () => {
           Accept: "application/json",
         },
       });
-      console.log(response.data);
+      // console.log(response.data);
       setCatalogueProduct(response.data);
       setLoader(false);
       setFilter(true);
       setError(null)
     } catch (error) {
       setLoader(false);
-      console.log(error.response.data.message);
+      // console.log(error.response.data.message);
       if (error.response.data.detail) {
-        console.log("Token has expired");
+        // console.log("Token has expired");
         toast.error("Token has expired");
         localStorage.removeItem("token");
         navigate("/signin");
@@ -143,7 +146,7 @@ const Catalogue = () => {
 
   const handleProductChange = (event) => {
     const selectedProduct = catalogue.find(item => item.name === event.target.value);
-    console.log(selectedProduct.endpoint);
+    // console.log(selectedProduct.endpoint);
     if (selectedProduct) {
       setProductChange(event.target.value);
       setEndpoint(selectedProduct.endpoint); // Update the endpoint state
@@ -171,7 +174,7 @@ const Catalogue = () => {
 
   // const dispatch = useDispatch()
   const handleProductClick = async (product) => {
-    console.log(product);
+    // console.log(product);
     const productId = product.id; // Ensure productId is set correctly
     setProductId(productId);
     localStorage.setItem('productId', JSON.stringify(productId));
@@ -179,24 +182,22 @@ const Catalogue = () => {
 
 
     try {
-      const result = await axios.get(`https://service.swiftsuite.app/vendor/add-to-product/46/${productId}/lipsey/`, {
+      const result = await axios.get(`https://service.swiftsuite.app/vendor/add-to-product/${userId}/${productId}/lipsey/`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
           Accept: "application/json",
         },
       });
-
-      console.log(result.data);
+      // console.log(result.data);
       onOpen();
       setSelectProduct(result.data);
       // setProductId(result.data.id); // Ensure correct product ID is set
       setEditingUser(result.data); // Assuming you want to edit user details
       setEditableValue(result.data.model); // Assuming model is editable
       setError(null);
-
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       toast.error('Request failed try again');
     }
   };
@@ -218,29 +219,29 @@ const Catalogue = () => {
 
 
   const handleUpdateProduct = async () => {
-    let productId = JSON.parse(localStorage.getItem('productId'))
-    console.log(productId);
+    // note: try and make this global, waiy till the app starts to work  let productId = JSON.parse(localStorage.getItem('productId')) 
+    let productId = JSON.parse(localStorage.getItem('productId')) 
+    // console.log(productId);
     const updatedProduct = handleSave();
     if (updatedProduct) {
-      console.log(updatedProduct);
+      // console.log(updatedProduct);
       setSelectProduct(updatedProduct);
 
 
       try {
-        const result = await axios.put(`https://service.swiftsuite.app/vendor/add-to-product/46/${productId}/lipsey/`, updatedProduct, {
+        const result = await axios.put(`https://service.swiftsuite.app/vendor/add-to-product/${userId}/${productId}/lipsey/`, updatedProduct, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
         });
-
-        console.log(result);
-        toast.success('Product added Successfully')
+        // console.log(result);
+        toast.success('Product edited Successfully')
         setSelectProduct(result);
         localStorage.setItem('selectProduct', JSON.stringify(updatedProduct));
       } catch (err) {
-        console.log(err);
+        // console.log(err);
         toast.error('Request failed try again');
       }
     }
@@ -254,7 +255,7 @@ const Catalogue = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Selected formFilters:", formFilters);
+    // console.log(formFilters);
     // Perform filtering logic here...
     filterCatalogueProduct();
     setFormFilters({ ...formFilters });
@@ -445,7 +446,7 @@ const Catalogue = () => {
 
   const filterControl = () => {
     setfilterOpen(!filterOpen);
-    console.log(filterOpen);
+    // console.log(filterOpen);
   };
 
   const handleOptionClick = (value) => {
@@ -575,6 +576,7 @@ const Catalogue = () => {
             ))}
           </select>
         </div>
+        <Vendors/>
       </section>
       <div
         className={filterOpen ? "lg:ms-[24%] ms-10 mt-14 fixed  text-white" : "hidden"}

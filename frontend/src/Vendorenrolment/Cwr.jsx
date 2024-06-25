@@ -49,8 +49,10 @@ const Cwr = () => {
 
 
   useEffect(() => {
-    setCheckBoxesCategory(connection.category)
-  }, [])
+    if (connection && connection.category) {
+      setCheckBoxesCategory(connection.category);
+    }
+  }, []);
 
   const Schema = yup.object().shape({
     select_markup: yup.string().required('Markup type is required'),
@@ -120,6 +122,7 @@ const Cwr = () => {
     const deselect = checkBoxesCategory.map(checkbox => ({ ...checkbox, checked: false }));
     console.log(deselect);
     setCheckBoxesCategory(deselect)
+    setCategoryChecked([]); // Ensure categoryChecked is also updated
     setHost(true)
   };
 
@@ -136,10 +139,16 @@ const Cwr = () => {
   let endpoint = 'https://service.swiftsuite.app/vendor/vendor-enrolment/'
 
   const onSubmit = (data) => {
-    const formData = { ...store, ...data, product_category: categoryChecked };
+    const formData = { ...store, ...data, product_category: categoryChecked};
+    console.log(categoryChecked);
     console.log(formData);
     setMyLoader(true)
+    if(categoryChecked.length === 0) {
+      toast.error('Please select at least one category.');
+      setMyLoader(false)
+    } else {
 
+    
     axios.post(endpoint, formData, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -147,14 +156,16 @@ const Cwr = () => {
     })
       .then((response) => {
         setMyLoader(false)
-        console.log(response);
+        // console.log(response);
+        localStorage.setItem("cwr", JSON.stringify(response.data))
         toast.success('Enrolment successful')
         dispatch(handleNextStep(formData));
       }).catch((err) => {
-        console.log(err);
+        // console.log(err);
         setMyLoader(false)
         toast.error('duplicate Enrolment')
       })
+    }
     // console.log(formData);
   };
 
