@@ -44,7 +44,7 @@
 
 
 const userId = JSON.parse (localStorage.getItem('userId'))
-console.log(userId);
+// console.log(userId);
 
 export const catalogue = [
   {

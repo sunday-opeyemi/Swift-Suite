@@ -144,16 +144,15 @@ const Sidebar = () => {
             <li className="flex lg:gap-10 gap-5">
               <NavLink to={"/layout/catalogue"} className="link flex gap-8 hover:text-green-600 ">
                 <FaRegAddressBook size={23} className="mt-2 min-w-max " />
-                <div className="flex gap-5  lg:w-[70px]">
-                  <p>
+                  <div>
                     Catalogue
-                  </p>
-                </div>
+                  </div>
               </NavLink>
               <p className="mt-[14px] cursor-pointer hover:text-green-600">
                 <span onClick={toggleUp} className={host ? '' : 'hidden'}>
                 <IoMdArrowRoundUp size={18} />
                 </span>
+                {/* toggledown is true already as we set it up. onclick of this btn will see host as true so we now say if host is true the button of toggledown should be hidden and vice-versa for the toggleup */}
                 <span onClick={toggleDown} className={host ? 'hidden' : ''}>
                 <IoMdArrowRoundDown size={18} />
                 </span>

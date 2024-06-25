@@ -35,13 +35,18 @@ const Lipsey = () => {
 
 
   useEffect(() => {
-    setCheckBoxesProduct(connection.productType)
-  }, [])
+    if (connection && connection.productType) {
+      setCheckBoxesProduct(connection.productType)
+    }
+  }, []);
+  
 
   useEffect(() => {
-    setCheckBoxesManufacturer(connection.manufacturer)
-  }, [])
-
+    if (connection && connection.manufacturer) {
+    setCheckBoxesManufacturer(connection.manufacturer)   
+    }
+  }, []);
+  
 
 
 
@@ -178,13 +183,8 @@ const Lipsey = () => {
     const deselect = checkBoxesManufacturer.map(checkbox => ({ ...checkbox, checked: false }));
     console.log(deselect);
     setCheckBoxesManufacturer(deselect)
+    setManufacturerChecked([]);
   };
-
-
-
-
-
-
 
 
   
@@ -220,11 +220,12 @@ const Lipsey = () => {
     })
       .then((response) => {
         setMyLoader(false)
-        console.log(response);
+        // console.log(response);
+        localStorage.setItem("lipsey", JSON.stringify(response.data))
         toast.success('Enrolment successful')
         dispatch(handleNextStep(formData));
       }).catch((err) => {
-        console.log(err);
+        // console.log(err);
         setMyLoader(false)
         toast.error('duplicate Enrolment')
       })
