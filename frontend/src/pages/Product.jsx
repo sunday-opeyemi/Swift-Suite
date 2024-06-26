@@ -7,21 +7,37 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 
 const Product = () => {
   const store = useSelector((state) => state.vendor.productId);
-  console.log(store);
+  // console.log(store);
 
-  const productId = JSON.parse(localStorage.getItem('productId'))
-  console.log(productId);
+  const userId = JSON.parse(localStorage.getItem('userId'))
+  // console.log(userId);
 
   const token = JSON.parse(localStorage.getItem('token'))
-  console.log(token);
+  // console.log(token);
+
+
+  const productIdString = localStorage.getItem('productId');
+  let productId = null;
+  if (productIdString) {
+    try {
+      productId = JSON.parse(productIdString);
+      // console.log(productId);
+    } catch (error) {
+      // console.error("Error parsing productId from localStorage");
+    }
+  }
+  else {
+    console.log("No productId found in localStorage");
+  }
+
 
   const [loader, setLoader] = useState(true)
-  const [emptyproduct, setEmptyproduct] = useState(false)
+  const [emptyProduct, setEmptyProduct] = useState(false)
 
 
   const [userProduct, setUserProduct] = useState([])
 
-  let endpoint = 'https://service.swiftsuite.app/vendor/view-all-products/46/'
+  let endpoint = `https://service.swiftsuite.app/vendor/view-all-products/${userId}/`
 
   useEffect(() => {
     axios.get(endpoint, {
@@ -32,8 +48,10 @@ const Product = () => {
       },
     })
       .then((result) => {
-        if (result.data <= 0) {
-          setEmptyproduct(true)
+        setLoader(true)
+        if (result.data.length === 0) {
+          setEmptyProduct(true)
+          setLoader(false)
         } else {
           console.log(result.data);
           setUserProduct(result.data)
@@ -49,7 +67,7 @@ const Product = () => {
 
   return (
 
-    <section className='bg-green-50 py-[5%] h-full'>
+    <section className='bg-green-50 h-screen'>
       <div className='lg:ms-[24%]'>
         <>
           {loader && (
@@ -61,7 +79,7 @@ const Product = () => {
               />
             </div>
           )}
-          {userProduct.length && (
+          {userProduct.length > 0 && (
             userProduct.map((item, i) => (
               <div key={i} className='relative grid grid-cols-3 shadow-xl cursor-pointer rounded-xl bg-white mb-10 p-3 border-2 md:me-10 me-0 border-[#089451]'>
                 <div>
@@ -91,8 +109,8 @@ const Product = () => {
               </div>
             ))
           )
-          }
-          {emptyproduct && <p className='text-black bg-green-50 h-screen text-xl lg:ms-[100px] w-[90%]'>No products available.</p>}
+          } 
+          {emptyProduct && <p className='text-black text-xl'>No products available.</p>}
         </>
       </div>
     </section>

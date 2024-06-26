@@ -208,7 +208,7 @@ const Lipsey = () => {
 
   const onSubmit = (data) => {
     const formData = { ...store, ...data, product_filter: productChecked, manufacturer: manufacturerChecked, product_category: [] };
-    console.log(formData);
+    // console.log(formData);
     setMyLoader(true)
 
     axios.post(endpoint, formData, {

@@ -127,7 +127,7 @@ const Catalogue = () => {
       setError(null)
     } catch (error) {
       setLoader(false);
-      // console.log(error.response.data.message);
+      console.log(error.response.status);
       if (error.response.data.detail) {
         // console.log("Token has expired");
         toast.error("Token has expired");
@@ -137,16 +137,17 @@ const Catalogue = () => {
         // Set the error message state
         setError(error.response.data.message);
       }
-      //  else {
-      //   setError("An error occurred while fetching data");
-      // }
+       else {
+        setError("Sorry, we couldn't find any results");
+      }
     }
   };
 
 
   const handleProductChange = (event) => {
     const selectedProduct = catalogue.find(item => item.name === event.target.value);
-    // console.log(selectedProduct.endpoint);
+    console.log(selectedProduct.name);
+    localStorage.setItem('editVendor', JSON.stringify(selectedProduct.name))
     if (selectedProduct) {
       setProductChange(event.target.value);
       setEndpoint(selectedProduct.endpoint); // Update the endpoint state
@@ -502,10 +503,8 @@ const Catalogue = () => {
   return (
     <div className={error || loader ? 'bg-green-50 h-screen' : 'bg-green-50'}>
       <section
-        className={
-          filterOpen
-            ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
-            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
+        className={filterOpen ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+          : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
         <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center">
@@ -646,7 +645,11 @@ const Catalogue = () => {
           <div className="flex gap-6 mb-34">
             <div className="rounded-lg overflow-hidden">
               {!loader &&
-                (paginatedItems.length > 0 && currentItems.length > 0 ? (
+                (paginatedItems.length === 0 && currentItems.length === 0 ? (
+                  <div className="text-red-500 bg-green-50 h-screen text-xl lg:ms-[100px] w-[90%] mt-20">
+                    Sorry, we couldn't find any results
+                  </div>
+                ) : (
                   <>
                     {viewMode === "list" ? (
                       <div className="list-view-container">
@@ -656,7 +659,7 @@ const Catalogue = () => {
                             onClick={() => handleProductClick(product)}
                             className={`${filterOpen
                               ? "grid grid-cols-3 mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                              : "grid grid-cols-3 mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                              : "grid grid-cols-3 mt-0 cursor-pointer rounded-xl mb-5"
                               }`}
                             key={index}
                           >
@@ -801,10 +804,7 @@ const Catalogue = () => {
                       </div>
                     )}
                   </>
-                ) : (
-                  <div className="text-black bg-green-50 h-screen text-xl lg:ms-[100px] w-[90%] mt-20">
-                    Sorry, we couldn't find any results
-                  </div>
+                
                 ))}
             </div>
           </div>
