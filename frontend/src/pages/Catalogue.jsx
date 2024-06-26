@@ -175,7 +175,7 @@ const Catalogue = () => {
 
   // const dispatch = useDispatch()
   const handleProductClick = async (product) => {
-    // console.log(product);
+    console.log(product);
     const productId = product.id; // Ensure productId is set correctly
     setProductId(productId);
     localStorage.setItem('productId', JSON.stringify(productId));
@@ -190,7 +190,7 @@ const Catalogue = () => {
           Accept: "application/json",
         },
       });
-      // console.log(result.data);
+      console.log(result.data);
       onOpen();
       setSelectProduct(result.data);
       // setProductId(result.data.id); // Ensure correct product ID is set
@@ -205,27 +205,25 @@ const Catalogue = () => {
 
 
 
-  const handleSave = () => {
-    console.log(selectProduct);
-    if (!selectProduct) {
-      console.error('No product selected for editing');
-      return null;
-    }
-    onClose(); // Close the modal
-    return selectProduct; // Return the updated product
-  };
+  // const handleSave = () => {
+  //   console.log(selectProduct);
+  //   if (!selectProduct) {
+  //     console.error('No product selected for editing');
+  //     return null;
+  //   }
+  //   onClose(); // Close the modal
+  //   return selectProduct; // Return the updated product
+  // };
 
 
   // https://service.swiftsuite.app/vendor/add-to-product/46/1/lipsey/
 
 
+  let productId = JSON.parse(localStorage.getItem('productId')) 
   const handleUpdateProduct = async () => {
-    // note: try and make this global, waiy till the app starts to work  let productId = JSON.parse(localStorage.getItem('productId')) 
-    let productId = JSON.parse(localStorage.getItem('productId')) 
-    // console.log(productId);
-    const updatedProduct = handleSave();
+    const updatedProduct = selectProduct;
     if (updatedProduct) {
-      // console.log(updatedProduct);
+      console.log(updatedProduct);
       setSelectProduct(updatedProduct);
 
 
@@ -626,7 +624,7 @@ const Catalogue = () => {
         handleChange={handleChange}
         handleUpdateProduct={handleUpdateProduct}
         handleProductClick={handleProductClick}
-        handleSave={handleSave}
+        // handleSave={handleSave}
       />
 
       <div className="lg:ms-[26%] py-40 bg-green-50 p-10">
