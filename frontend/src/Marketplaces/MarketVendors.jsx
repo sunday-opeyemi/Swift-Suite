@@ -1,16 +1,20 @@
 import React from 'react'
 import { Vendordata } from './Vendordata'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { setVendorName } from '../redux/vendor'
 
 
 
 
 const MarketVendors = () => {
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const vendor=(e)=>{
-        console.log(e);
-        localStorage.setItem('vendor_name', JSON.stringify(e))
+    const vendor=(vendor)=>{
+        // console.log(vendor);
+        localStorage.setItem('vendor_name', JSON.stringify(vendor))
+        dispatch(setVendorName(vendor))
         navigate('/layout/enrolment')
     }
 

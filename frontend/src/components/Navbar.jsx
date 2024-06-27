@@ -33,7 +33,7 @@ const Navbar = ({ openToggle }) => {
 
   const location = useLocation();
 
-  const hiddenRoutes = ['/layout/home', '/layout/catalogue', '/layout/product', '/layout/allapp','/layout/enrolment', '/layout/inventory', '/layout/market'];
+  const hiddenRoutes = ['/layout/home', '/layout/catalogue', '/layout/product', '/layout/allapp','/layout/enrolment', '/layout/inventory', '/layout/market', '/layout/editvendor'];
 
   const isHidden = hiddenRoutes.some(route => location.pathname.startsWith(route));
   console.log(isHidden);

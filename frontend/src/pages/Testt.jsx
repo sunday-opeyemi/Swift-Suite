@@ -8,23 +8,28 @@ import { useNavigate } from "react-router-dom";
 import { BsFillFilterSquareFill } from "react-icons/bs";
 import { FaList, FaTh } from "react-icons/fa";
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  Button,
+  // Modal,
+  // ModalContent,
+  // ModalHeader,
+  // ModalBody,
+  // Button,
   useDisclosure,
-  ModalFooter,
+  // ModalFooter,
 } from "@nextui-org/react";
 import FilterComponent from "../components/FilterComponent";
 import { catalogue } from "./Cataloguedata";
 import { useDispatch, useSelector } from "react-redux";
-import { addToProduct } from "../redux/vendor";
+import { addToProduct, setProductId } from "../redux/vendor";
+import Productmodal from "./Productmodal";
+import Vendors from "../Editvendor/Vendors";
+
 
 const Catalogue = () => {
 
-  const store = useSelector((state) => state.vendor.product);
+  const store = useSelector((state) => state.vendor.productId);
   // console.log(store);
+  const userId = JSON.parse (localStorage.getItem('userId'))
+// console.log(userId);
   const dispatch = useDispatch()
 
 
@@ -50,46 +55,26 @@ const Catalogue = () => {
   const [endpoint, setEndpoint] = useState("");
   const [filter, setFilter] = useState(false)
   const [error, setError] = useState(null);
-  const [editedType, setEditedType] = useState('');
   const [editableValue, setEditableValue] = useState('');
-  const [productId, setProductId] = useState('')
-  const [userId, setUserId] = useState('')
+  // const [productId, setProductId] = useState('')
   const [selectProduct, setSelectProduct] = useState({
-    type: '',
-    category_name: '',
     category: '',
-    manufacturer: '',
-    manufacturer_name: '',
+    brand: '',
     price: '',
     model: '',
     title: '',
     quantity: '',
-    quantity_available_to_ship_combined: '',
-    additionalfeature1: '',
-    additionalfeature2: '',
-    additionalfeature3: '',
-    itemnumber: '',
-    description1: '',
-    description2: '',
-    calibergauge: '',
-    capacity: '',
-    family: '',
-    finish: '',
-    itemgroup: '',
-    itemheight: '',
-    itemlength: '',
-    itemwidth: '',
-    magazine: '',
-    packageheight: '',
-    packagelength: '',
-    packagewidth: '',
-    shippingweight: '',
-    sightstype: '',
-    sights: '',
-    stockframegrips: '',
+    mpn: '',
+    msrp: '',
+    user: '',
+    sku: '',
     upc: '',
+    detailed_description: '',
+    shipping_width: '',
+    shipping_height: '',
+    shipping_weight: '',
   });
-  const [type, setType] = useState('')
+
   const [editingUser, setEditingUser] = useState(null);
 
 
@@ -135,16 +120,16 @@ const Catalogue = () => {
           Accept: "application/json",
         },
       });
-      console.log(response.data);
+      // console.log(response.data);
       setCatalogueProduct(response.data);
       setLoader(false);
       setFilter(true);
       setError(null)
     } catch (error) {
       setLoader(false);
-      console.log(error.response.data.message);
+      // console.log(error.response.data.message);
       if (error.response.data.detail) {
-        console.log("Token has expired");
+        // console.log("Token has expired");
         toast.error("Token has expired");
         localStorage.removeItem("token");
         navigate("/signin");
@@ -161,7 +146,7 @@ const Catalogue = () => {
 
   const handleProductChange = (event) => {
     const selectedProduct = catalogue.find(item => item.name === event.target.value);
-    console.log(selectedProduct.endpoint);
+    // console.log(selectedProduct.endpoint);
     if (selectedProduct) {
       setProductChange(event.target.value);
       setEndpoint(selectedProduct.endpoint); // Update the endpoint state
@@ -178,43 +163,6 @@ const Catalogue = () => {
     setCurrentPage(selected);
   };
 
-  // const handleProductClick = (product) => {
-  //   console.log(product.id);
-  //   setEditingUser(product.type)
-  //   setType(product.type)
-  //   // Step 2: Function to handle product click
-  //   setSelectedProduct(product);
-  //   // setSelectProduct({ ...product })
-  //   // setSelectProduct(selectProduct)
-  //   onOpen(); // Step 3: Open the modal
-  //   setError(null)
-  // };
-
-
-
-
-  // const handleChange = (e) => {
-  //   //   const { name, value } = e.target;
-  //   //   setSelectProduct((prevProduct) => ({
-  //   //     ...prevProduct,
-  //   //     [name]: value,
-  //   //   }));
-  //   //   console.log('Product updated:', { ...selectProduct, [name]: value });
-  // };
-
-  // const handleSave = () => {
-  //   console.log('Updated product details:', selectProduct);
-  //   if (!editingUser) {
-  //     console.error('No user selected for editing');
-  //     return;
-  //   }
-  //   const userData = {type };
-  //   console.log(userData);
-  //   setSelectedProduct(userData)
-
-  //   // Add any additional save logic here
-  // };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -224,115 +172,81 @@ const Catalogue = () => {
     }));
   };
 
-
-  // const handleSave = () => {
-  //   console.log('Updated product details:', selectedProduct);
-  //   if (!selectedProduct) {
-  //     console.error('No product selected for editing');
-  //     return;
-  //   }
-  //   const updatedProduct = {
-  //     ...selectedProduct,
-  //     type: editableValue,
-  //   };
-  //   setSelectedProduct(updatedProduct);
-  //   console.log('New product value:', updatedProduct.type); // Log the new value
-  //   setEditableValue('');
-  //   onClose(); // Close the modal
-  //   return updatedProduct; // Return the updated product
-  // };
+  // const dispatch = useDispatch()
+  const handleProductClick = async (product) => {
+    // console.log(product);
+    const productId = product.id; // Ensure productId is set correctly
+    setProductId(productId);
+    localStorage.setItem('productId', JSON.stringify(productId));
+    dispatch(setProductId(productId));
 
 
-  // const handleProductClick = (product) => {
-  //   console.log(product.id);
-  //   setEditingUser(product.type);
-  //   setType(product.type);
-  //   setEditableValue(product.type); // Set the editable value
-  //   setSelectedProduct(product);
-  //   onOpen();
-  //   setError(null);
-  // };
-
-
-  // const handleUpdateProduct = () => {
-  //   const updatedProduct = handleSave();
-  //   if (updatedProduct) {
-  //     console.log('Updated product:', updatedProduct);
-  //     // Update the UI with the new value
-  //     setSelectedProduct(updatedProduct);
-  //   }
-  // };
-
-  // const handleSave = () => {
-  //   console.log('Updated product details:', selectProduct);
-  //   // Add any additional save logic here
-  //   return selectProduct;
-  // };
-
-
-
-
-  const handleProductClick = (product) => {
-    // console.log(product.user_id);
-    setProductId(product.id)
-    setUserId(product.user_id)
-    setEditingUser(product.type);
-    setType(product.type);
-    setSelectProduct(product);
-    setEditableValue(product.type);
-    onOpen();
-    setError(null);
-  };
-
-  let productEndpoint = `https://service.swiftsuite.app/vendor/add-to-product/46/${productId}/lipsey/`
-  const handleSave = async () => {
-    console.log('Updated product details:', selectProduct);
-
-    axios.post(productEndpoint)
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-    // try {
-    //   const response = axios.post(`https://service.swiftsuite.app/vendor/add-to-product/46/${productId}/lipsey/`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(selectProduct),
-    //   });
-
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     console.log('Product added successfully:', data);
-    //   } else {
-    //     console.error('Error adding product:', response.status);
-    //   }
-    // } catch (error) {
-    //   console.error('Error making the request:', error);
-    // }
-
-    return selectProduct;
-  };
-
-  const handleUpdateProduct = () => {
-    const updatedProduct = handleSave();
-    if (updatedProduct) {
-      console.log('Updated product:', updatedProduct);
-      // Update the UI with the new values
-      setSelectProduct(updatedProduct);
-      localStorage.setItem('selectProduct', JSON.stringify(updatedProduct))
+    try {
+      const result = await axios.get(`https://service.swiftsuite.app/vendor/add-to-product/${userId}/${productId}/lipsey/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      });
+      // console.log(result.data);
+      onOpen();
+      setSelectProduct(result.data);
+      // setProductId(result.data.id); // Ensure correct product ID is set
+      setEditingUser(result.data); // Assuming you want to edit user details
+      setEditableValue(result.data.model); // Assuming model is editable
+      setError(null);
+    } catch (err) {
+      // console.log(err);
+      toast.error('Request failed try again');
     }
   };
 
 
 
+  const handleSave = () => {
+    console.log(selectProduct);
+    if (!selectProduct) {
+      console.error('No product selected for editing');
+      return null;
+    }
+    onClose(); // Close the modal
+    return selectProduct; // Return the updated product
+  };
 
-  // const handleInputChange = (e) => {
-  //   setEditedType(e.target.value);
-  // };
+
+  // https://service.swiftsuite.app/vendor/add-to-product/46/1/lipsey/
+
+
+  const handleUpdateProduct = async () => {
+    // note: try and make this global, waiy till the app starts to work  let productId = JSON.parse(localStorage.getItem('productId')) 
+    let productId = JSON.parse(localStorage.getItem('productId')) 
+    // console.log(productId);
+    const updatedProduct = handleSave();
+    if (updatedProduct) {
+      // console.log(updatedProduct);
+      setSelectProduct(updatedProduct);
+
+
+      try {
+        const result = await axios.put(`https://service.swiftsuite.app/vendor/add-to-product/${userId}/${productId}/lipsey/`, updatedProduct, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        });
+        // console.log(result);
+        toast.success('Product edited Successfully')
+        setSelectProduct(result);
+        localStorage.setItem('selectProduct', JSON.stringify(updatedProduct));
+      } catch (err) {
+        // console.log(err);
+        toast.error('Request failed try again');
+      }
+    }
+  };
+
 
   const handleFormInputChange = (e) => {
     const { name, value } = e.target;
@@ -341,7 +255,7 @@ const Catalogue = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Selected formFilters:", formFilters);
+    // console.log(formFilters);
     // Perform filtering logic here...
     filterCatalogueProduct();
     setFormFilters({ ...formFilters });
@@ -399,15 +313,6 @@ const Catalogue = () => {
         (item) => item.type && item.type.toLowerCase() === formFilters.type.toLowerCase()
       );
     }
-
-    // if (formFilters.msrp !== "") {
-    //   const filterMsrp = parseFloat(formFilters.msrp);
-    //   console.log(filterMsrp);
-    //   filteredItems = filteredItems.filter(
-    //     (item) => typeof item.msrp === item.msrp && item.msrp === filterMsrp
-    //   );
-    // }
-
 
     if (formFilters.msrp !== "") {
       const filterMsrp = parseFloat(formFilters.msrp);
@@ -516,7 +421,6 @@ const Catalogue = () => {
       }
 
     }
-    // Apply other filters
     filteredItems = filteredItems.filter(item => {
       return (
         (!searchQuery || // If searchQuery is empty, don't apply keyword filter
@@ -528,7 +432,6 @@ const Catalogue = () => {
           (item.category_name && item.category_name.toLowerCase().includes(searchQuery.toLowerCase())) ||
           (item.type && item.type.toLowerCase().includes(searchQuery.toLowerCase()))
         )
-        // Add additional conditions here if needed
       );
     });
 
@@ -543,7 +446,7 @@ const Catalogue = () => {
 
   const filterControl = () => {
     setfilterOpen(!filterOpen);
-    console.log(filterOpen);
+    // console.log(filterOpen);
   };
 
   const handleOptionClick = (value) => {
@@ -673,6 +576,7 @@ const Catalogue = () => {
             ))}
           </select>
         </div>
+        <Vendors/>
       </section>
       <div
         className={filterOpen ? "lg:ms-[24%] ms-10 mt-14 fixed  text-white" : "hidden"}
@@ -713,171 +617,18 @@ const Catalogue = () => {
           filterQuantityValue={filterQuantityValue}
           onFilterQuantityChange={onFilterQuantityChange}
         />
-        {/* <div>
-        {currentItems.length > 0 && (
-          <p className="lg:ms-4">{currentItems.length} products match your criteria.</p>
-        )}
-        </div> */}
       </div>
       {/* Modal */}
-      <Modal
-        className="md:p-5 sm:p-0 " style={{ maxHeight: "80vh", overflowY: "auto", maxWidth: '100vh' }}
+      <Productmodal
         isOpen={isOpen}
         onClose={onClose}
-        isDismissable={false}
-      >
-
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            {selectedProduct && selectedProduct.name ? `Title: ${selectedProduct && selectedProduct.name}` : ''}
-          </ModalHeader>
-          <ModalBody>
-            {selectedProduct && (
-              <>
-                <div className="text-black">
-                  {/* Lipsey */}
-                  <div>
-                    <div className="flex gap-5 my-2">
-                      <label htmlFor="" className="w-60">Type:</label>
-                      <input type="text" name="type" className="w-[100%] border text-center border-black" value={selectProduct.type} onChange={handleChange}/>
-                    </div>
-
-                    <div className="flex gap-5 my-2">
-                      <label htmlFor="category" className="w-60">Category:</label>
-                      <input type="text" name="category" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.type || selectProduct.category_name || selectProduct.category} onChange={handleChange}
-                      />
-                    </div>
-                    <div className="flex gap-5 my-2">
-                      <label htmlFor="manufacturer" className="w-60">Manufacturer:</label>
-                      <input
-                        type="text" name="manufacturer" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.manufacturer || selectProduct.manufacturer_name}
-                        onChange={handleChange}/>
-                    </div>
-                    <div className="flex gap-5 my-2">
-                      <label htmlFor="price" className="w-60">Price:</label>
-                      <input
-                        type="text" name="price" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.price || ''} onChange={handleChange}/>
-                    </div>
-                    <div className="flex gap-5 my-2">
-                      <label htmlFor="model" className="w-60">Model:</label>
-                      <input type="text" name="model" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.model || selectProduct.title || ''} onChange={handleChange}/>
-                    </div>
-                    <div className="flex gap-5 my-2">
-                      <label htmlFor="quantity" className="w-60">Quantity</label>
-                      <input
-                        type="text"
-                        name="quantity"
-                        className="w-[100%] border border-gray-500 text-center outline-none p-1"
-                        value={selectProduct.quantity || selectProduct.quantity_available_to_ship_combined || ''}
-                        onChange={handleChange}
-                      />
-                    </div>
-                    <div className="flex gap-5 my-2">
-                      <label htmlFor="upc" className="w-60">UPC:</label>
-                      <input type="text" name="upc" className="w-[100%] border text-center border-black" value={selectProduct.upc} onChange={handleChange} />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Additional Feature 1:</label>
-                      <input type="text" name="additionalfeature1" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.additionalfeature1} onChange={handleChange} placeholder="Feature1" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Additional Feature 2:</label>
-                      <input type="text" name="additionalfeature2" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.additionalfeature2} onChange={handleChange} placeholder="Feature2" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Additional Feature 3:</label>
-                      <input type="text" name="additionalfeature3" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.additionalfeature3} onChange={handleChange} placeholder="Feature3" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Item Number:</label>
-                      <input type="text" name="itemnumber" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.itemnumber} onChange={handleChange} placeholder="Itemnumber" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Description 1</label>
-                      <input type="text" name="description1" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.description1} onChange={handleChange} placeholder="Description1" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Description 2</label>
-                      <input type="text" name="description2" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.description2} onChange={handleChange} placeholder="Description2" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Additional Caliber Guage</label>
-                      <input type="text" name="calibergauge" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.calibergauge} onChange={handleChange} placeholder="Calibergauge" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Capacity:</label>
-                      <input type="text" name="capacity" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.capacity} onChange={handleChange} placeholder="Capacity" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Family:</label>
-                      <input type="text" name="family" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.family} onChange={handleChange} placeholder="Family" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Finish:</label>
-                      <input type="text" name="finish" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.finish} onChange={handleChange} placeholder="Finish" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Item Group:</label>
-                      <input type="text" name="itemgroup" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.itemgroup} onChange={handleChange} placeholder="Itemgroup" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Height</label>
-                      <input type="text" name="itemheight" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.itemheight || ''} onChange={handleChange} placeholder="Itemheight" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Length</label>
-                      <input type="text" name="itemlength" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.itemlength || ''} onChange={handleChange} placeholder="Itemlength" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Width</label>
-                      <input type="text" name="itemwidth" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.itemwidth || ''} onChange={handleChange} placeholder="Itemwidth" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Magazine</label>
-                      <input type="text" name="magazine" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.magazine || ''} onChange={handleChange} placeholder="Magazine" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Package Height:</label>
-                      <input type="text" name="packageheight" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.packageheight || ''} onChange={handleChange} placeholder="Packageheight" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Package Length</label>
-                      <input type="text" name="packagelength" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.packagelength || ''} onChange={handleChange} placeholder="Packagelength" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Package Width</label>
-                      <input type="text" name="packagewidth" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.packagewidth || ''} onChange={handleChange} placeholder="Packagewidth" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Shipping Weight</label>
-                      <input type="text" name="shippingweight" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.shippingweight || ''} onChange={handleChange} placeholder="Shippingweight" />
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Sights Type</label>
-                      {selectProduct.sightstype || selectProduct.sights
-                      ?
-                      <input type="text" name="sightstype" className="w-[100%] border text-center border-black" value={selectProduct.sightstype || selectProduct.sights} onChange={handleChange} placeholder="Sightstype"
-                      /> : ''}
-                    </div>
-                    <div className="flex gap-5 my-3">
-                      <label htmlFor="" className="w-60">Stock Framegrips</label>
-                      <input type="text" name="Stockframegrips" className="w-[100%] border border-gray-500 text-center outline-none p-1" value={selectProduct.stockframegrips || ''} onChange={handleChange} placeholder="Stockframegrips" />
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </ModalBody>
-          <ModalFooter>
-            <Button color="danger" variant="light" onPress={onClose}>
-              CANCEL
-            </Button>
-            <Button onClick={handleUpdateProduct} className="bg-[#089451] text-white" onPress={onClose}>
-              ADD TO PRODUCT
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal >
+        selectedProduct={selectedProduct}
+        selectProduct={selectProduct}
+        handleChange={handleChange}
+        handleUpdateProduct={handleUpdateProduct}
+        handleProductClick={handleProductClick}
+        handleSave={handleSave}
+      />
 
       <div className="lg:ms-[26%] py-40 bg-green-50 p-10">
         {loader && (

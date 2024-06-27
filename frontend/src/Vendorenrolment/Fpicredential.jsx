@@ -58,8 +58,8 @@ const Fpicredential = () => {
   const onSubmit = (data) => {
     setMyLoader(true)
     // console.log(data);
-    let form = { ...store, ...data, vendor_name}
-    console.log(form);
+    let form = { ...store, ...data, vendor_name }
+    // console.log(form);
     axios.post(
       endpoint,
       {
@@ -77,7 +77,7 @@ const Fpicredential = () => {
       }
     )
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         localStorage.setItem('connection', JSON.stringify(response.data))
         setMyLoader(false)
         toast.success("Connection Successful!");
@@ -86,7 +86,7 @@ const Fpicredential = () => {
       })
       .catch((err) => {
         setMyLoader(false)
-        console.log(err);
+        // console.log(err);
         if (err.response.data.detail) {
           console.log("Token has expired");
           toast.error("Token has expired");

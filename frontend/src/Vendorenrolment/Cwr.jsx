@@ -14,17 +14,18 @@ import { ToastContainer, toast } from 'react-toastify';
 
 
 
+
 const Cwr = () => {
   const store = useSelector(state => state.vendor.vendorData)
 
   const vendorName = JSON.parse(localStorage.getItem('vendorName'));
-  
+
   let token = JSON.parse(localStorage.getItem('token'))
-//   console.log(vendorName);
-const connection = JSON.parse(localStorage.getItem('connection'));
+  //   console.log(vendorName);
+  const connection = JSON.parse(localStorage.getItem('connection'));
   // console.log(connection);
 
-const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const [checkBoxesCategory, setCheckBoxesCategory] = useState([]);
 
@@ -39,21 +40,32 @@ const navigate = useNavigate()
 
 
   const [host, setHost] = useState(false)
-  const [hostCategory, setHostCategory] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const [categoryChecked, setCategoryChecked] = useState([])
   const [myLoader, setMyLoader] = useState(false)
   const [selectedOption, setSelectedOption] = useState('');
-  
 
- 
+
+
 
   useEffect(() => {
-    setCheckBoxesCategory(connection.category)
-  }, [])
+    if (connection && connection.category) {
+      setCheckBoxesCategory(connection.category);
+    }
+  }, []);
 
   const Schema = yup.object().shape({
-    percentage_markup: yup.string().required(),
-    fixed_markup: yup.string().required(),
+    select_markup: yup.string().required('Markup type is required'),
+    percentage_markup: yup.string().when('select_markup', {
+      is: 'percentage',
+      then: schema => schema.required('Percentage markup is required'),
+      otherwise: schema => schema.notRequired()
+    }),
+    fixed_markup: yup.string().when('select_markup', {
+      is: 'fixed',
+      then: schema => schema.required('Fixed markup is required'),
+      otherwise: schema => schema.notRequired()
+    }),
     shipping_cost: yup.string().required(),
     stock_minimum: yup.string().required(),
     stock_maximum: yup.string().required(),
@@ -64,7 +76,7 @@ const navigate = useNavigate()
     oversized: yup.string(),
     returnable: yup.string(),
     truck_freight: yup.string(),
-    third_party_marketplaces:yup.string()
+    third_party_marketplaces: yup.string()
   })
 
   const { register, handleSubmit, formState: { errors }, } = useForm({
@@ -110,6 +122,7 @@ const navigate = useNavigate()
     const deselect = checkBoxesCategory.map(checkbox => ({ ...checkbox, checked: false }));
     console.log(deselect);
     setCheckBoxesCategory(deselect)
+    setCategoryChecked([]); // Ensure categoryChecked is also updated
     setHost(true)
   };
 
@@ -126,36 +139,48 @@ const navigate = useNavigate()
   let endpoint = 'https://service.swiftsuite.app/vendor/vendor-enrolment/'
 
   const onSubmit = (data) => {
-    const formData = { ...store, ...data, product_category:categoryChecked };
+    const formData = { ...store, ...data, product_category: categoryChecked};
+    console.log(categoryChecked);
     console.log(formData);
     setMyLoader(true)
+    if(categoryChecked.length === 0) {
+      toast.error('Please select at least one category.');
+      setMyLoader(false)
+    } else {
 
-    axios.post(endpoint, formData,  {
+    
+    axios.post(endpoint, formData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
-    .then((response)=>{
-    setMyLoader(false)
-      console.log(response);
-      toast.success('Enrolment successful')
-      dispatch(handleNextStep(formData));
-    }) .catch((err)=>{
-      console.log(err);
-      setMyLoader(false)
-      toast.error('duplicate Enrolment')
-    })
+      .then((response) => {
+        setMyLoader(false)
+        // console.log(response);
+        localStorage.setItem("cwr", JSON.stringify(response.data))
+        toast.success('Enrolment successful')
+        dispatch(handleNextStep(formData));
+      }).catch((err) => {
+        // console.log(err);
+        setMyLoader(false)
+        toast.error('duplicate Enrolment')
+      })
+    }
     // console.log(formData);
   };
 
 
 
-  const handlePrevious=()=>{
+  const handlePrevious = () => {
     dispatch(handlePreviousStep())
   }
 
   const handleSelectChange = (event) => {
     setSelectedOption(event.target.value)
+  }
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen)
   }
 
   return (
@@ -182,50 +207,51 @@ const navigate = useNavigate()
                 <h3 className='text-sm font-semibold w-[140px]'>Returnable:</h3>
                 <input {...register("returnable")} type="checkbox" onChange={() => setReturnable(!returnable)} checked={returnable} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
-              <div className='flex lg:ms-0 md:ms-0 ms-1 gap-[30%] md:gap-[21%] border-gray-300 border-b lg:p-5 p-4 focus:outline-border-gray-500'>
-                <label className='mt-2 text-sm font-semibold h-8 md:w-[140px]' htmlFor="">Categories:</label>
-                <div className='relative border border-gray-500 rounded p-1 text-sm lg:pe-20 h-8 lg:w-[230px] w-[160px] md:w-[200px]' onClick={categorySelect}>
-                  <span className='text-gray-500 p-1' >Select Categories</span>
-                  <p className="mt-[-12%] cursor-pointer lg:ms-[130%] md:ms-[90%] ms-32 hover:text-green-700" >
-                    <span  className={host ? '' : 'hidden'}>
-                      <IoIosArrowUp size={18}  />
-                    </span>
-                    <span  className={host ? 'hidden' : ''}>
-                      <IoChevronDown size={18}  className={(host) ? 'hidden' : 'block'}/>
-                    </span>
-                  </p>
-                  <div className={`${host ? 'block p-2 mt-[-4%]' : 'hidden'}`}>
-                    <div className='bg-white shadow-lg z-100 lg:w-[250px] md:w-[250px] w-[200px] lg:ms-[-10px] md:ms-[-20%] ms-[-20%] p-3 mt-2'>
-                      <div className='flex gap-6'>
-                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={selectallCategory}>Select All</button>
-                        <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={deselectallCategory}>Deselect All</button>
-                      </div>
-                      <div className='p-2 max-h-[50vh] overflow-y-auto'>
-                        {checkBoxesCategory.map(checkbox => (
-                          <div className='flex justify-between border-b-2 border-green-400' key={checkbox.id}>
-                            {checkbox.label}
-                            <input
-                              type="checkbox"
-                              checked={checkbox.checked}
-                              onChange={() => handleCheckBoxCategory(checkbox.id)}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
 
+              <div>
+                <h1 className='ms-5 lg:text-xl text-sm font-bold'>Product Type</h1>
+                <div className='flex mt-5 px-5'>
+                  <label className='mt-2 text-sm font-semibold h-8  w-[55%] md:w-[52%] lg:w-[50%]' htmlFor="">Select Category:</label>
+                  <div className='relative border border-gray-500 rounded p-1 text-sm h-8 lg:w-[230px] w-[160px] md:w-[200px]'>
+                    <div className='flex items-center px-2 cursor-pointer justify-between' onClick={toggleDropdown}>
+                      <span className='text-gray-500'>Select Category</span>
+                      {isOpen ? <IoIosArrowUp size={20} /> : <IoChevronDown size={20} />}
+                    </div>
+                    {isOpen && (
+                      <div className='max-h-[60vh] overflow-y-auto absolute mt-2 bg-white shadow-lg z-100 lg:w-[250px] md:w-[250px] w-[200px] lg:ms-[-10px] md:ms-[-20%] ms-[-20%] p-3'>
+                        <div className='flex gap-6 mb-2'>
+                          <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={selectallCategory}>Select All</button>
+                          <button className='border border-[#089451] font-semibold py-1 lg:px-4 px-2 rounded' onClick={deselectallCategory}>Deselect All</button>
+                        </div>
+                        <div className='p-2'>
+                          {checkBoxesCategory.map(checkbox => (
+                            <div className='flex justify-between' key={checkbox.id}>
+                              {checkbox.label}
+                              <input
+                                type="checkbox"
+                                checked={checkbox.checked}
+                                onChange={() => handleCheckBoxCategory(checkbox.id)}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-              <h1 className='ms-5 lg:text-xl font-bold my-2'>Pricing Option</h1>
+
+
+              <h1 className='ms-5 lg:text-xl font-bold mt-2'>Pricing Option</h1>
               <div className='flex  mt-5 px-5'>
-                    <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[40%] border'>Select Markup Type</h3>
-              <select className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' onChange={handleSelectChange} value={selectedOption}>
-                <option  value="">Select Markup Type</option>
-                <option value="fixed">Fixed Markup</option>
-                <option value="percentage">Percentage Markup</option>
-              </select>
+                <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Select Markup Type</h3>
+                <select {...register("select_markup", {required: true})} className='border h-[35px] w-[50%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' onChange={handleSelectChange} value={selectedOption}>
+                  <option value="">Select Markup Type</option>
+                  <option value="fixed">Fixed Markup</option>
+                  <option value="percentage">Percentage Markup</option>
+                </select>
               </div>
+              <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.select_markup && <span>This field is required</span>}</small>
               {selectedOption === 'percentage' && (
                 <div>
                   <div className='flex  mt-5 px-5'>
@@ -248,7 +274,7 @@ const navigate = useNavigate()
 
               <div>
                 <div className='flex mt-5 px-5'>
-                  <h3 className='mt-2 text-sm font-semibold h-[35px] md:w-[52%] w-[55%] lg:w-[50%] border'>Shipping Cost:</h3>
+                  <h3 className='mt-2 text-sm font-semibold h-[35px] md:w-[52%] w-[55%] lg:w-[50%]'>Shipping Cost:</h3>
                   <input {...register("shipping_cost", { required: true })} type="text" className='border h-[35px] w-[55%] lg:w-[230px] p-3 md:w-[201px] border-gray-500 focus:outline-none py-1 rounded' />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.shipping_cost && <span>This field is required</span>}</small>
@@ -259,7 +285,7 @@ const navigate = useNavigate()
               <div>
                 <div className='flex mt-5 px-5'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Stock Minimum:</h3>
-                  <input {...register("stock_minimum", {required : true})} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("stock_minimum", { required: true })} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stock_minimum && <span>This field is required</span>}</small>
               </div>
@@ -267,7 +293,7 @@ const navigate = useNavigate()
               <div>
                 <div className='flex  mt-5 px-5 pb-5 border-b'>
                   <h3 className='mt-2 text-sm font-semibold h-[35px] w-[55%] md:w-[52%] lg:w-[50%]'>Stock Maximum:</h3>
-                  <input {...register("stock_maximum", {required : true})} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
+                  <input {...register("stock_maximum", { required: true })} type="text" className='border h-[35px] w-[55%] md:w-[201px] lg:w-[230px] border-gray-500 focus:outline-none p-3 py-1 rounded' />
                 </div>
                 <small className='text-red-600 ms-[42%] lg:ms-[55%]'>{errors.stock_maximum && <span>This field is required</span>}</small>
               </div>
@@ -287,13 +313,13 @@ const navigate = useNavigate()
                 <input type="checkbox" {...register("update_tracking")} onChange={() => setTracking(!tracking)} checked={tracking} className='lg:mt-0 mt-2 md:mt-2 border h-[20px] w-[15%] lg:w-[40%] border-gray-500 focus:outline-none py-1 rounded' />
               </div>
               <div className='flex gap-20 justify-center my-5'>
-            <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>
-            <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>{myLoader ? <img src={gif} alt="" className='w-[25px] ' /> : 'Submit' }</button>
-            </div>
+                <button type='submit' onClick={handlePrevious} className='bg-white text-[#089451] border py-1 px-3 rounded hover:bg-[#089451] font-bold hover:text-white border-[#089451]'>Previous</button>
+                <button type='submit' className='bg-[#089451] text-white border py-1 px-5 rounded hover:bg-white font-bold hover:text-[#089451] border-[#089451]'>{myLoader ? <img src={gif} alt="" className='w-[25px] ' /> : 'Submit'}</button>
+              </div>
             </div>
           </div>
         </form>
-        <ToastContainer/>
+        <ToastContainer />
       </section>
     </>
 
