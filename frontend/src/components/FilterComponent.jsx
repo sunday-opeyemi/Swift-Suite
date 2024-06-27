@@ -26,6 +26,9 @@ const FilterComponent = ({
   onFilterQuantityChange,
 }) => {
 
+  const userId = JSON.parse(localStorage.getItem('userId'))
+  // console.log(userId);
+
 
   return (
     <div className={filterOpen ? "ms-[2%] fixed text-white" : "hidden"}>
@@ -35,7 +38,7 @@ const FilterComponent = ({
         onSubmit={handleSubmit}
       >
         {/* FRAGRANCEX */}
-        {endpoint === "https://service.swiftsuite.app/vendor/catalogue-FragranceX/46/" && (
+        {endpoint === `https://service.swiftsuite.app/vendor/catalogue-FragranceX/${userId}/` && (
           <div>
             {/* FRAGRANCEX specific inputs */}
             <div className="flex flex-col">
@@ -75,7 +78,7 @@ const FilterComponent = ({
         )}
 
         {/* LIPSEY */}
-        {endpoint === "https://service.swiftsuite.app/vendor/catalogue-lipsey/46/" && (
+        {endpoint === `https://service.swiftsuite.app/vendor/catalogue-lipsey/${userId}/` && (
           <div className="w-full grid lg:grid-cols-4 md:grid-cols-4 grid-cols-2 lg:gap-5 md:gap-10 my-4 lg:ms-[1%] ">
             {/* Lipsey specific inputs */}
             <div className="flex flex-col">
@@ -129,7 +132,7 @@ const FilterComponent = ({
         )}
 
         {/* CWR */}
-        {endpoint === "https://service.swiftsuite.app/vendor/catalogue-cwr/46/" && (
+        {endpoint === `https://service.swiftsuite.app/vendor/catalogue-cwr/${userId}/` && (
           <div className="w-full grid lg:grid-cols-4 md:grid-cols-4 grid-cols-2 lg:gap-5 md:gap-10 my-4 lg:ms-[1%] ">
             {/* CWR specific inputs */}
             <div className="flex flex-col">
@@ -186,7 +189,7 @@ const FilterComponent = ({
         )}
 
         {/* SSI */}
-        {endpoint === "https://service.swiftsuite.app/vendor/catalogue-ssi/46/" && (
+        {endpoint === `https://service.swiftsuite.app/vendor/catalogue-ssi/${userId}/` && (
           <div className="w-full grid lg:grid-cols-4 md:grid-cols-4 grid-cols-2 lg:gap-5 md:gap-10 my-4 lg:ms-[1%] ">
             {/* SSI specific inputs */}
             <div className="flex flex-col">

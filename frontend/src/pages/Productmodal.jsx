@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@nextui-org/react";
 
 
-const Productmodal = ({ isOpen, onClose, selectProduct, handleChange, handleUpdateProduct, handleProductClick, handleSave }) => {
+const Productmodal = ({ isOpen, onClose, selectProduct, handleChange, handleUpdateProduct, handleProductClick,  }) => {
   return (
     <Modal
         className="md:p-5 sm:p-0 " style={{ maxHeight: "80vh", overflowY: "auto", maxWidth: '100vh' }}
