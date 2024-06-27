@@ -501,14 +501,14 @@ const Catalogue = () => {
   return (
     <div className={error || loader ? 'bg-green-50 h-screen' : 'bg-green-50'}>
       <section
-        className={filterOpen ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+        className={filterOpen ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10  lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
           : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
-        <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center">
-          <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white h-[40px]">
+        <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center ">
+          <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white h-[40px] ">
             <button
-              className="flex gap-1"
+              className="flex gap-1 "
               onClick={() => {
                 if (filter == true) {
                   filterControl();
@@ -522,7 +522,7 @@ const Catalogue = () => {
               </span>
             </button>
           </div>
-          <div className="flex lg:w-[45%] md:w-[100%] rounded-2xl h-[40px]  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
+          <div className="flex lg:w-[35%] md:w-[50%] rounded-2xl h-[40px]  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
             <input
               className="py-3 bg-transparent outline-none px-2  w-[200px] md:w-[100%]"
               type="text"
@@ -572,8 +572,8 @@ const Catalogue = () => {
               </option>
             ))}
           </select>
-        </div>
         <Vendors/>
+        </div>
       </section>
       <div
         className={filterOpen ? "lg:ms-[24%] ms-10 mt-14 fixed  text-white" : "hidden"}

@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-
-const Lipsey = () => {
-  return (
-    <div className='bg-green-50 h-screen'>
-        <p className='relative lg:top-4 md:top-[-2px] lg:left-0 md:left-10 ms-3 top-[-4px] font-bold text-xl'>Edit  Lipsey</p>
-        <div className='bg-white lg:w-[100%] w-[93%] md:w-[90%] lg:ms-0 md:ms-10 lg:h-[20%] ms-3 py-10 lg:mt-8 mt-0'>
-               
-        </div>
-    </div>
-  )
-}
-=======
 import React, { useEffect, useState } from 'react'
 import { IoIosArrowUp } from 'react-icons/io'
 import { IoChevronDown } from 'react-icons/io5'
@@ -223,7 +209,8 @@ console.log(userId);
 
 
   let dispatch = useDispatch();
-  let endpoint = `https://service.swiftsuite.app/vendor/add-to-product/${userId}/1/lipsey/`
+  // let endpoint = `https://service.swiftsuite.app/vendor/add-to-product/${userId}/1/lipsey/`
+  let endpoint = `https://service.swiftsuite.app/vendor/update-vendor-enrolment/Lipsey/`
 
   const onSubmit = (data) => {
     const formData = { ...store, ...data, product_filter: productChecked, manufacturer: manufacturerChecked, product_category: [] };
@@ -422,6 +409,5 @@ console.log(userId);
 
   );
 };
->>>>>>> 9dfd328d331e551520b1c835060deaced2c8091f
 
 export default Lipsey
