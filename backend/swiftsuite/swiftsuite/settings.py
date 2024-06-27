@@ -115,10 +115,9 @@ DATABASES = {
 
 
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
-EMAIL_HOST_USER = '16a3aa2f086189'
-EMAIL_HOST_PASSWORD = 'a680d6de32a1be'
+EMAIL_HOST_USER = '4ef4b514d33fdd'
+EMAIL_HOST_PASSWORD = 'bba302e1fa5c69'
 EMAIL_PORT = '2525'
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

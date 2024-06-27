@@ -127,7 +127,11 @@ const Catalogue = () => {
       setError(null)
     } catch (error) {
       setLoader(false);
+<<<<<<< HEAD
       // console.log(error.response.data.message);
+=======
+      console.log(error.response.status);
+>>>>>>> 9dfd328d331e551520b1c835060deaced2c8091f
       if (error.response.data.detail) {
         // console.log("Token has expired");
         toast.error("Token has expired");
@@ -646,7 +650,11 @@ const Catalogue = () => {
           <div className="flex gap-6 mb-34">
             <div className="rounded-lg overflow-hidden">
               {!loader &&
-                (paginatedItems.length > 0 && currentItems.length > 0 ? (
+                (paginatedItems.length === 0 && currentItems.length === 0 ? (
+                  <div className="text-black bg-green-50 h-screen text-xl lg:ms-[100px] w-[90%] mt-20">
+                    Sorry, we couldn't find any results
+                  </div>
+                ) : (
                   <>
                     {viewMode === "list" ? (
                       <div className="list-view-container">
@@ -801,10 +809,7 @@ const Catalogue = () => {
                       </div>
                     )}
                   </>
-                ) : (
-                  <div className="text-black bg-green-50 h-screen text-xl lg:ms-[100px] w-[90%] mt-20">
-                    Sorry, we couldn't find any results
-                  </div>
+                
                 ))}
             </div>
           </div>

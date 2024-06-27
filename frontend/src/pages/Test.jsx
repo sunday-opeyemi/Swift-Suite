@@ -120,7 +120,11 @@ const Catalogue = () => {
           Accept: "application/json",
         },
       });
+<<<<<<< HEAD
       // console.log(response.data);
+=======
+      console.log(response.data);
+>>>>>>> 9dfd328d331e551520b1c835060deaced2c8091f
       setCatalogueProduct(response.data);
       setLoader(false);
       setFilter(true);
@@ -137,9 +141,15 @@ const Catalogue = () => {
         // Set the error message state
         setError(error.response.data.message);
       }
+<<<<<<< HEAD
       //  else {
       //   setError("An error occurred while fetching data");
       // }
+=======
+       else {
+        setError("An error occurred while fetching data");
+      }
+>>>>>>> 9dfd328d331e551520b1c835060deaced2c8091f
     }
   };
 
@@ -650,7 +660,10 @@ const Catalogue = () => {
             <div className="text-black text-xl bg-green-50 h-screen lg:ms-[100px] w-[90%] mt-20">
               Sorry, we couldn't find any results
             </div>
+<<<<<<< HEAD
            
+=======
+>>>>>>> 9dfd328d331e551520b1c835060deaced2c8091f
           )}
               {paginatedItems.length > 0 && currentItems.length > 0 && (
                 <>

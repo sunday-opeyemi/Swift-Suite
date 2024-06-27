@@ -27,16 +27,8 @@ import Vendors from "../Editvendor/Vendors";
 const Catalogue = () => {
 
   const store = useSelector((state) => state.vendor.productId);
-  const [userId, setuserId] = useState('')
   // console.log(store);
-  useEffect(() => {
-    const userId = JSON.parse (localStorage.getItem('userId')) 
-    if(userId){
-      setuserId(userId)
-    }
-      
-  }, [])
-  
+  const userId = JSON.parse (localStorage.getItem('userId'))
 // console.log(userId);
   const dispatch = useDispatch()
 
@@ -135,7 +127,7 @@ const Catalogue = () => {
       setError(null)
     } catch (error) {
       setLoader(false);
-      // console.log(error.response.data.message);
+      console.log(error.response.status);
       if (error.response.data.detail) {
         // console.log("Token has expired");
         toast.error("Token has expired");
@@ -146,7 +138,7 @@ const Catalogue = () => {
         setError(error.response.data.message);
       }
        else {
-        setError("An error occurred while fetching data");
+        setError("Sorry, we couldn't find any results");
       }
     }
   };
@@ -154,7 +146,8 @@ const Catalogue = () => {
 
   const handleProductChange = (event) => {
     const selectedProduct = catalogue.find(item => item.name === event.target.value);
-    // console.log(selectedProduct.endpoint);
+    console.log(selectedProduct.name);
+    localStorage.setItem('editVendor', JSON.stringify(selectedProduct.name))
     if (selectedProduct) {
       setProductChange(event.target.value);
       setEndpoint(selectedProduct.endpoint); // Update the endpoint state
@@ -182,7 +175,7 @@ const Catalogue = () => {
 
   // const dispatch = useDispatch()
   const handleProductClick = async (product) => {
-    // console.log(product);
+    console.log(product);
     const productId = product.id; // Ensure productId is set correctly
     setProductId(productId);
     localStorage.setItem('productId', JSON.stringify(productId));
@@ -197,7 +190,7 @@ const Catalogue = () => {
           Accept: "application/json",
         },
       });
-      // console.log(result.data);
+      console.log(result.data);
       onOpen();
       setSelectProduct(result.data);
       // setProductId(result.data.id); // Ensure correct product ID is set
@@ -212,27 +205,25 @@ const Catalogue = () => {
 
 
 
-  const handleSave = () => {
-    console.log(selectProduct);
-    if (!selectProduct) {
-      console.error('No product selected for editing');
-      return null;
-    }
-    onClose(); // Close the modal
-    return selectProduct; // Return the updated product
-  };
+  // const handleSave = () => {
+  //   console.log(selectProduct);
+  //   if (!selectProduct) {
+  //     console.error('No product selected for editing');
+  //     return null;
+  //   }
+  //   onClose(); // Close the modal
+  //   return selectProduct; // Return the updated product
+  // };
 
 
   // https://service.swiftsuite.app/vendor/add-to-product/46/1/lipsey/
 
 
+  let productId = JSON.parse(localStorage.getItem('productId')) 
   const handleUpdateProduct = async () => {
-    // note: try and make this global, waiy till the app starts to work  let productId = JSON.parse(localStorage.getItem('productId')) 
-    let productId = JSON.parse(localStorage.getItem('productId')) 
-    // console.log(productId);
-    const updatedProduct = handleSave();
+    const updatedProduct = selectProduct;
     if (updatedProduct) {
-      // console.log(updatedProduct);
+      console.log(updatedProduct);
       setSelectProduct(updatedProduct);
 
 
@@ -510,10 +501,8 @@ const Catalogue = () => {
   return (
     <div className={error || loader ? 'bg-green-50 h-screen' : 'bg-green-50'}>
       <section
-        className={
-          filterOpen
-            ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
-            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
+        className={filterOpen ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+          : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
         <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center">
@@ -548,7 +537,7 @@ const Catalogue = () => {
               <BsSearch className="" />
             </button>
           </div>
-          
+          {/* Toggle on big screen */}
           <div className="lg:block md:hidden hidden gap-2 bg-white rounded-xl p-2 h-[36px]">
             <button
               onClick={() => {
@@ -635,7 +624,7 @@ const Catalogue = () => {
         handleChange={handleChange}
         handleUpdateProduct={handleUpdateProduct}
         handleProductClick={handleProductClick}
-        handleSave={handleSave}
+        // handleSave={handleSave}
       />
 
       <div className="lg:ms-[26%] py-40 bg-green-50 p-10">
@@ -655,7 +644,7 @@ const Catalogue = () => {
             <div className="rounded-lg overflow-hidden">
               {!loader &&
                 (paginatedItems.length === 0 && currentItems.length === 0 ? (
-                  <div className="text-black bg-green-50 h-screen text-xl lg:ms-[100px] w-[90%] mt-20">
+                  <div className="text-red-500 bg-green-50 h-screen text-xl lg:ms-[100px] w-[90%] mt-20">
                     Sorry, we couldn't find any results
                   </div>
                 ) : (
@@ -668,7 +657,7 @@ const Catalogue = () => {
                             onClick={() => handleProductClick(product)}
                             className={`${filterOpen
                               ? "grid grid-cols-3 mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                              : "grid grid-cols-3 mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                              : "grid grid-cols-3 mt-0 cursor-pointer rounded-xl mb-5"
                               }`}
                             key={index}
                           >

@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const Vendors = () => {
+<<<<<<< HEAD
     const [editVendor, setEditVendor] = useState('')
     const navigate = useNavigate()
 
@@ -17,11 +18,21 @@ const Vendors = () => {
         // console.log(e.target.value);
         setEditVendor(e.target.value)
         localStorage.setItem('editVendor', JSON.stringify(e.target.value))
+=======
+    const navigate = useNavigate()
+
+    const editVendor = JSON.parse(localStorage.getItem('editVendor'));
+        console.log(editVendor);
+
+
+    const handleEditVendor = () => {
+>>>>>>> 9dfd328d331e551520b1c835060deaced2c8091f
         navigate('/layout/editvendor')
     }
     
     return (
         <div>
+<<<<<<< HEAD
             <div className="my-auto">Edit Vendor:</div>
             <select className="cursor-pointer h-9 rounded-xl px-2 outline-none w-20" onChange={handleEditVendor} value={editVendor}>
                 {
@@ -32,6 +43,9 @@ const Vendors = () => {
                     ))
                 }
             </select>
+=======
+            <button className='bg-white text- border py-1 px-5 rounded hover:bg-black font-bold hover:text-white border-[#089451]' onClick={() =>handleEditVendor()}>Edit</button>
+>>>>>>> 9dfd328d331e551520b1c835060deaced2c8091f
         </div>
     )
 }
