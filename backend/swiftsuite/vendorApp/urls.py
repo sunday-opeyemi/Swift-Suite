@@ -13,5 +13,11 @@ urlpatterns = [
     path('all-catalogue/<int:pk>/',AllCatalogueView.as_view(), name='all-catalogue'),
 
     path('add-to-product/<int:userid>/<int:product_id>/<str:vendor_name>/', AddProductView.as_view(), name='add-to-product'),
-    path('view-all-products/<int:userid>/', ViewAllProducts.as_view(), name='view-all-products')
+    path('view-all-products/<int:userid>/', ViewAllProducts.as_view(), name='view-all-products'),
+
+    path('all-identifiers/', ViewAllIdentifiers.as_view(), name='all-identifiers'),
+    path('vendor-identifiers/<str:vendor_name>/', VendorIdentifiers.as_view(), name='vendor-identifiers'),
+    path('all-vendor-enrolled/', AllVendorEnrolled.as_view(), name='all-vendor-enrolled')
+
+
 ]

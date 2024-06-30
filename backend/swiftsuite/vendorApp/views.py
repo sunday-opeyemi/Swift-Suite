@@ -828,3 +828,40 @@ class ViewAllProducts(APIView):
         all_products = Generalproducttable.objects.filter(user_id = userid)
         serializer = GeneralProductSerializer(all_products, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ViewAllIdentifiers(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user.id
+        vendor = VendoEnronment.objects.filter(user_id = user)
+        serializer = VendoEnronmentSerializer(vendor, many=True)
+        
+        all_identifiers = [item['vendor_identifier'] for item in serializer.data]
+
+        return Response(all_identifiers, status=status.HTTP_200_OK)
+    
+class VendorIdentifiers(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, vendor_name):
+        user = request.user.id
+        vendor = VendoEnronment.objects.filter(user_id = user, vendor_name = vendor_name)
+        serializer = VendoEnronmentSerializer(vendor, many=True)
+
+        all_identifiers = [item['vendor_identifier'] for item in serializer.data]
+
+        return Response(all_identifiers, status=status.HTTP_200_OK)
+    
+class AllVendorEnrolled(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self,request):
+        user = request.user.id
+        vendor = VendoEnronment.objects.filter(user_id = user)
+        serializer = VendoEnronmentSerializer(vendor, many=True)
+
+        all_vendor_enrolled = list({item['vendor_name'] for item in serializer.data})
+        return Response(all_vendor_enrolled, status=status.HTTP_200_OK)
+
+
