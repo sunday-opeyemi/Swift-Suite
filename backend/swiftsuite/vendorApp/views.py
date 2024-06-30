@@ -35,12 +35,12 @@ class VendorActivity:
         print(f"Processing {supplier_name}...")
         local_dir = os.path.join("local_dir", supplier_name)
         os.makedirs(local_dir, exist_ok=True)
-        try:
-            value = self.download_csv_from_ftp(userid, supplier, get_filters, local_dir)
-            print(f"{supplier_name} data processed successfully.")
-            return value
-        except Exception as e:
-            print(f"Error processing {supplier_name}: {str(e)}")
+        # try:
+        value = self.download_csv_from_ftp(userid, supplier, get_filters, local_dir)
+        print(f"{supplier_name} data processed successfully.")
+        return value
+        # except Exception as e:
+        #     print(f"Error processing {supplier_name}: {str(e)}")
 
 
     def download_csv_from_ftp(self, userid, supplier, get_filters, local_dir=".", port=21):
@@ -63,13 +63,13 @@ class VendorActivity:
             print(f"{file_name} downloaded from FTPS for {ftp_user}.")
             ftps.quit()
         else:
-            ftp = FTP()
-            ftp.connect(ftp_host, port)
-            ftp.login(user=ftp_user, passwd=ftp_password)
-            ftp.set_pasv(True)
-            ftp.cwd(ftp_path)
-            with open(os.path.join(local_dir, file_name), "wb") as local_file:
-                ftp.retrbinary(f"RETR {file_name}", local_file.write)
+            # ftp = FTP()
+            # ftp.connect(ftp_host, port)
+            # ftp.login(user=ftp_user, passwd=ftp_password)
+            # ftp.set_pasv(True)
+            # ftp.cwd(ftp_path)
+            # with open(os.path.join(local_dir, file_name), "wb") as local_file:
+            #     ftp.retrbinary(f"RETR {file_name}", local_file.write)
         
             print(f"{file_name} downloaded from FTP for {ftp_user}.")
 
@@ -173,7 +173,7 @@ class VendorActivity:
             
         header[-1] = header[-1].replace("'", "")
         
-        data = pd.DataFrame(items, columns=header)
+        self.data = pd.DataFrame(items, columns=header)
         category = self.data['Category'].unique()
 
         category_dictList = []
@@ -273,44 +273,108 @@ class VendorActivity:
         try:
             for row in self.data.iterrows():
                 items = row[1].values
-                self.insert_data.append(Ssi(user_id=1, sku=items[0], description=items[1], datecreated=items[2], dimensionh=items[3], dimensionl=items[4], dimensionw=items[5], manufacturer=items[6], imageurl=items[7], thumbnailurl=items[8], upccode=items[9], weight=items[10], weightunits=items[11], category=items[12], subcategory=items[13], status=items[14], map=items[15], msrp=items[16], mpn=items[17], minimumorderquantity=items[18], detaileddescription=items[19], shippingweight=items[20], shippinglength=items[21], shippingwidth=items[22], shippingheight=items[23], attribute1=items[24], attribute2=items[25], attribute3=items[26], attribute4=items[27], attribute5=items[28], attribute6=items[29], attribute7=items[30], prop65warning=items[31], prop65reason=items[32], countryoforigin=items[33], groundshippingrequired=items[34]))
-            
+                self.insert_data.append(Ssi(user_id=userid, sku=items[0], description=items[1], datecreated=items[2], dimensionh=items[3], dimensionl=items[4], dimensionw=items[5], manufacturer=items[6], imageurl=items[7], thumbnailurl=items[8], upccode=items[9], weight=items[10], weightunits=items[11], category=items[12], subcategory=items[13], status=items[14], map=items[15], msrp=items[16], mpn=items[17], minimumorderquantity=items[18], detaileddescription=items[19], shippingweight=items[20], shippinglength=items[21], shippingwidth=items[22], shippingheight=items[23], attribute1=items[24], attribute2=items[25], attribute3=items[26], attribute4=items[27], attribute5=items[28], attribute6=items[29], attribute7=items[30], prop65warning=items[31], prop65reason=items[32], countryoforigin=items[33], groundshippingrequired=items[34]))
+
             Ssi.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["description", "status", "weight"])
             print('SSI upload successfully')
             return True
         except Exception as e:
             return e
-        
+
     def process_cwr(self, userid):
-        try: 
-            if _filters['truck_freight']:
-                self.data = self.data[self.data['Truck Freight'] == True]
-
-            if _filters['oversized']:
-                self.data = self.data[self.data['Oversized'] == True]
-            if _filters['third_party_marketplaces']:
-                self.data = self.data[self.data['3rd Party Marketplaces'] == True]
-            if _filters['returnable']:
-                self.data = self.data[self.data['Returnable'] == True]
-        
-            self.data = self.data[self.data['Category Name'].isin(_filters['product_category'])] 
-
+        try:
             for row in self.data.iterrows():
-                items = row[1].values   
+                items = row[1].values
                 items = list(items)
-                self.insert_data.append(Cwr(user_id=1, cwr_part_number=items[0], manufacturer_part_number=items[1], upc_code=items[2], quantity_available_to_ship_combined=items[3], quantity_available_to_ship_nj=items[4], quantity_available_to_ship_fl=items[5], next_shipment_date_combined=items[6], next_shipment_date_nj=items[7], next_shipment_date_fl=items[8], your_cost=items[9], list_price=items[10], m_a_p_price=items[11], m_r_p_price=items[12], uppercase_title=items[13], title=items[14], full_description=items[15], category_id=items[16], category_name=items[17], manufacturer_name=items[18], shipping_weight=items[19], box_height=items[20], box_length=items[21], box_width=items[22], list_of_accessories_by_sku=items[23], list_of_accessories_by_mfg=items[24], quick_specs=items[29], hazardous_materials=items[30], truck_freight=items[31], exportable=items[32], first_class_mail=items[33], oversized=items[34], remanufactured=items[35], closeout=items[36], harmonization_code=items[37], country_of_origin=items[38], sale=items[39], original_price_if_on_sale_closeout=items[40], sale_start_date=items[41], sale_end_date=items[42], rebate=items[43], rebate_description=items[44], rebate_start_date=items[45], rebate_end_date=items[46], google_merchant_category=items[47], quick_guide_literature_pdf_url=items[48], owners_manual_pdf_url=items[49], brochure_literature_pdf_url=items[50], installation_guide_pdf_url=items[51], video_urls=items[52], prop_65=items[53], prop_65_description=items[54], free_shipping=items[55], free_shipping_end_date=items[56], returnable=items[57], image_additional_1000x1000_urls=items[58], case_qty_nj=items[59], case_qty_fl=items[60], number_3rd_party_marketplaces=items[61], fcc_id=items[62], sku=items[63], mfgn=items[64], qty=items[65], qtynj=items[66], qtyfl=items[67], price=items[68], map=items[69], mrp=items[70]))
-                    
+                # print(items)
+
+                # Validate and convert boolean fields
+                truck_freight = items[31] in ['true', 'True', True, '1', 1]
+                oversized = items[34] in ['true', 'True', True, '1', 1]
+                returnable = items[57] in ['true', 'True', True, '1', 1]
+                number_3rd_party_marketplaces = items[61] in ['true', 'True', True, '1', 1]
+
+                self.insert_data.append(Cwr(
+                    user_id=userid,
+                    cwr_part_number=items[0],
+                    manufacturer_part_number=items[1],
+                    upc_code=items[2],
+                    quantity_available_to_ship_combined=items[3],
+                    quantity_available_to_ship_nj=items[4],
+                    quantity_available_to_ship_fl=items[5],
+                    next_shipment_date_combined=items[6],
+                    next_shipment_date_nj=items[7],
+                    next_shipment_date_fl=items[8],
+                    your_cost=items[9],
+                    list_price=items[10],
+                    m_a_p_price=items[11],
+                    m_r_p_price=items[12],
+                    uppercase_title=items[13],
+                    title=items[14],
+                    full_description=items[15],
+                    category_id=items[16],
+                    category_name=items[17],
+                    manufacturer_name=items[18],
+                    shipping_weight=items[19],
+                    box_height=items[20],
+                    box_length=items[21],
+                    box_width=items[22],
+                    list_of_accessories_by_sku=items[23],
+                    list_of_accessories_by_mfg=items[24],
+                    quick_specs=items[29],
+                    hazardous_materials=items[30],
+                    truck_freight=truck_freight,
+                    exportable=items[32],
+                    first_class_mail=items[33],
+                    oversized=oversized,
+                    remanufactured=items[35],
+                    closeout=items[36],
+                    harmonization_code=items[37],
+                    country_of_origin=items[38],
+                    sale=items[39],
+                    original_price_if_on_sale_closeout=items[40],
+                    sale_start_date=items[41],
+                    sale_end_date=items[42],
+                    rebate=items[43],
+                    rebate_description=items[44],
+                    rebate_start_date=items[45],
+                    rebate_end_date=items[46],
+                    google_merchant_category=items[47],
+                    quick_guide_literature_pdf_url=items[48],
+                    owners_manual_pdf_url=items[49],
+                    brochure_literature_pdf_url=items[50],
+                    installation_guide_pdf_url=items[51],
+                    video_urls=items[52],
+                    prop_65=items[53],
+                    prop_65_description=items[54],
+                    free_shipping=items[55],
+                    free_shipping_end_date=items[56],
+                    returnable=returnable,
+                    image_additional_1000x1000_urls=items[58],
+                    case_qty_nj=items[59],
+                    case_qty_fl=items[60],
+                    number_3rd_party_marketplaces=number_3rd_party_marketplaces,
+                    fcc_id=items[62],
+                    sku=items[63],
+                    mfgn=items[64],
+                    qty=items[65],
+                    qtynj=items[66],
+                    qtyfl=items[67],
+                    price=items[68],
+                    map=items[69],
+                    mrp=items[70]
+                ))
+
             print(len(self.insert_data))
-            Cwr.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["qty", "qtynj", "qtyfl", "price", "map", "mrp"])
-            self.insert_data.append(Cwr(user_id=userid, cwr_part_number=items[0], manufacturer_part_number=items[1], upc_code=items[2], quantity_available_to_ship_combined=items[3], quantity_available_to_ship_nj=items[4], quantity_available_to_ship_fl=items[5], next_shipment_date_combined=items[6], next_shipment_date_nj=items[7], next_shipment_date_fl=items[8], your_cost=items[9], list_price=items[10], m_a_p_price=items[11], m_r_p_price=items[12], uppercase_title=items[13], title=items[14], full_description=items[15], category_id=items[16], category_name=items[17], manufacturer_name=items[18], shipping_weight=items[19], box_height=items[20], box_length=items[21], box_width=items[22], list_of_accessories_by_sku=items[23], list_of_accessories_by_mfg=items[24], quick_specs=items[29], hazardous_materials=items[30], truck_freight=items[31], exportable=items[32], first_class_mail=items[33], oversized=items[34], remanufactured=items[35], closeout=items[36], harmonization_code=items[37], country_of_origin=items[38], sale=items[39], original_price_if_on_sale_closeout=items[40], sale_start_date=items[41], sale_end_date=items[42], rebate=items[43], rebate_description=items[44], rebate_start_date=items[45], rebate_end_date=items[46], google_merchant_category=items[47], quick_guide_literature_pdf_url=items[48], owners_manual_pdf_url=items[49], brochure_literature_pdf_url=items[50], installation_guide_pdf_url=items[51], video_urls=items[52], prop_65=items[53], prop_65_description=items[54], free_shipping=items[55], free_shipping_end_date=items[56], returnable=items[57], image_additional_1000x1000_urls=items[58], case_qty_nj=items[59], case_qty_fl=items[60], number_3rd_party_marketplaces=items[61], fcc_id=items[62], sku=items[63], mfgn=items[64], qty=items[65], qtynj=items[66], qtyfl=items[67], price=items[68], map=items[69], mrp=items[70]))
-            
-            print(len(self.insert_data))
-            Cwr.objects.bulk_create(self.insert_data, batch_size=500, update_conflicts=True, update_fields=["qty", "qtynj", "qtyfl", "price", "map", "mrp"])
+            Cwr.objects.bulk_create(self.insert_data, batch_size=100, update_conflicts=True, update_fields=[
+                "qty", "qtynj", "qtyfl", "price", "map", "mrp"
+            ])
             print('\nProduct Upload successful....')
             return True
         except Exception as e:
+            print(f"Error: {e}")
             return e
-
+    
     def process_rsr(self, userid):
         pass
   
@@ -483,8 +547,9 @@ class CatalogueBaseView(APIView):
     model = None  # Subclasses must override this
     vendor_name = ''
 
-    def get_queryset(self, userid):
-        vendor_data = VendoEnronment.objects.get(user_id=userid, vendor_name = self.vendor_name)
+    def get_queryset(self, userid, identifier):
+        print("identifier=",identifier)
+        vendor_data = VendoEnronment.objects.get(user_id=userid, vendor_name = self.vendor_name, vendor_identifier = identifier)
         vendor_data = model_to_dict(vendor_data)
         general_selection = {
             'percentage_markup':vendor_data['percentage_markup'],
@@ -556,9 +621,9 @@ class CatalogueBaseView(APIView):
 
             return queryset
 
-    def get(self, request, pk):
+    def get(self, request, pk, identifier):
         try:
-            queryset = self.get_queryset(pk)
+            queryset = self.get_queryset(pk, identifier)
             return JsonResponse(list(queryset), safe=False)
         
         except VendoEnronment.DoesNotExist:
@@ -619,7 +684,7 @@ class AddProductView(APIView):
     def put(self, request, userid, product_id, vendor_name):
         vendor_name = vendor_name.lower()
 
-        if vendor_name not in self.MODELS_MAPPING:
+        if vendor_name not in MODELS_MAPPING:
             return JsonResponse({'error': 'Invalid vendor name'}, status=400)
 
         product = get_object_or_404(MODELS_MAPPING[vendor_name], id=product_id, user_id=userid)

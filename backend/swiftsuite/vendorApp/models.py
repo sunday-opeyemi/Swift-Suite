@@ -18,6 +18,7 @@ class VendoEnronment(models.Model):
     ftp_url = models.CharField(max_length=255)
     file_urls = models.TextField()
     host = models.CharField(max_length=255)
+    vendor_identifier = models.CharField(max_length=50, unique=True, null=True)
 
     # Price options
     percentage_markup = models.TextField(blank=True, null=True)
