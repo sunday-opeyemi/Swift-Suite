@@ -8,7 +8,7 @@ const Vendors = () => {
     const navigate = useNavigate()
 
     const editVendor = JSON.parse(localStorage.getItem('editVendor'));
-        console.log(editVendor);
+        // console.log(editVendor);
 
 
     const handleEditVendor = () => {

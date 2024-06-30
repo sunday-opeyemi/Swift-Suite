@@ -31,7 +31,7 @@ const Catalogue = () => {
   // this checks if the userId is null
   const userIdString = localStorage.getItem('userId');
   const userId = userIdString ? JSON.parse(userIdString) : null;
-  console.log(userId);
+  // console.log(userId);
 
   const dispatch = useDispatch()
 
@@ -130,7 +130,7 @@ const Catalogue = () => {
       setError(null)
     } catch (error) {
       setLoader(false);
-      console.log(error.response.status);
+      // console.log(error.response.status);
       if (error.response.data.detail) {
         // console.log("Token has expired");
         toast.error("Token has expired");
@@ -178,7 +178,7 @@ const Catalogue = () => {
 
   // const dispatch = useDispatch()
   const handleProductClick = async (product) => {
-    console.log(product);
+    // console.log(product);
     const productId = product.id; // Ensure productId is set correctly
     setProductId(productId);
     localStorage.setItem('productId', JSON.stringify(productId));
@@ -227,7 +227,7 @@ const Catalogue = () => {
   // this checks if the productId is null
   const productIdString = localStorage.getItem('productId');
   const productId = productIdString ? JSON.parse(productIdString) : null;
-  console.log(productId);
+  // console.log(productId);
   
   const handleUpdateProduct = async () => {
     const updatedProduct = selectProduct;
