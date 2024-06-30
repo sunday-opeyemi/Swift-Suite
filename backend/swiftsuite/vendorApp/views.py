@@ -35,12 +35,12 @@ class VendorActivity:
         print(f"Processing {supplier_name}...")
         local_dir = os.path.join("local_dir", supplier_name)
         os.makedirs(local_dir, exist_ok=True)
-        # try:
-        value = self.download_csv_from_ftp(userid, supplier, get_filters, local_dir)
-        print(f"{supplier_name} data processed successfully.")
-        return value
-        # except Exception as e:
-        #     print(f"Error processing {supplier_name}: {str(e)}")
+        try:
+            value = self.download_csv_from_ftp(userid, supplier, get_filters, local_dir)
+            print(f"{supplier_name} data processed successfully.")
+            return value
+        except Exception as e:
+            print(f"Error processing {supplier_name}: {str(e)}")
 
 
     def download_csv_from_ftp(self, userid, supplier, get_filters, local_dir=".", port=21):
@@ -63,13 +63,13 @@ class VendorActivity:
             print(f"{file_name} downloaded from FTPS for {ftp_user}.")
             ftps.quit()
         else:
-            # ftp = FTP()
-            # ftp.connect(ftp_host, port)
-            # ftp.login(user=ftp_user, passwd=ftp_password)
-            # ftp.set_pasv(True)
-            # ftp.cwd(ftp_path)
-            # with open(os.path.join(local_dir, file_name), "wb") as local_file:
-            #     ftp.retrbinary(f"RETR {file_name}", local_file.write)
+            ftp = FTP()
+            ftp.connect(ftp_host, port)
+            ftp.login(user=ftp_user, passwd=ftp_password)
+            ftp.set_pasv(True)
+            ftp.cwd(ftp_path)
+            with open(os.path.join(local_dir, file_name), "wb") as local_file:
+                ftp.retrbinary(f"RETR {file_name}", local_file.write)
         
             print(f"{file_name} downloaded from FTP for {ftp_user}.")
 
@@ -532,8 +532,8 @@ class VendoEnronmentView(APIView):
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
-def update_vendor_enrolment(request, vendor_name):
-    enrolment_list = get_object_or_404(VendoEnronment, user_id=request.user.id, vendor_name=vendor_name)
+def update_vendor_enrolment(request, identifier):
+    enrolment_list = get_object_or_404(VendoEnronment, user_id=request.user.id, vendor_identifier=identifier)
     serializer = VendoEnronmentSerializer(enrolment_list, data=request.data)
     if serializer.is_valid():
         serializer.save()
