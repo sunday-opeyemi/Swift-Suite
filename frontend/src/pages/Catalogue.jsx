@@ -21,12 +21,18 @@ import { catalogue } from "./Cataloguedata";
 import { useDispatch, useSelector } from "react-redux";
 import { addToProduct, setProductId } from "../redux/vendor";
 import Productmodal from "./Productmodal";
+import Vendors from "../Editvendor/Vendors";
 
 
 const Catalogue = () => {
 
   const store = useSelector((state) => state.vendor.productId);
   // console.log(store);
+  // this checks if the userId is null
+  const userIdString = localStorage.getItem('userId');
+  const userId = userIdString ? JSON.parse(userIdString) : null;
+  // console.log(userId);
+
   const dispatch = useDispatch()
 
 
@@ -117,16 +123,16 @@ const Catalogue = () => {
           Accept: "application/json",
         },
       });
-      console.log(response.data);
+      // console.log(response.data);
       setCatalogueProduct(response.data);
       setLoader(false);
       setFilter(true);
       setError(null)
     } catch (error) {
       setLoader(false);
-      console.log(error.response.data.message);
+      // console.log(error.response.status);
       if (error.response.data.detail) {
-        console.log("Token has expired");
+        // console.log("Token has expired");
         toast.error("Token has expired");
         localStorage.removeItem("token");
         navigate("/signin");
@@ -134,16 +140,17 @@ const Catalogue = () => {
         // Set the error message state
         setError(error.response.data.message);
       }
-      //  else {
-      //   setError("An error occurred while fetching data");
-      // }
+      else {
+        setError("Sorry, we couldn't find any results");
+      }
     }
   };
 
 
   const handleProductChange = (event) => {
     const selectedProduct = catalogue.find(item => item.name === event.target.value);
-    console.log(selectedProduct.endpoint);
+    console.log(selectedProduct.name);
+    localStorage.setItem('editVendor', JSON.stringify(selectedProduct.name))
     if (selectedProduct) {
       setProductChange(event.target.value);
       setEndpoint(selectedProduct.endpoint); // Update the endpoint state
@@ -171,7 +178,7 @@ const Catalogue = () => {
 
   // const dispatch = useDispatch()
   const handleProductClick = async (product) => {
-    console.log(product);
+    // console.log(product);
     const productId = product.id; // Ensure productId is set correctly
     setProductId(productId);
     localStorage.setItem('productId', JSON.stringify(productId));
@@ -179,14 +186,13 @@ const Catalogue = () => {
 
 
     try {
-      const result = await axios.get(`https://service.swiftsuite.app/vendor/add-to-product/46/${productId}/lipsey/`, {
+      const result = await axios.get(`https://service.swiftsuite.app/vendor/add-to-product/${userId}/${productId}/lipsey/`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
           Accept: "application/json",
         },
       });
-
       console.log(result.data);
       onOpen();
       setSelectProduct(result.data);
@@ -194,53 +200,56 @@ const Catalogue = () => {
       setEditingUser(result.data); // Assuming you want to edit user details
       setEditableValue(result.data.model); // Assuming model is editable
       setError(null);
-
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       toast.error('Request failed try again');
     }
   };
 
 
 
-  const handleSave = () => {
-    console.log(selectProduct);
-    if (!selectProduct) {
-      console.error('No product selected for editing');
-      return null;
-    }
-    onClose(); // Close the modal
-    return selectProduct; // Return the updated product
-  };
+  // const handleSave = () => {
+  //   console.log(selectProduct);
+  //   if (!selectProduct) {
+  //     console.error('No product selected for editing');
+  //     return null;
+  //   }
+  //   onClose(); // Close the modal
+  //   return selectProduct; // Return the updated product
+  // };
 
 
   // https://service.swiftsuite.app/vendor/add-to-product/46/1/lipsey/
 
 
+  // let productId = JSON.parse(localStorage.getItem('productId'))
+  // console.log(store);
+  // this checks if the productId is null
+  const productIdString = localStorage.getItem('productId');
+  const productId = productIdString ? JSON.parse(productIdString) : null;
+  // console.log(productId);
+  
   const handleUpdateProduct = async () => {
-    let productId = JSON.parse(localStorage.getItem('productId'))
-    console.log(productId);
-    const updatedProduct = handleSave();
+    const updatedProduct = selectProduct;
     if (updatedProduct) {
       console.log(updatedProduct);
       setSelectProduct(updatedProduct);
 
 
       try {
-        const result = await axios.put(`https://service.swiftsuite.app/vendor/add-to-product/46/${productId}/lipsey/`, updatedProduct, {
+        const result = await axios.put(`https://service.swiftsuite.app/vendor/add-to-product/${userId}/${productId}/lipsey/`, updatedProduct, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
         });
-
-        console.log(result);
-        toast.success('Product added Successfully')
+        // console.log(result);
+        toast.success('Product edited Successfully')
         setSelectProduct(result);
         localStorage.setItem('selectProduct', JSON.stringify(updatedProduct));
       } catch (err) {
-        console.log(err);
+        // console.log(err);
         toast.error('Request failed try again');
       }
     }
@@ -254,7 +263,7 @@ const Catalogue = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Selected formFilters:", formFilters);
+    // console.log(formFilters);
     // Perform filtering logic here...
     filterCatalogueProduct();
     setFormFilters({ ...formFilters });
@@ -358,7 +367,7 @@ const Catalogue = () => {
       // If filter by UPC is enabled, filter items where UPC exists
       // filteredItems = filteredItems.filter((item) => item.upc !== "");
       filteredItems = filteredItems.filter((item) => item.upc || item.upc_code || item.upccode);
-      console.log(filteredItems);
+      // console.log(filteredItems);
     }
     // PRICE FILTER
     if (filterType && filterValue !== "") {
@@ -434,18 +443,13 @@ const Catalogue = () => {
       );
     });
 
-
-
-
-
-
     // Update the current items
     setCurrentItems(filteredItems);
   };
 
   const filterControl = () => {
     setfilterOpen(!filterOpen);
-    console.log(filterOpen);
+    // console.log(filterOpen);
   };
 
   const handleOptionClick = (value) => {
@@ -501,16 +505,14 @@ const Catalogue = () => {
   return (
     <div className={error || loader ? 'bg-green-50 h-screen' : 'bg-green-50'}>
       <section
-        className={
-          filterOpen
-            ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
-            : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
+        className={filterOpen ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10  lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+          : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
-        <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center">
-          <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white h-[40px]">
+        <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center ">
+          <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white h-[40px] ">
             <button
-              className="flex gap-1"
+              className="flex gap-1 "
               onClick={() => {
                 if (filter == true) {
                   filterControl();
@@ -524,7 +526,7 @@ const Catalogue = () => {
               </span>
             </button>
           </div>
-          <div className="flex lg:w-[45%] md:w-[100%] rounded-2xl h-[40px]  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
+          <div className="flex lg:w-[35%] md:w-[50%] rounded-2xl h-[40px]  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
             <input
               className="py-3 bg-transparent outline-none px-2  w-[200px] md:w-[100%]"
               type="text"
@@ -574,6 +576,7 @@ const Catalogue = () => {
               </option>
             ))}
           </select>
+        <Vendors/>
         </div>
       </section>
       <div
@@ -625,7 +628,7 @@ const Catalogue = () => {
         handleChange={handleChange}
         handleUpdateProduct={handleUpdateProduct}
         handleProductClick={handleProductClick}
-        handleSave={handleSave}
+      // handleSave={handleSave}
       />
 
       <div className="lg:ms-[26%] py-40 bg-green-50 p-10">
@@ -644,7 +647,11 @@ const Catalogue = () => {
           <div className="flex gap-6 mb-34">
             <div className="rounded-lg overflow-hidden">
               {!loader &&
-                (paginatedItems.length > 0 && currentItems.length > 0 ? (
+                (paginatedItems.length === 0 && currentItems.length === 0 ? (
+                  <div className="text-red-500 bg-green-50 h-screen text-xl lg:ms-[100px] w-[90%] mt-20">
+                    Sorry, we couldn't find any results
+                  </div>
+                ) : (
                   <>
                     {viewMode === "list" ? (
                       <div className="list-view-container">
@@ -654,7 +661,7 @@ const Catalogue = () => {
                             onClick={() => handleProductClick(product)}
                             className={`${filterOpen
                               ? "grid grid-cols-3 mt-10 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
-                              : "grid grid-cols-3 mt-0 shadow-xl cursor-pointer rounded-xl bg-white mb-5"
+                              : "grid grid-cols-3 mt-0 cursor-pointer rounded-xl mb-5"
                               }`}
                             key={index}
                           >
@@ -799,10 +806,7 @@ const Catalogue = () => {
                       </div>
                     )}
                   </>
-                ) : (
-                  <div className="text-black bg-green-50 h-screen text-xl lg:ms-[100px] w-[90%] mt-20">
-                    Sorry, we couldn't find any results
-                  </div>
+
                 ))}
             </div>
           </div>

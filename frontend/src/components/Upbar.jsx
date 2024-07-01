@@ -17,7 +17,7 @@ const Upbar = ({onClickHandler}) => {
 
   return (
     <>
-        <div className='fixed w-screen lg:hidden bg-white p-5 rounded' style={{zIndex: '2'}}>
+        <div className='fixed w-screen lg:hidden ms-[-5%] bg-white p-5 rounded' style={{zIndex: '2'}}>
             <section className='mx-1'>
                 <div className='grid grid-cols-2 gap-2 justify-center items-center'>
                     <Link to="" className='font-semibold'>Home</Link>

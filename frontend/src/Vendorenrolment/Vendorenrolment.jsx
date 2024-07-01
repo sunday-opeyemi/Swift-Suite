@@ -2,14 +2,14 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import { handleNextStep } from "../redux/vendor";
+import { handleNextStep, setVendorName } from "../redux/vendor";
 import { useDispatch, useSelector } from "react-redux";
 
 const Vendorenrolment = () => {
-  let vendor_name = JSON.parse(localStorage.getItem("vendor_name"));
-  // console.log(vendor_name);
-
+  
   const store = useSelector((state) => state.vendor.vendorData);
+  
+  // console.log(store.vendor_name);
 
   const [country, setCountry] = useState("");
   const [state, setState] = useState("");
@@ -156,15 +156,25 @@ const Vendorenrolment = () => {
     let form = {
       ...store,
       ...data,
-      vendor_name: vendor_name,
+      vendor_name: store.vendor_name,
       country,
       state,
     };
-    console.log(form);
+    // console.log(form);
     dispatch(handleNextStep(form));
   };
 
-
+ 
+    
+    useEffect(() => {
+      const storedVendorName = JSON.parse(localStorage.getItem('vendor_name'));
+      // console.log(storedVendorName);
+    if (storedVendorName) {
+      dispatch(setVendorName(storedVendorName)); // Update Redux store
+      setValue("vendor_name", storedVendorName); // Update form value if necessary
+    }
+    }, [])
+    
   useEffect(() => {
     if(store) {
       setValue("address_street1", store.address_street1);
@@ -215,7 +225,7 @@ const Vendorenrolment = () => {
             </label>
             <input
               // {...register("vendor_name"   , {required : true})}
-              type="text" disabled value={`${vendor_name}`}
+              type="text" disabled value={`${store.vendor_name}`}
               className='border p-3 border-black focus:outline-none py-2 lg:w-[52%] md:w-[46%] w-[58%] ms-12 lg:ms-6 md:ms-20 rounded lg:mt-3 mt-0'
             />
           </div>

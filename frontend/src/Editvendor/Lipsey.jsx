@@ -9,22 +9,27 @@ import { handleNextStep, handlePreviousStep } from '../redux/vendor';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import gif from '../Images/gif.gif'
+import { useNavigate } from 'react-router-dom';
 
 
 
 
 const Lipsey = () => {
   const store = useSelector(state => state.vendor.vendorData)
-
+console.log(store);
   let token = JSON.parse(localStorage.getItem('token'))
   // console.log(token);
   const vendor_name = JSON.parse(localStorage.getItem('vendor_name'));
   // console.log(vendor_name);
 
+  const userId = JSON.parse (localStorage.getItem('userId'))
+console.log(userId);
+
 
   const connection = JSON.parse(localStorage.getItem('connection'));
   // console.log(connection);
 
+  const navigate = useNavigate()
 
   const [checkBoxesProduct, setCheckBoxesProduct] = useState([])
   const [checkBoxesManufacturer, setCheckBoxesManufacturer] = useState([])
@@ -204,7 +209,8 @@ const Lipsey = () => {
 
 
   let dispatch = useDispatch();
-  let endpoint = 'https://service.swiftsuite.app/vendor/vendor-enrolment/'
+  // let endpoint = `https://service.swiftsuite.app/vendor/add-to-product/${userId}/1/lipsey/`
+  let endpoint = `https://service.swiftsuite.app/vendor/update-vendor-enrolment/Lipsey/`
 
   const onSubmit = (data) => {
     const formData = { ...store, ...data, product_filter: productChecked, manufacturer: manufacturerChecked, product_category: [] };
@@ -221,9 +227,11 @@ const Lipsey = () => {
       .then((response) => {
         setMyLoader(false)
         // console.log(response);
-        localStorage.setItem("lipsey", JSON.stringify(response.data))
+        // localStorage.setItem("lipsey", JSON.stringify(response.data))
         toast.success('Enrolment successful')
         dispatch(handleNextStep(formData));
+        navigate('/layout/catalogue')
+
       }).catch((err) => {
         // console.log(err);
         setMyLoader(false)

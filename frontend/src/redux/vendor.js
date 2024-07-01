@@ -7,6 +7,14 @@ const initialData = () => {
     //** Parse stored json or if none return initialValue
     return item ? JSON.parse(item) :
         {
+            currentStep: 0,
+            vendor_name: '',
+            address_street1: '',
+            address_street2: '',
+            city: '',
+            postal_code: '',
+            country: '',
+            state: '',
             // currentStep: 0,
 
             // vendor_name: '',
@@ -58,7 +66,7 @@ export const slice = createSlice({
         handleNextStep: (state, action) => {
             state.vendorData = { ...state.vendorData, ...action.payload }
             state.vendorData.currentStep++
-            // localStorage.setItem("vendor", JSON.stringify(state.vendorData))
+            localStorage.setItem("vendor", JSON.stringify(state.vendorData))
         },
 
         handlePlanLength: (state, action) => {
@@ -105,8 +113,20 @@ export const slice = createSlice({
             state.productId = action.payload;
             // console.log(action.payload);
         },
+        setVendorName: (state, action) => {
+            // here, we receive vendor_name that is in localstorage
+            state.vendorData.vendor_name = action.payload;
+            // console.log(action.payload);
+            // localStorage.setItem('vendor', JSON.stringify(state.vendorData)); // Update localStorage
+        },
+        userId: (state, action) => {
+            // here, we receive vendor_name that is in localstorage
+            state.vendorData.userId = action.payload;
+            console.log(action.payload);
+            // localStorage.setItem('vendor', JSON.stringify(state.vendorData)); // Update localStorage
+        },
     },
 })
-export const { handleNextStep, handlePlanLength, handlePreviousStep, handleChange, handleConfirm, addToProduct, increment, decrement, remove, setProductId } = slice.actions
+export const { handleNextStep, handlePlanLength, handlePreviousStep, handleChange, handleConfirm, addToProduct, increment, decrement, remove, setProductId, setVendorName, userId } = slice.actions
 
 export default slice.reducer
