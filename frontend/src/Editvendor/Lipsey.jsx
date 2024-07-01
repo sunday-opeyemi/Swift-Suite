@@ -209,7 +209,8 @@ console.log(userId);
 
 
   let dispatch = useDispatch();
-  let endpoint = `https://service.swiftsuite.app/vendor/add-to-product/${userId}/1/lipsey/`
+  // let endpoint = `https://service.swiftsuite.app/vendor/add-to-product/${userId}/1/lipsey/`
+  let endpoint = `https://service.swiftsuite.app/vendor/update-vendor-enrolment/Lipsey/`
 
   const onSubmit = (data) => {
     const formData = { ...store, ...data, product_filter: productChecked, manufacturer: manufacturerChecked, product_category: [] };

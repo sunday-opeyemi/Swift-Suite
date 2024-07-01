@@ -127,7 +127,11 @@ const Catalogue = () => {
       setError(null)
     } catch (error) {
       setLoader(false);
+<<<<<<< HEAD
+      // console.log(error.response.data.message);
+=======
       console.log(error.response.status);
+>>>>>>> 9dfd328d331e551520b1c835060deaced2c8091f
       if (error.response.data.detail) {
         // console.log("Token has expired");
         toast.error("Token has expired");
