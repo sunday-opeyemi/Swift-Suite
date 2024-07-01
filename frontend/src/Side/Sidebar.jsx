@@ -141,14 +141,14 @@ const Sidebar = () => {
                 Dashboard
               </NavLink>
             </li>
-            <li className="flex lg:gap-10 gap-5">
-              <NavLink to={"/layout/catalogue"} className="link flex gap-8 hover:text-green-600 ">
+            <li className="flex lg:gap-8 gap-5">
+              <NavLink to={"/layout/catalogue"} className="link flex gap-8 hover:text-green-600 w-[130px]">
                 <FaRegAddressBook size={23} className="mt-2 min-w-max " />
                   <div>
                     Catalogue
                   </div>
               </NavLink>
-              <p className="mt-[14px] cursor-pointer hover:text-green-600">
+              <p className="mt-[10px] h-[25px] rounded-[100%] p-1 pb-2 cursor-pointer hover:text-green-600">
                 <span onClick={toggleUp} className={host ? '' : 'hidden'}>
                 <IoMdArrowRoundUp size={18} />
                 </span>
@@ -172,15 +172,15 @@ const Sidebar = () => {
                 Inventory
               </NavLink>
             </li>
-            <li className="flex lg:gap-10 gap-5">
-              <NavLink className="link flex gap-8 hover:text-green-600">
+            <li className="flex lg:gap-8 gap-5">
+              <NavLink className="link flex gap-8 hover:text-green-600 w-[130px]">
                 <IoBagHandleOutline size={23} className="mt-2 min-w-max" />
                 <p className=" lg:w-[70px]">
                 Marketplace
                 </p>
               </NavLink>
 
-              <p className="mt-[12px] cursor-pointer hover:text-green-600">
+              <p className="mt-[10px] h-[25px] rounded-[100%] p-1 pb-2 cursor-pointer hover:text-green-600 ">
                 <span onClick={toggleUpMarket} className={market ? '' : 'hidden'}>
                   <IoMdArrowRoundUp size={18} />
                 </span>

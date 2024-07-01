@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { IoEyeSharp } from "react-icons/io5";
 import { BsEyeSlashFill } from "react-icons/bs";
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import * as yup from 'yup'
 import axios from 'axios';
 import gif from '../Images/gif.gif'
 import { ToastContainer, toast } from 'react-toastify';
+
 
 
 
@@ -21,6 +22,14 @@ const Reset = () => {
 
     let navigate = useNavigate()
     const endpoint = 'https://service.swiftsuite.app/accounts/set_new_password/'
+
+    const token = JSON.parse(localStorage.getItem("token"));
+
+    useEffect(() => {
+      if (!token){
+        navigate('/signin')
+      }
+    }, [])
 
     const togglePasswordVisibility = (field) => {
       if (field === 'password') {

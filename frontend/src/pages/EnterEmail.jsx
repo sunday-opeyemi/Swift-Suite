@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import { useFormik } from "formik";
 import * as yup from 'yup'
@@ -9,10 +9,18 @@ import gif from '../Images/gif.gif'
 
 
 
+
 const EnterEmail = () => {
   const [myLoader, setMyLoader] = useState('')
+  const token = JSON.parse(localStorage.getItem("token"));
 
-  // let navigate = useNavigate()
+  let navigate = useNavigate()
+  useEffect(() => {
+    if (!token){
+      navigate('/signin')
+    }
+  }, [])
+  
 
   const endpoint = 'https://service.swiftsuite.app/accounts/password_reset/'
   let formik = useFormik({

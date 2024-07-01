@@ -42,7 +42,7 @@ function App() {
       <Route path='layout/*' element={<Rootlayout/>}/>
       <Route path='/signin'  element={<Signin/>}/>
       <Route path='/enteremail'  element={<EnterEmail/>}/>
-      <Route path='/reset'  element={<Reset/>}/>
+      <Route path='/accounts/password_reset_confirm'  element={<Reset/>}/>
       <Route path='/success'  element={<Regsuccess/>}/>
       <Route path='passreg'   element={<PassSuccess/>}/>
       <Route path='/auth'   element={<Auth/>}/>
