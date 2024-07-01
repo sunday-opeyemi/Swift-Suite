@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { vendorDetails } from './Editvendordetail';
-import Cwr from './Cwr';
-import Lipsey from './Lipsey';
+import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
 
@@ -11,7 +8,7 @@ const Vendors = () => {
     const navigate = useNavigate()
 
     const editVendor = JSON.parse(localStorage.getItem('editVendor'));
-        console.log(editVendor);
+        // console.log(editVendor);
 
 
     const handleEditVendor = () => {

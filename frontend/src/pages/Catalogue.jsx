@@ -28,8 +28,11 @@ const Catalogue = () => {
 
   const store = useSelector((state) => state.vendor.productId);
   // console.log(store);
-  const userId = JSON.parse (localStorage.getItem('userId'))
-// console.log(userId);
+  // this checks if the userId is null
+  const userIdString = localStorage.getItem('userId');
+  const userId = userIdString ? JSON.parse(userIdString) : null;
+  // console.log(userId);
+
   const dispatch = useDispatch()
 
 
@@ -127,7 +130,7 @@ const Catalogue = () => {
       setError(null)
     } catch (error) {
       setLoader(false);
-      console.log(error.response.status);
+      // console.log(error.response.status);
       if (error.response.data.detail) {
         // console.log("Token has expired");
         toast.error("Token has expired");
@@ -137,7 +140,7 @@ const Catalogue = () => {
         // Set the error message state
         setError(error.response.data.message);
       }
-       else {
+      else {
         setError("Sorry, we couldn't find any results");
       }
     }
@@ -175,7 +178,7 @@ const Catalogue = () => {
 
   // const dispatch = useDispatch()
   const handleProductClick = async (product) => {
-    console.log(product);
+    // console.log(product);
     const productId = product.id; // Ensure productId is set correctly
     setProductId(productId);
     localStorage.setItem('productId', JSON.stringify(productId));
@@ -219,7 +222,13 @@ const Catalogue = () => {
   // https://service.swiftsuite.app/vendor/add-to-product/46/1/lipsey/
 
 
-  let productId = JSON.parse(localStorage.getItem('productId')) 
+  // let productId = JSON.parse(localStorage.getItem('productId'))
+  // console.log(store);
+  // this checks if the productId is null
+  const productIdString = localStorage.getItem('productId');
+  const productId = productIdString ? JSON.parse(productIdString) : null;
+  // console.log(productId);
+  
   const handleUpdateProduct = async () => {
     const updatedProduct = selectProduct;
     if (updatedProduct) {
@@ -358,7 +367,7 @@ const Catalogue = () => {
       // If filter by UPC is enabled, filter items where UPC exists
       // filteredItems = filteredItems.filter((item) => item.upc !== "");
       filteredItems = filteredItems.filter((item) => item.upc || item.upc_code || item.upccode);
-      console.log(filteredItems);
+      // console.log(filteredItems);
     }
     // PRICE FILTER
     if (filterType && filterValue !== "") {
@@ -434,11 +443,6 @@ const Catalogue = () => {
       );
     });
 
-
-
-
-
-
     // Update the current items
     setCurrentItems(filteredItems);
   };
@@ -501,14 +505,14 @@ const Catalogue = () => {
   return (
     <div className={error || loader ? 'bg-green-50 h-screen' : 'bg-green-50'}>
       <section
-        className={filterOpen ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10   lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
+        className={filterOpen ? "fixed border md:h-[60%] h-[55%] md:gap-14 w-[100%] top-14 mt-4 bg-[#089451] py-10  lg:ms-[22%]  lg:me-[2%] md:me-[5%]"
           : "fixed border md:gap-14  w-[100%] top-14 bg-[#089451] mt-4 py-10  lg:ms-[22%] lg:me-[2] md:me-[5%]"
         }
       >
-        <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center">
-          <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white h-[40px]">
+        <div className="flex h-[25%] lg:ms-[-260px]  md:gap-5 gap-3 md:mx-5 mx-2 justify-center ">
+          <div className="rounded-2xl pt-1 focus:outline-none p-2 bg-white h-[40px] ">
             <button
-              className="flex gap-1"
+              className="flex gap-1 "
               onClick={() => {
                 if (filter == true) {
                   filterControl();
@@ -522,7 +526,7 @@ const Catalogue = () => {
               </span>
             </button>
           </div>
-          <div className="flex lg:w-[45%] md:w-[100%] rounded-2xl h-[40px]  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
+          <div className="flex lg:w-[35%] md:w-[50%] rounded-2xl h-[40px]  md:ms-0 items-center lg:gap-[100px] md:gap-[100px] bg-white">
             <input
               className="py-3 bg-transparent outline-none px-2  w-[200px] md:w-[100%]"
               type="text"
@@ -572,8 +576,8 @@ const Catalogue = () => {
               </option>
             ))}
           </select>
-        </div>
         <Vendors/>
+        </div>
       </section>
       <div
         className={filterOpen ? "lg:ms-[24%] ms-10 mt-14 fixed  text-white" : "hidden"}
@@ -624,7 +628,7 @@ const Catalogue = () => {
         handleChange={handleChange}
         handleUpdateProduct={handleUpdateProduct}
         handleProductClick={handleProductClick}
-        // handleSave={handleSave}
+      // handleSave={handleSave}
       />
 
       <div className="lg:ms-[26%] py-40 bg-green-50 p-10">
@@ -802,7 +806,7 @@ const Catalogue = () => {
                       </div>
                     )}
                   </>
-                
+
                 ))}
             </div>
           </div>

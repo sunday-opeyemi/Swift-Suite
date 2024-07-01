@@ -8,7 +8,7 @@ import Rsr from './Rsr';
 
 const Editvendors = () => {
         const editVendor = JSON.parse(localStorage.getItem('editVendor'));
-        console.log(editVendor);
+        // console.log(editVendor);
 
   return (
     <section className='bg-green-50'>
