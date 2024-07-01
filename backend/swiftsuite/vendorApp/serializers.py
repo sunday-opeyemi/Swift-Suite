@@ -20,7 +20,7 @@ class VendoEnronmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = VendoEnronment
         fields = ['vendor_id', 'vendor_name', 'address_street1', 'address_street2',
-                  'city', 'state', 'postal_code', 'country', 'ftp_username', 'ftp_password','ftp_url', 'file_urls','host','percentage_markup','fixed_markup','shipping_cost','stock_minimum','stock_maximum','update_inventory','send_orders','update_tracking', 'product_filter','manufacturer', 'truck_freight','oversized','third_party_marketplaces','returnable','product_category', 'shipping_cost_average', 'brand','serialized']
+                  'city', 'state', 'postal_code', 'country', 'ftp_username', 'ftp_password','ftp_url', 'file_urls','host','vendor_identifier','percentage_markup','fixed_markup','shipping_cost','stock_minimum','stock_maximum','update_inventory','send_orders','update_tracking', 'product_filter','manufacturer', 'truck_freight','oversized','third_party_marketplaces','returnable','product_category', 'shipping_cost_average', 'brand','serialized']
         
     
     def create(self, validated_data):
