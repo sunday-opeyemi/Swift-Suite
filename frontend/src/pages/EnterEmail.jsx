@@ -15,11 +15,11 @@ const EnterEmail = () => {
   const token = JSON.parse(localStorage.getItem("token"));
 
   let navigate = useNavigate()
-  useEffect(() => {
-    if (!token){
-      navigate('/signin')
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!token){
+  //     navigate('/signin')
+  //   }
+  // }, [])
   
 
   const endpoint = 'https://service.swiftsuite.app/accounts/password_reset/'

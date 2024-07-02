@@ -25,11 +25,11 @@ const Reset = () => {
 
     const token = JSON.parse(localStorage.getItem("token"));
 
-    useEffect(() => {
-      if (!token){
-        navigate('/signin')
-      }
-    }, [])
+    // useEffect(() => {
+    //   if (!token){
+    //     navigate('/signin')
+    //   }
+    // }, [])
 
     const togglePasswordVisibility = (field) => {
       if (field === 'password') {
