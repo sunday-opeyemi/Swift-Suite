@@ -15,9 +15,9 @@ import gif from '../Images/gif.gif'
 
 const Lipsey = () => {
   const store = useSelector(state => state.vendor.vendorData)
+  console.log(store);
 
   let token = JSON.parse(localStorage.getItem('token'))
-  // console.log(token);
   const vendor_name = JSON.parse(localStorage.getItem('vendor_name'));
   // console.log(vendor_name);
 
@@ -220,12 +220,12 @@ const Lipsey = () => {
     })
       .then((response) => {
         setMyLoader(false)
-        // console.log(response);
+        console.log(response);
         localStorage.setItem("lipsey", JSON.stringify(response.data))
         toast.success('Enrolment successful')
         dispatch(handleNextStep(formData));
       }).catch((err) => {
-        // console.log(err);
+        console.log(err);
         setMyLoader(false)
         toast.error('duplicate Enrolment')
       })

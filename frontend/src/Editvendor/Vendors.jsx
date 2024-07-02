@@ -17,7 +17,7 @@ const Vendors = () => {
     
     return (
         <div>
-            <button className='bg-white text- border py-[5px] px-5 rounded-xl  border-[#089451] hover:border-white hover:bg-[#089451] hover:text-white' onClick={() =>handleEditVendor()}>Update Enrolment</button>
+            <button className='bg-white text- border py-1 px-5 rounded hover:bg-black font-bold hover:text-white border-[#089451]' onClick={() =>handleEditVendor()}>Edit</button>
         </div>
     )
 }
